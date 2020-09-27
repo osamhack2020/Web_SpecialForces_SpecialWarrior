@@ -1,4 +1,5 @@
 <template>
+    <v-app>
     <v-tabs
       fixed-tabs
       background-color="indigo"
@@ -17,6 +18,7 @@
             Another Screen
         </v-tab>
     </v-tabs>
+    </v-app>
 </template>
 
 <script>

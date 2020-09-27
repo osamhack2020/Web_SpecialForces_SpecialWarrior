@@ -24,7 +24,7 @@
         label="PASSWORD"
         type="password"
       ></v-text-field>
-        <v-btn block>
+        <v-btn block @click="getToken(id,pw)">
           Login
         </v-btn>
       </v-card-text>
@@ -33,13 +33,21 @@
 </template>
 
 <script>
+
+
 export default {
     name:'loginpage',
-
+    props: {
+      setLogin: {type: Function},
+      getToken: {type: Function},
+    },
     data: () => ({
-      id:null,pw:null,
-
+      id:"",pw:"",
+      showError:true,errorMsg:"asd",
     }),
+    methods:{
+      
+    }
 }
 </script>
 
