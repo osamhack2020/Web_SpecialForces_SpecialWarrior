@@ -11,21 +11,24 @@
       <v-card-text>
         <v-text-field
         v-model="id"
-        solo
-        dense
-        color="deep-purple"
+        clearable
+        clear-icon="mdi-close-circle"
+        outlined dense
         label="ID"
       ></v-text-field>
       <v-text-field
         v-model="pw"
-        solo
-        dense
-        color="deep-purple"
+        clearable
+        clear-icon="mdi-close-circle"
+        outlined dense
         label="PASSWORD"
         type="password"
       ></v-text-field>
-        <v-btn block @click="getToken(id,pw)">
+        <v-btn dark block @click="login(id,pw)">
           Login
+        </v-btn>
+        <v-btn dark block @click="login(id,pw)">
+          Register
         </v-btn>
       </v-card-text>
     </v-card>
@@ -37,16 +40,13 @@
 
 export default {
     name:'loginpage',
-    props: {
-      setLogin: {type: Function},
-      getToken: {type: Function},
-    },
     data: () => ({
       id:"",pw:"",
-      showError:true,errorMsg:"asd",
     }),
     methods:{
-      
+      login(id,pw){
+        this.$store.dispatch('getUserCredentialWith', {id, pw});
+      },
     }
 }
 </script>

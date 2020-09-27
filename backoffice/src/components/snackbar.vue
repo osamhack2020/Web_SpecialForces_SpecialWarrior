@@ -1,13 +1,13 @@
 <template>
   <v-snackbar
-      v-model="render"
+      v-model="this.$store.state.showSnackbar"
       :timeout="timeout"
     >
-      {{ message }}
+      {{ this.$store.state.snackbarMessage }}
         <v-btn
           color="blue"
           text
-          @click="render = false"
+          @click="this.$store.state.showSnackbar = false"
         >
           Close
         </v-btn>
@@ -20,14 +20,10 @@ export default {
     props:{
     },
     data:()=>({
-        render:false,timeout:2000,message:""
+        timeout:2000
     }),
     methods:{
-        showSnackBar(message,timeout){
-            this.message=message;
-            this.timeout=timeout;
-            this.render=true;
-        }
+
     },
 }
 </script>
