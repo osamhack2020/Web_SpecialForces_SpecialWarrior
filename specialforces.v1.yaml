@@ -12,15 +12,33 @@ servers:
 paths:
   /api/v1/auth/login:
     post:
-      summary: ''
+      summary: Login API
       operationId: post-api-v1-auth-login
       responses:
         '200':
-          description: OK
+          description: 토큰 정보 응답
           content:
             application/json:
               schema:
                 type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+                  token_type:
+                    type: string
+                  scope: {}
+                  refresh_token:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    access_token: 3acfb3bea5cefc3aecc0b25f50b9539b6f5df3dc
+                    expires_in: 3600
+                    token_type: Bearer
+                    scope: null
+                    refresh_token: 636b6291c0398a16244f08b3fae42a4b277342ab
       description: 로그인
       requestBody:
         content:
@@ -41,37 +59,106 @@ paths:
                 - client_id
                 - user_id
                 - password
+            examples:
+              example-1:
+                value:
+                  grant_type: password
+                  client_id: app
+                  user_id: someuser
+                  password: verystrongpassword
         description: '앱에서 요청 시 grant_type="password", client_id="app" 입니다.'
       parameters: []
+      security: []
   /api/v1/test/testapi:
     get:
-      summary: ''
+      summary: API 접근 테스트 API
       tags: []
       responses:
         '200':
-          description: '{"success":true,"message":"API 접근 성공!"}'
+          description: API 접근 성공
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: API 접근 성공!
         '401':
           description: Unauthorized (접근 권한 없음 - Token Invalid)
       operationId: get-api-v1-test-testapi
       description: API 사용 테스트
   /api/v1/test/testconnection:
     get:
-      summary: ''
+      summary: 서버 접속 테스트 API
       tags: []
       responses:
         '200':
-          description: '{"success":true,"message":"server all good!"}'
+          description: 서버 접속 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: server all good!
       operationId: get-api-v1-test-test2
       description: 서버 접속 테스트 API
+      security: []
     parameters: []
   /api/v1/member/register:
     parameters: []
     post:
-      summary: ''
+      summary: 회원가입 API
       operationId: post-api-v1-member-register
       responses:
         '200':
-          description: OK
+          description: 회원가입 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+          headers: {}
+        '400':
+          description: '회원가입 실패(중복, 생략등의 이유)'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: false
+                    message: 소속은(는) 공백일 수 없습니다
       description: 회원가입 API
       requestBody:
         content:
@@ -83,14 +170,43 @@ paths:
                   type: string
                 password:
                   type: string
+                cadre_flag:
+                  type: boolean
+                  description: 입력되지 않을 시 자동으로 병사(기본값 false)
+                army_num:
+                  type: string
+                unit_id:
+                  type: integer
                 email:
                   type: string
+                phone:
+                  type: string
+              required:
+                - user_id
+                - password
+                - army_num
+                - unit_id
+                - email
+                - phone
+            examples:
+              example-1:
+                value:
+                  user_id: someuser
+                  password: verystrongpassword
+                  cadre_flag: false
+                  army_num: 20-00000000
+                  unit_id: 8839
+                  email: em@i.l
+                  phone: 010-0000-0000
+        description: 회원가입 요청
+      security: []
 components:
   schemas: {}
   securitySchemes:
     access_token:
       type: http
       scheme: bearer
+      description: API 접근 시 필요
     user credentials:
       type: oauth2
       flows:
@@ -100,4 +216,4 @@ components:
           scopes: {}
       description: ''
 security:
-  - oauthkey: []
+  - access_token: []
