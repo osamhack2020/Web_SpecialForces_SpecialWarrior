@@ -6,12 +6,26 @@ info:
     name: Seong Cheol Park
     url: '-'
     email: gorae02@gmail.com
-  description: |
+  description: |-
     Special Forces API documentation
 
     >
     모든 API는 로그인 시 발급되는 access_token을 이용해 액세스 하여야 하며,<br>
     access_token이 없거나, 유효하지 않을 시 401 에러와 오류 메시지를 반환합니다.
+
+
+
+    > 운동 종류<br>
+    {<br>
+    0: 팔굽<br>
+    1: 윗몸<br>
+    2: 뜀뛰기<br>
+    3: 벤치프레스<br>
+    4: 렛풀다운 <br>
+    5: 레그 익스텐션 <br>
+    6: 레그 프레스 <br>
+    7: 케이블 크로스오버<br>
+    }
 servers:
   - url: 'https://spefor.ml'
 paths:
@@ -268,10 +282,10 @@ paths:
                 value:
                   substring: 정보통신여단
     parameters: []
-  /api/v1/profile/add:
+  /api/v1/exercise/addprofile:
     post:
       summary: 운동 프로필 추가 API
-      operationId: post-api-v1-profile-add
+      operationId: post-api-v1-exercise-addprofile
       responses:
         '200':
           description: 처리결과 반환
@@ -284,33 +298,51 @@ paths:
                     type: boolean
                   message:
                     type: string
-      description: '자신의 아이디에 운동 프로필을 추가합니다.<br> 종류,횟수,시간<br>종류 =<br> {<br> 0 : 팔굽혀펴기,<br> 1 : 윗몸일으키기,<br> 2 : 뜀뛰기,<br> 3 : 벤치프레스,<br> 4 : 랫풀다운,<br> 5 : 레그 익스텐션,<br> 6 : 레그 프레스,<br> 7 : 케이블 크로스오버<br>}'
+      description: |
+        자신의 아이디에 운동 프로필을 추가합니다.
+        > !! exercise_weight, exercise_count, exercise_time 중 하나는 입력해야 합니다.
+
+        > profile_id (현재 데이터를 입력할 대상의 profile_id) 가 안들어온다면 자동으로 오늘 프로필에 추가.<br>
+
+        >종류는 ___/exercise/getexercises 에서 가져올 수 있음. 실 데이터는 Overview 참고
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                type:
+                exercise_id:
                   type: integer
-                count:
+                exercise_weight:
                   type: integer
-                time:
+                exercise_count:
                   type: integer
-                  description: 분 단위로.
+                exercise_time:
+                  type: integer
+                  description: 분 단위
+                date:
+                  description: 이 데이터를 입력할 날짜 (타겟)
+                  type: string
               required:
-                - type
-                - count
-                - time
+                - exercise_id
+                - date
             examples:
               example-1:
                 value:
-                  type: 0
-                  count: 100
-                  time: 30
-        description: '윗몸일으키기 100개, 30분 동안 함 -> 1번 예제'
+                  exercise_id: 0
+                  exercise_weight: 0
+                  exercise_count: 0
+                  exercise_time: 0
+                  date: '2020-09-29'
+        description: |-
+          1번 예제
+          > 윗몸일으키기 100개, 30분 동안 함 -> 자신의 금일 profile_id는 1번임 -> 입력
+
+          2번 예제
+          > 윗몸일으키기 100개, 30분 동안 함 -> 2020-09-29에 넣고싶음<br> -> profile을 만들지 않았음 -> 입력 (자동 생성 후 입력됨)
       tags:
         - 프로필
+    parameters: []
   /api/v1/profile/setweight:
     post:
       summary: 체중 입력 API
@@ -515,7 +547,7 @@ paths:
         - 전우
   /api/v1/friend/requestlist:
     get:
-      summary: 전우요청자 목록 API
+      summary: 전우 요청자 목록 API
       tags:
         - 전우
       responses:
@@ -594,20 +626,117 @@ paths:
                     items:
                       type: object
                       properties:
-                        '1':
+                        user_id:
                           type: string
-                        '2':
+                        class:
+                          type: integer
+                          description: 계급
+                        army_num:
                           type: string
-                        '3':
+                          description: 군번
+                        unit_id:
+                          type: integer
+                          description: 소속ID
+                        email:
                           type: string
-                        '4':
+                        phone:
                           type: string
-              examples: {}
+                        created_at:
+                          type: string
+                          description: 가입 시각
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - user_id: string
+                        class: 1
+                        army_num: string
+                        unit_id: 1234
+                        email: string
+                        phone: string
+                        created_at: '2020-10-10 00:00:00'
       operationId: get-api-v1-member-getuserinfo
       description: |-
         유저의 정보를 반환하는 API 입니다. 
 
         주로 로그인 직후에 유저 정보를 받아오거나, 유저 정보를 갱신할 필요가 있을 때 사용합니다.
+  /api/v1/exercise/getexercises:
+    get:
+      summary: 전체 운동 종목 가져오기
+      tags:
+        - 운동
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - 팔굽혀펴기
+                      - 윗몸
+                      - 기타
+                      - 등등
+      operationId: get-api-v1-profile-get
+      description: 가능한 운동(종목) 을 모두 가져옵니다.
+    parameters: []
+  /api/v1/profile/add:
+    post:
+      summary: 일일 프로필 추가 API
+      operationId: post-api-v1-profile-add
+      responses:
+        '200':
+          description: OK
+      description: |-
+        일일 프로필을 추가합니다.
+
+        필수가 아닌 항목은 __빼놓고__ 프로필을 추가할 수 있습니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: 'YYYY-MM-DD, 입력할 날짜(당일이 아닐수 있음)'
+                weight:
+                  type: number
+                  example: 0
+                height:
+                  type: number
+                calorie:
+                  type: number
+                sleep_time:
+                  type: number
+              required:
+                - date
+            examples:
+              example-1:
+                value:
+                  date: string
+                  weight: 0
+                  height: 0
+                  calorie: 0
+                  sleep_time: 0
+              example-2:
+                value:
+                  date: '2020-09-30'
+                  weight: 62
+                  height: 171.1
+        description: 'weight, height, calorie, sleep_time 은  __FLOAT__'
 components:
   schemas: {}
   securitySchemes:
@@ -630,3 +759,4 @@ tags:
   - name: 테스트
   - name: 프로필
   - name: 전우
+  - name: 운동
