@@ -577,7 +577,8 @@ paths:
   /api/v1/member/getuserinfo:
     get:
       summary: 유저 정보 API
-      tags: []
+      tags:
+        - 멤버
       responses:
         '200':
           description: OK
