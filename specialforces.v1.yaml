@@ -69,10 +69,13 @@ paths:
         description: '앱에서 요청 시 grant_type="password", client_id="app" 입니다.'
       parameters: []
       security: []
+      tags:
+        - 멤버
   /api/v1/test/testapi:
     get:
       summary: API 접근 테스트 API
-      tags: []
+      tags:
+        - 테스트
       responses:
         '200':
           description: API 접근 성공
@@ -98,7 +101,8 @@ paths:
   /api/v1/test/testconnection:
     get:
       summary: 서버 접속 테스트 API
-      tags: []
+      tags:
+        - 테스트
       responses:
         '200':
           description: 서버 접속 성공
@@ -200,6 +204,360 @@ paths:
                   phone: 010-0000-0000
         description: 회원가입 요청
       security: []
+      tags:
+        - 멤버
+  /api/v1/member/findafflication:
+    get:
+      summary: 부대 검색 API
+      tags:
+        - 멤버
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - 지상작전사령부 정보통신여단 111대대
+                      - 지상작전사령부 정보통신여단 112대대
+                      - 지상작전사령부 정보통신여단 311대대
+                      - 지상작전사령부 정보통신여단 312대대
+      operationId: get-api-v1-member-findafflication
+      description: 부대를 substring 으로 검색하여 결과를 반환합니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                substring:
+                  type: string
+              required:
+                - substring
+            examples:
+              example-1:
+                value:
+                  substring: 정보통신여단
+    parameters: []
+  /api/v1/profile/add:
+    post:
+      summary: 운동 프로필 추가 API
+      operationId: post-api-v1-profile-add
+      responses:
+        '200':
+          description: 처리결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+      description: '자신의 아이디에 운동 프로필을 추가합니다.<br> 종류,횟수,시간<br>종류 =<br> {<br> 0 : 팔굽혀펴기,<br> 1 : 윗몸일으키기,<br> 2 : 뜀뛰기,<br> 3 : 벤치프레스,<br> 4 : 랫풀다운,<br> 5 : 레그 익스텐션,<br> 6 : 레그 프레스,<br> 7 : 케이블 크로스오버<br>}'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: integer
+                count:
+                  type: integer
+                time:
+                  type: integer
+                  description: 분 단위로.
+              required:
+                - type
+                - count
+                - time
+            examples:
+              example-1:
+                value:
+                  type: 0
+                  count: 100
+                  time: 30
+        description: '윗몸일으키기 100개, 30분 동안 함 -> 1번 예제'
+      tags:
+        - 프로필
+  /api/v1/profile/setweight:
+    post:
+      summary: 체중 입력 API
+      operationId: post-api-v1-profile-setweight
+      responses:
+        '200':
+          description: 처리 결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: '자신의 체중을 입력합니다. <br>체중 기입일 ~ 미기입기간 ~ 기입일 사이는 현재 입력하는 체중으로 채워집니다.<br> 예) 7월 15일, 7월 20일에 180kg 입력했다면, 7/15 ~ 7/20은 180kg.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weight:
+                  type: integer
+              required:
+                - weight
+            examples:
+              example-1:
+                value:
+                  weight: 180
+        description: 체중 입력
+      tags:
+        - 프로필
+  /api/v1/profile/setsleep:
+    parameters: []
+    post:
+      summary: 수면시간 입력 API
+      operationId: post-api-v1-profile-setsleep
+      responses:
+        '200':
+          description: 처리 결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: '수면 시간 입력 API입니다. 취침시간, 기상시간을 입력받습니다.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                starttime:
+                  type: string
+                  description: 'YYYY-MM-DD HH:II:SS'
+                endtime:
+                  type: string
+                  description: 'YYYY-MM-DD HH:II:SS'
+              required:
+                - starttime
+                - endtime
+            examples:
+              example-1:
+                value:
+                  starttime: '2020-09-28 22:00:00'
+                  endtime: '2020-09-29 06:30:00'
+        description: 'YYYY-MM-DD HH:II:SS 형식으로 전송 바랍니다.'
+      tags:
+        - 프로필
+  /api/v1/friend/add:
+    post:
+      summary: 전우 추가 API
+      operationId: post-api-v1-friend-add
+      description: 상대를 전우로 추가합니다. 수락은 별도입니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+                  description: 상대의 아이디입니다
+              required:
+                - target
+            examples:
+              example-1:
+                value:
+                  target: id_of_target
+        description: ''
+      tags:
+        - 전우
+      responses:
+        '200':
+          description: 처리 결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+  /api/v1/friend/accept:
+    post:
+      summary: 전우 추가 수락 API
+      operationId: post-api-v1-friend-accept
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: '상대의 전우 추가 요청을 수락합니다 <br>(그러한 요청이 있는지 검증합니다)<br> 서버에서 상대->나 관계의 수락 여부를 true 로 바꾸고, 나->상대 관계도 true로 추가합니다.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+              required:
+                - target
+            examples:
+              example-1:
+                value:
+                  target: someone_to_accept
+      tags:
+        - 전우
+  /api/v1/friend/decline:
+    post:
+      summary: 전우 추가 거절 API
+      operationId: post-api-v1-friend-decline
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: 상대의 전우 추가 요청을 거절합니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+              required:
+                - target
+            examples:
+              example-1:
+                value:
+                  target: someone_to_decline
+      tags:
+        - 전우
+  /api/v1/friend/requestlist:
+    get:
+      summary: 전우요청자 목록 API
+      tags:
+        - 전우
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - someone_likes_you
+                      - someone_wants_you
+                      - someone_loves_you
+                      - someone_needs_you
+      operationId: get-api-v1-friend-requestlist
+      description: 전우를 요청한 아이디들을 리스팅합니다.
+  /api/v1/friend/list:
+    get:
+      summary: 전우 목록 API
+      tags:
+        - 전우
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - someone_likes_you
+                      - someone_wants_you
+                      - someone_loves_you
+                      - someone_needs_you
+      operationId: get-api-friend-list
+      description: 자신의 전우 목록을 리스팅합니다
+    parameters: []
 components:
   schemas: {}
   securitySchemes:
@@ -217,3 +575,8 @@ components:
       description: ''
 security:
   - access_token: []
+tags:
+  - name: 멤버
+  - name: 테스트
+  - name: 프로필
+  - name: 전우
