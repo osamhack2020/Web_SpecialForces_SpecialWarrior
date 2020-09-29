@@ -6,7 +6,12 @@ info:
     name: Seong Cheol Park
     url: '-'
     email: gorae02@gmail.com
-  description: Special Forces API documentation
+  description: |
+    Special Forces API documentation
+
+    >
+    모든 API는 로그인 시 발급되는 access_token을 이용해 액세스 하여야 하며,<br>
+    access_token이 없거나, 유효하지 않을 시 401 에러와 오류 메시지를 반환합니다.
 servers:
   - url: 'https://spefor.ml'
 paths:
@@ -163,7 +168,10 @@ paths:
                   value:
                     success: false
                     message: 소속은(는) 공백일 수 없습니다
-      description: 회원가입 API
+      description: |-
+        회원가입 API
+
+        계급은 class 입니다 0: 이병, 1:일병, 2:상병, 3:병장
       requestBody:
         content:
           application/json:
@@ -174,9 +182,16 @@ paths:
                   type: string
                 password:
                   type: string
+                class:
+                  type: integer
+                  description: |-
+                    계급입니다.
+                    입력되지 않을 시 자동으로 이병(기본값 0)
                 cadre_flag:
                   type: boolean
-                  description: 입력되지 않을 시 자동으로 병사(기본값 false)
+                  description: |-
+                    간부 여부입니다.
+                    입력되지 않을 시 자동으로 병사(기본값 false)
                 army_num:
                   type: string
                 unit_id:
@@ -197,6 +212,7 @@ paths:
                 value:
                   user_id: someuser
                   password: verystrongpassword
+                  class: 1
                   cadre_flag: false
                   army_num: 20-00000000
                   unit_id: 8839
@@ -558,6 +574,39 @@ paths:
       operationId: get-api-friend-list
       description: 자신의 전우 목록을 리스팅합니다
     parameters: []
+  /api/v1/member/getuserinfo:
+    get:
+      summary: 유저 정보 API
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        '1':
+                          type: string
+                        '2':
+                          type: string
+                        '3':
+                          type: string
+                        '4':
+                          type: string
+              examples: {}
+      operationId: get-api-v1-member-getuserinfo
+      description: |-
+        유저의 정보를 반환하는 API 입니다. 
+
+        주로 로그인 직후에 유저 정보를 받아오거나, 유저 정보를 갱신할 필요가 있을 때 사용합니다.
 components:
   schemas: {}
   securitySchemes:
