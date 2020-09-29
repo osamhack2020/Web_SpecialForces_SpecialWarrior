@@ -341,7 +341,7 @@ paths:
           2번 예제
           > 윗몸일으키기 100개, 30분 동안 함 -> 2020-09-29에 넣고싶음<br> -> profile을 만들지 않았음 -> 입력 (자동 생성 후 입력됨)
       tags:
-        - 프로필
+        - 운동
     parameters: []
   /api/v1/profile/setweight:
     post:
@@ -737,6 +737,8 @@ paths:
                   weight: 62
                   height: 171.1
         description: 'weight, height, calorie, sleep_time 은  __FLOAT__'
+      tags:
+        - 프로필
 components:
   schemas: {}
   securitySchemes:
