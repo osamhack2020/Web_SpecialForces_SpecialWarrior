@@ -650,12 +650,12 @@ paths:
                     success: true
                     result:
                       - user_id: string
-                        class: 1
+                        class: '0'
                         army_num: string
-                        unit_id: 1234
+                        unit_id: '123'
                         email: string
                         phone: string
-                        created_at: '2020-10-10 00:00:00'
+                        created_at: '2020-09-29 23:44:40'
       operationId: get-api-v1-member-getuserinfo
       description: |-
         유저의 정보를 반환하는 API 입니다. 
@@ -681,14 +681,34 @@ paths:
                     items:
                       type: string
               examples:
-                example-1:
+                example-2:
                   value:
                     success: true
                     result:
-                      - 팔굽혀펴기
-                      - 윗몸
-                      - 기타
-                      - 등등
+                      - exercise_id: '0'
+                        exercise_name: 팔굽혀펴기
+                        exercise_part: ''
+                      - exercise_id: '1'
+                        exercise_name: 윗몸일으키기
+                        exercise_part: ''
+                      - exercise_id: '2'
+                        exercise_name: 뜀뛰기
+                        exercise_part: ''
+                      - exercise_id: '3'
+                        exercise_name: 벤치프레스
+                        exercise_part: ''
+                      - exercise_id: '4'
+                        exercise_name: 렛풀다운
+                        exercise_part: ''
+                      - exercise_id: '5'
+                        exercise_name: 레그 익스텐션
+                        exercise_part: ''
+                      - exercise_id: '6'
+                        exercise_name: 레그 프레스
+                        exercise_part: ''
+                      - exercise_id: '7'
+                        exercise_name: 케이블 크로스오버
+                        exercise_part: ''
       operationId: get-api-v1-profile-get
       description: 가능한 운동(종목) 을 모두 가져옵니다.
     parameters: []
@@ -699,6 +719,25 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - success
+                  - message
+              examples:
+                example-1:
+                  value:
+                    success: false
+                    message: 2020-07-30의 프로필은 이미 있습니다.
       description: |-
         일일 프로필을 추가합니다.
 
