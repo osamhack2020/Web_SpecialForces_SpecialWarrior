@@ -1,8 +1,6 @@
 <?php
 include_once('../dbsettings.php');
 
-//header('Access-Control-Allow-Origin: *'); header('Access-Control-Allow-Headers: Content-Type, X-Requested-With'); header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT'); header('Access-Control-Max-Age: 600');
-
 // OAuth2\Storage\UserCredentialsInterface 에서 DB 형태에 따라 수정
 $input = json_decode(file_get_contents('php://input'),true);
 
@@ -30,11 +28,19 @@ try{
   if($row['cnt'])
     throw new Exception("사용할 수 없는 이메일입니다");
   
+  // able to skip unnecessary fields
+   if(!$input['cadre_flag'])
+    $input['cadre_flag'] = 0;
+  if(!isset($input['cadre_flag']))
+    $input['cadre_flag'] = 0;
+  if(!isset($input['class']))
+    $input['class'] = 0;
   
+  $date = date("Y-m-d H:i:s"); 
   // register user
   $encrypted_pass = sha1($input['password']);
-  $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],
-  '$input[army_num]',$input[unit_id],'$input[email]','$input[phone]')";
+  $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],0,$input[class],
+  '$input[army_num]',$input[unit_id],'$input[email]','$input[phone]','$date','$date')";
   mysqli_query($dbconn,$sql);
   $res['success']=true;
 }
