@@ -85,7 +85,9 @@ paths:
                   client_id: app
                   user_id: someuser
                   password: verystrongpassword
-        description: '앱에서 요청 시 grant_type="password", client_id="app" 입니다.'
+        description: |-
+          >앱에서 요청 시 grant_type="password", client_id="app" 입니다.<br>
+          Content-Type 에 유의하시기 바랍니다.(application/json)
       parameters: []
       security: []
       tags:
@@ -236,7 +238,7 @@ paths:
       security: []
       tags:
         - 멤버
-  /api/v1/member/findafflication:
+  /api/v1/member/find_afflication:
     get:
       summary: 부대 검색 API
       tags:
@@ -282,10 +284,10 @@ paths:
                 value:
                   substring: 정보통신여단
     parameters: []
-  /api/v1/exercise/addprofile:
+  /api/v1/exercise/add_exercise_profile:
     post:
       summary: 운동 프로필 추가 API
-      operationId: post-api-v1-exercise-addprofile
+      operationId: post-api-v1-exercise-add_exercise_profile
       responses:
         '200':
           description: 처리결과 반환
@@ -298,13 +300,38 @@ paths:
                     type: boolean
                   message:
                     type: string
+              examples: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - success
+                  - message
+              examples:
+                example-1:
+                  value:
+                    success: false
+                    message: 입력 된 기록이 없습니다
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
       description: |
         자신의 아이디에 운동 프로필을 추가합니다.
         > !! exercise_weight, exercise_count, exercise_time 중 하나는 입력해야 합니다.
 
-        > profile_id (현재 데이터를 입력할 대상의 profile_id) 가 안들어온다면 자동으로 오늘 프로필에 추가.<br>
-
-        >종류는 ___/exercise/getexercises 에서 가져올 수 있음. 실 데이터는 Overview 참고
+        >운동 종류는 ___/exercise/get_exercises 에서 가져올 수 있음. 실 데이터는 Overview 참고
       requestBody:
         content:
           application/json:
@@ -313,6 +340,7 @@ paths:
               properties:
                 exercise_id:
                   type: integer
+                  description: 운동 종류 코드입니다
                 exercise_weight:
                   type: integer
                 exercise_count:
@@ -320,30 +348,22 @@ paths:
                 exercise_time:
                   type: integer
                   description: 분 단위
-                date:
-                  description: 이 데이터를 입력할 날짜 (타겟)
-                  type: string
               required:
                 - exercise_id
-                - date
             examples:
               example-1:
                 value:
                   exercise_id: 0
                   exercise_weight: 0
-                  exercise_count: 0
-                  exercise_time: 0
-                  date: '2020-09-29'
+                  exercise_count: 100
+                  exercise_time: 30
         description: |-
           1번 예제
-          > 윗몸일으키기 100개, 30분 동안 함 -> 자신의 금일 profile_id는 1번임 -> 입력
-
-          2번 예제
-          > 윗몸일으키기 100개, 30분 동안 함 -> 2020-09-29에 넣고싶음<br> -> profile을 만들지 않았음 -> 입력 (자동 생성 후 입력됨)
+          > 윗몸일으키기 100개, 30분 동안 함
       tags:
         - 운동
     parameters: []
-  /api/v1/profile/setweight:
+  /api/v1/profile/set_weight:
     post:
       summary: 체중 입력 API
       operationId: post-api-v1-profile-setweight
@@ -364,7 +384,9 @@ paths:
                   value:
                     success: true
                     message: ''
-      description: '자신의 체중을 입력합니다. <br>체중 기입일 ~ 미기입기간 ~ 기입일 사이는 현재 입력하는 체중으로 채워집니다.<br> 예) 7월 15일, 7월 20일에 180kg 입력했다면, 7/15 ~ 7/20은 180kg.'
+      description: |-
+        자신의 체중을 입력합니다. <br>
+        >체중 기입일 ~ 미기입기간 ~ 기입일 사이는 현재 입력하는 체중으로 채워집니다.<br> 예) 7월 15일, 7월 20일에 180kg 입력했다면, 7/15 ~ 7/20은 180kg.
       requestBody:
         content:
           application/json:
@@ -382,7 +404,8 @@ paths:
         description: 체중 입력
       tags:
         - 프로필
-  /api/v1/profile/setsleep:
+    parameters: []
+  /api/v1/profile/set_sleep:
     parameters: []
     post:
       summary: 수면시간 입력 API
@@ -404,30 +427,18 @@ paths:
                   value:
                     success: true
                     message: ''
-      description: '수면 시간 입력 API입니다. 취침시간, 기상시간을 입력받습니다.'
+      description: 수면 시간 입력 API입니다. 수면 시간을 입력받아 오늘의 profile에 저장합니다.
+      tags:
+        - 프로필
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                starttime:
-                  type: string
-                  description: 'YYYY-MM-DD HH:II:SS'
-                endtime:
-                  type: string
-                  description: 'YYYY-MM-DD HH:II:SS'
-              required:
-                - starttime
-                - endtime
-            examples:
-              example-1:
-                value:
-                  starttime: '2020-09-28 22:00:00'
-                  endtime: '2020-09-29 06:30:00'
-        description: 'YYYY-MM-DD HH:II:SS 형식으로 전송 바랍니다.'
-      tags:
-        - 프로필
+                minute:
+                  type: integer
+                  description: 분단위
   /api/v1/friend/add:
     post:
       summary: 전우 추가 API
@@ -606,7 +617,7 @@ paths:
       operationId: get-api-friend-list
       description: 자신의 전우 목록을 리스팅합니다
     parameters: []
-  /api/v1/member/getuserinfo:
+  /api/v1/member/get_userinfo:
     get:
       summary: 유저 정보 API
       tags:
@@ -656,14 +667,74 @@ paths:
                         email: string
                         phone: string
                         created_at: '2020-09-29 23:44:40'
-      operationId: get-api-v1-member-getuserinfo
+        '':
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      required:
+                        - user_id
+                        - class
+                        - army_num
+                        - unit_id
+                        - email
+                        - phone
+                        - created_at
+                      properties:
+                        user_id:
+                          type: string
+                          minLength: 1
+                        class:
+                          type: string
+                          minLength: 1
+                        army_num:
+                          type: string
+                          minLength: 1
+                        unit_id:
+                          type: string
+                          minLength: 1
+                        email:
+                          type: string
+                          minLength: 1
+                        phone:
+                          type: string
+                          minLength: 1
+                        created_at:
+                          type: string
+                          minLength: 1
+                required:
+                  - success
+                  - result
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - user_id: string
+                        class: '0'
+                        army_num: string
+                        unit_id: '123'
+                        email: string
+                        phone: string
+                        created_at: '2020-09-29 23:44:40'
+      operationId: get-api-v1-member-get_userinfo
       description: |-
         유저의 정보를 반환하는 API 입니다. 
 
         주로 로그인 직후에 유저 정보를 받아오거나, 유저 정보를 갱신할 필요가 있을 때 사용합니다.
-  /api/v1/exercise/getexercises:
+    parameters: []
+  /api/v1/exercise/get_exercise_ids:
     get:
-      summary: 전체 운동 종목 가져오기
+      summary: 운동 종목 모두 가져오기 API
       tags:
         - 운동
       responses:
@@ -709,16 +780,7 @@ paths:
                       - exercise_id: '7'
                         exercise_name: 케이블 크로스오버
                         exercise_part: ''
-      operationId: get-api-v1-profile-get
-      description: 가능한 운동(종목) 을 모두 가져옵니다.
-    parameters: []
-  /api/v1/profile/add:
-    post:
-      summary: 일일 프로필 추가 API
-      operationId: post-api-v1-profile-add
-      responses:
-        '200':
-          description: OK
+        '':
           content:
             application/json:
               schema:
@@ -727,57 +789,62 @@ paths:
                 properties:
                   success:
                     type: boolean
-                  message:
-                    type: string
-                    minLength: 1
+                  result:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      required:
+                        - exercise_id
+                        - exercise_name
+                        - exercise_part
+                      properties:
+                        exercise_id:
+                          type: string
+                          minLength: 1
+                        exercise_name:
+                          type: string
+                          minLength: 1
+                        exercise_part:
+                          type: string
                 required:
                   - success
-                  - message
+                  - result
               examples:
                 example-1:
                   value:
-                    success: false
-                    message: 2020-07-30의 프로필은 이미 있습니다.
-      description: |-
-        일일 프로필을 추가합니다.
-
-        필수가 아닌 항목은 __빼놓고__ 프로필을 추가할 수 있습니다.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                date:
-                  type: string
-                  description: 'YYYY-MM-DD, 입력할 날짜(당일이 아닐수 있음)'
-                weight:
-                  type: number
-                  example: 0
-                height:
-                  type: number
-                calorie:
-                  type: number
-                sleep_time:
-                  type: number
-              required:
-                - date
-            examples:
-              example-1:
-                value:
-                  date: string
-                  weight: 0
-                  height: 0
-                  calorie: 0
-                  sleep_time: 0
-              example-2:
-                value:
-                  date: '2020-09-30'
-                  weight: 62
-                  height: 171.1
-        description: 'weight, height, calorie, sleep_time 은  __FLOAT__'
-      tags:
-        - 프로필
+                    success: true
+                    result:
+                      - exercise_id: '0'
+                        exercise_name: 팔굽혀펴기
+                        exercise_part: ''
+                      - exercise_id: '1'
+                        exercise_name: 윗몸일으키기
+                        exercise_part: ''
+                      - exercise_id: '2'
+                        exercise_name: 뜀뛰기
+                        exercise_part: ''
+                      - exercise_id: '3'
+                        exercise_name: 벤치프레스
+                        exercise_part: ''
+                      - exercise_id: '4'
+                        exercise_name: 렛풀다운
+                        exercise_part: ''
+                      - exercise_id: '5'
+                        exercise_name: 레그 익스텐션
+                        exercise_part: ''
+                      - exercise_id: '6'
+                        exercise_name: 레그 프레스
+                        exercise_part: ''
+                      - exercise_id: '7'
+                        exercise_name: 케이블 크로스오버
+                        exercise_part: ''
+          description: 결과
+      operationId: get-api-v1-exercise-get_exercises_ids
+      description: 가능한 운동(종목) 정보 을 모두 가져옵니다.
+    parameters: []
+  /api/v1/profile/add_today:
+    parameters: []
 components:
   schemas: {}
   securitySchemes:
