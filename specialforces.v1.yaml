@@ -405,11 +405,11 @@ paths:
       tags:
         - 프로필
     parameters: []
-  /api/v1/profile/set_sleep:
+  /api/v1/profile/set_sleeptime:
     parameters: []
     post:
       summary: 수면시간 입력 API
-      operationId: post-api-v1-profile-setsleep
+      operationId: post-api-v1-profile-set_sleeptime
       responses:
         '200':
           description: 처리 결과 반환
@@ -436,9 +436,13 @@ paths:
             schema:
               type: object
               properties:
-                minute:
+                sleep_time:
                   type: integer
                   description: 분단위
+            examples:
+              example-1:
+                value:
+                  sleep_time: 480
   /api/v1/friend/add_friend:
     post:
       summary: 전우 추가 API
@@ -571,37 +575,6 @@ paths:
       tags:
         - 전우
     parameters: []
-  /api/v1/friend/get_request_list:
-    get:
-      summary: 전우 요청자 목록 API
-      tags:
-        - 전우
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  result:
-                    type: array
-                    items:
-                      type: string
-              examples:
-                example-1:
-                  value:
-                    success: true
-                    result:
-                      - someone_likes_you
-                      - someone_wants_you
-                      - someone_loves_you
-                      - someone_needs_you
-      operationId: get-api-v1-friend-requestlist
-      description: 전우를 요청한 아이디들을 리스팅합니다.
-    parameters: []
   /api/v1/friend/get_friend_list:
     get:
       summary: 전우 목록 API
@@ -613,23 +586,45 @@ paths:
           content:
             application/json:
               schema:
+                description: ''
                 type: object
                 properties:
                   success:
                     type: boolean
                   result:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    properties:
+                      requested:
+                        type: array
+                        uniqueItems: true
+                        minItems: 1
+                        items:
+                          required:
+                            - user_id
+                          properties:
+                            user_id:
+                              type: string
+                              minLength: 1
+                      friend:
+                        type: array
+                        items:
+                          required: []
+                          properties: {}
+                    required:
+                      - requested
+                      - friend
+                required:
+                  - success
+                  - result
               examples:
                 example-1:
                   value:
                     success: true
                     result:
-                      - someone_likes_you
-                      - someone_wants_you
-                      - someone_loves_you
-                      - someone_needs_you
+                      requested:
+                        - user_id: string
+                      friend:
+                        - user_id: somefriend
       operationId: get-api-friend-list
       description: 자신의 전우 목록을 리스팅합니다
     parameters: []
@@ -859,6 +854,86 @@ paths:
       operationId: get-api-v1-exercise-get_exercises_ids
       description: 가능한 운동(종목) 정보 을 모두 가져옵니다.
     parameters: []
+  /api/v1/profile/set_height:
+    post:
+      summary: 신장 입력 API
+      operationId: post-api-v1-profile-set_height
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                required:
+                  - success
+                  - message
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      tags:
+        - 프로필
+      description: 신장 입력(cm)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                height:
+                  type: integer
+            examples:
+              example-1:
+                value:
+                  height: 180
+  /api/v1/profile/set_calorie:
+    post:
+      summary: 칼로리 입력 API
+      operationId: post-api-v1-profile-set_calorie
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                required:
+                  - success
+                  - message
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      tags:
+        - 프로필
+      description: 칼로리 입력 (kcal)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                calorie:
+                  type: integer
+            examples:
+              example-1:
+                value:
+                  calorie: 2200
 components:
   schemas: {}
   securitySchemes:
