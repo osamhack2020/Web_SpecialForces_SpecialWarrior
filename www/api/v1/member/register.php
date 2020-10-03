@@ -1,5 +1,6 @@
 <?php
-include_once('../dbsettings.php');
+require_once('../dbsettings.php');
+require_once('../profile/add_today_profile.php');
 
 // OAuth2\Storage\UserCredentialsInterface 에서 DB 형태에 따라 수정
 $input = json_decode(file_get_contents('php://input'),true);
@@ -42,6 +43,7 @@ try{
   $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],0,$input[class],
   '$input[army_num]',$input[unit_id],'$input[email]','$input[phone]','$date','$date')";
   mysqli_query($dbconn,$sql);
+  add_today_profile($dbconn,$input['user_id']);
   $res['success']=true;
 }
 catch(Exception $e){

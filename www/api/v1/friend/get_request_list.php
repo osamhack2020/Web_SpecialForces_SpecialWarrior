@@ -8,10 +8,12 @@ $token = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
 $res=array("success"=>false,"result"=>array());
 
 try{ 
-  $sql = "SELECT user_id,class,army_num,unit_id,email,phone,created_at FROM warrior WHERE user_id='$token[user_id]';";
+  $sql = "SELECT me as user_id FROM comrade WHERE comrade='$token[user_id]' AND accepted = 0;"; //opponent -> me (not accepted yet)
   $result = mysqli_query($dbconn,$sql);
-  $row = mysqli_fetch_assoc($result);
-  array_push($res['result'], $row);
+  for($i=0;$i<$result->num_rows;$i++){
+    $row = mysqli_fetch_assoc($result);
+    array_push($res['result'], $row);
+  }
   $res['success']=true;
 }
 catch(Exception $e){

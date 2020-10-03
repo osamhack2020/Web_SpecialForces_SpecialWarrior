@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/../auth/settings.php';
-include_once('../dbsettings.php');
-include_once('../token_validator.php');
+require_once('../dbsettings.php');
+require_once('../token_validator.php');
 
 function get_today_profile_id($dbconn, $token){
   $res=array("success"=>false,"result"=>array());

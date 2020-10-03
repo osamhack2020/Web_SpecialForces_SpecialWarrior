@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__.'/../auth/settings.php';
-include_once('../dbsettings.php');
-include_once('../token_validator.php');
-require_once('./get_today_profile_id.php');
+require_once('../dbsettings.php');
+require_once('../token_validator.php');
+require_once('../profile/get_today_profile_id.php');
 
 $input = json_decode(file_get_contents('php://input'),true);
 $token = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
@@ -22,8 +22,8 @@ try{
     throw new Exception("입력 된 기록이 없습니다");
   }
   
-  $exercise_profile_id = get_today_profile_id($dbconn,$token)['result'][0]['profile_id'];
-  $sql = "INSERT INTO exercise_profile(exercise_id,exercise_weight,exercise_count,exercise_time,profile_id,user_id) VALUES($input[exercise_id],$input[exercise_weight],$input[exercise_count],$input[exercise_time],$exercise_profile_id,'$token[user_id]');";
+  $today_profile_id = get_today_profile_id($dbconn,$token)['result'][0]['profile_id'];
+  $sql = "INSERT INTO exercise_profile(exercise_id,exercise_weight,exercise_count,exercise_time,profile_id,user_id) VALUES($input[exercise_id],$input[exercise_weight],$input[exercise_count],$input[exercise_time],$today_profile_id,'$token[user_id]');";
   mysqli_query($dbconn,$sql);
   $res['success']=true;
 }
