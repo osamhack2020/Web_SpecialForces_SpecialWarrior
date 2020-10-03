@@ -443,6 +443,62 @@ paths:
               example-1:
                 value:
                   sleep_time: 480
+  /api/v1/friend/get_friend_list:
+    get:
+      summary: 전우 목록 API
+      tags:
+        - 전우
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: object
+                    properties:
+                      requested:
+                        type: array
+                        uniqueItems: true
+                        minItems: 1
+                        items:
+                          required:
+                            - user_id
+                          properties:
+                            user_id:
+                              type: string
+                              minLength: 1
+                      friend:
+                        type: array
+                        items:
+                          required: []
+                          properties: {}
+                    required:
+                      - requested
+                      - friend
+                required:
+                  - success
+                  - result
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      requested:
+                        - user_id: string
+                      friend:
+                        - user_id: somefriend
+      operationId: get-api-friend-list
+      description: |-
+        자신의 전우 목록을 리스팅합니다
+        > requested 는 친구 요청 받으나, 아직 본인이 수락하지 않은 상대의 아이디.<br>
+         friend 는 상호 수락으로 친구가 된 상대의 아이디입니다.
+    parameters: []
   /api/v1/friend/add_friend:
     post:
       summary: 전우 추가 API
@@ -574,59 +630,6 @@ paths:
                   target: someone_to_decline
       tags:
         - 전우
-    parameters: []
-  /api/v1/friend/get_friend_list:
-    get:
-      summary: 전우 목록 API
-      tags:
-        - 전우
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                description: ''
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  result:
-                    type: object
-                    properties:
-                      requested:
-                        type: array
-                        uniqueItems: true
-                        minItems: 1
-                        items:
-                          required:
-                            - user_id
-                          properties:
-                            user_id:
-                              type: string
-                              minLength: 1
-                      friend:
-                        type: array
-                        items:
-                          required: []
-                          properties: {}
-                    required:
-                      - requested
-                      - friend
-                required:
-                  - success
-                  - result
-              examples:
-                example-1:
-                  value:
-                    success: true
-                    result:
-                      requested:
-                        - user_id: string
-                      friend:
-                        - user_id: somefriend
-      operationId: get-api-friend-list
-      description: 자신의 전우 목록을 리스팅합니다
     parameters: []
   /api/v1/member/get_userinfo:
     get:
