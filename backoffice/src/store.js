@@ -10,7 +10,7 @@ export const store = new Vuex.Store({
     state:{
         isAuthorized:false,
         tokenData:null,
-        showSnackbar:false,
+        showSnackbar:true,
         snackbarMessage:"",
     },
     getters:{
@@ -25,6 +25,9 @@ export const store = new Vuex.Store({
         showSnackbar(state,payload){
             state.showSnackbar = true;
             state.snackbarMessage = payload.message;
+        },
+        closeSnackbar(state){
+            state.showSnackbar = false;
         },
         SetTokenData(state,payload){
             state.isAuthorized = true;
@@ -51,6 +54,9 @@ export const store = new Vuex.Store({
                   if(response.status==200){
                     commit("SetTokenData",response.data);
                     commit("SetAuthorization");
+                  }
+                  else{
+                    commit("showSnackbar",{message:"fdsa"});
                   }
               });
         },

@@ -1,17 +1,18 @@
 <template>
   <v-snackbar
-      v-model="this.$store.state.showSnackbar"
-      :timeout="timeout"
+    app
+    :timeout="timeout"
+    :value="this.$store.state.showSnackbar"
+  >
+    asdasdasdasda
+    <v-btn
+      color="blue"
+      text
+      @click="close()"
     >
-      {{ this.$store.state.snackbarMessage }}
-        <v-btn
-          color="blue"
-          text
-          @click="this.$store.state.showSnackbar = false"
-        >
-          Close
-        </v-btn>
-    </v-snackbar>
+      Close
+    </v-btn>
+  </v-snackbar>
 </template>
 
 <script>
@@ -23,7 +24,9 @@ export default {
         timeout:2000
     }),
     methods:{
-
+      close(){
+        this.$store.commit('closeSnackbar');
+      }
     },
 }
 </script>
