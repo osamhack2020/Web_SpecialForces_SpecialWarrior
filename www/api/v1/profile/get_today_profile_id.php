@@ -18,7 +18,6 @@ function get_today_profile_id($dbconn, $token){
     http_response_code(400); //bad request
     $res['message'] = $e->getMessage();
   }
-  //if($exit_without_echo) exit(0);
   return $res;
 }
 ?>
