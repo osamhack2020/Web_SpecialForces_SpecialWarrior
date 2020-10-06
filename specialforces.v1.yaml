@@ -268,7 +268,9 @@ paths:
                       - 지상작전사령부 정보통신여단 311대대
                       - 지상작전사령부 정보통신여단 312대대
       operationId: get-api-v1-member-findafflication
-      description: 부대를 substring 으로 검색하여 결과를 반환합니다.
+      description: |-
+        부대를 substring 으로 검색하여 결과를 반환합니다.
+        (미구현 상태)
       requestBody:
         content:
           application/json:
@@ -283,6 +285,7 @@ paths:
               example-1:
                 value:
                   substring: 정보통신여단
+      security: []
     parameters: []
   /api/v1/exercise/add_exercise_profile:
     post:
@@ -937,6 +940,210 @@ paths:
               example-1:
                 value:
                   calorie: 2200
+  /api/v1/profile/get_profile:
+    post:
+      summary: 일일 프로필 가져오기 API
+      operationId: post-api-v1-profile-get_profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        profile_id:
+                          type: integer
+                        user_id:
+                          type: string
+                        date:
+                          type: string
+                          description: YYYY-MM-DD
+                        weight:
+                          type: integer
+                        height:
+                          type: integer
+                        calorie:
+                          type: integer
+                        sleep_time:
+                          type: integer
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '19'
+                        user_id: string
+                        date: '2020-10-06'
+                        weight: '3'
+                        height: null
+                        calorie: null
+                        sleep_time: null
+                example-2:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '16'
+                        user_id: string
+                        date: '2020-10-05'
+                        weight: '3'
+                        height: '190'
+                        calorie: '2200'
+                        sleep_time: '240'
+      description: 오늘 혹은 지정한 날짜의 일일 프로필을 가져옵니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: '기본값 오늘(Today), YYYY-MM-DD'
+            examples:
+              example-1:
+                value: {}
+              example-2:
+                value:
+                  date: '2020-10-05'
+        description: ''
+      tags:
+        - 프로필
+  /api/v1/profile/get_sleeptime_data:
+    get:
+      summary: 수면시간 데이터 가져오기 API
+      tags:
+        - 프로필
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    description: 결과
+                    items:
+                      type: object
+                      properties:
+                        profile_id:
+                          type: integer
+                        date:
+                          type: string
+                        sleep_time:
+                          type: integer
+                  min_max_avg:
+                    type: array
+                    description: '최소,최대,평균'
+                    items:
+                      type: object
+                      properties:
+                        min:
+                          type: integer
+                        max:
+                          type: integer
+                        average:
+                          type: integer
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '7'
+                        date: '2020-10-04'
+                        sleep_time: '360'
+                      - profile_id: '16'
+                        date: '2020-10-05'
+                        sleep_time: '240'
+                      - profile_id: '19'
+                        date: '2020-10-06'
+                        sleep_time: '220'
+                    min_max_avg:
+                      - min: '220'
+                        max: '360'
+                        average: '273'
+      operationId: get-api-v1-profile-get_sleeptime_data
+      description: '수면시간을 일별로 30일치를 가져옵니다. (데이터들의 최소,최대,평균이 함께 제공됩니다)'
+  /api/v1/profile/get_weight_data:
+    get:
+      summary: 체중 데이터 가져오기 API
+      tags:
+        - 프로필
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: object
+                      properties:
+                        profile_id:
+                          type: integer
+                        date:
+                          type: string
+                          minLength: 1
+                        weight:
+                          type: integer
+                  min_max_avg:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: object
+                      properties:
+                        min:
+                          type: integer
+                        max:
+                          type: integer
+                        average:
+                          type: integer
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '7'
+                        date: '2020-10-04'
+                        weight: '30'
+                      - profile_id: '16'
+                        date: '2020-10-05'
+                        weight: '31'
+                      - profile_id: '19'
+                        date: '2020-10-06'
+                        weight: '32'
+                    min_max_avg:
+                      - min: '30'
+                        max: '32'
+                        average: '31'
+      operationId: get-api-v1-profile-get_weight_data
+      description: |-
+        체중을 일별로 30일치를 가져옵니다. (데이터들의 최소,최대,평균이 함께 제공됩니다)
+        >입력① ~ 다음입력② 사이의 체중은 ①로 유지됩니다. (회의내용)<br>
+        Ex) 2020-10-01 30kg 입력, 2020-10-06 40kg 입력시<br>
+        2020-10-01 ~ 2020-10-05 -> 30kg<br>2020-10-06 -> 40kg 
 components:
   schemas: {}
   securitySchemes:
