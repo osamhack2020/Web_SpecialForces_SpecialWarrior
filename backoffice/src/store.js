@@ -68,11 +68,11 @@ export const store = new Vuex.Store({
                 data: {
                     user_id: payload.user_id,
                     password: payload.password,
-                    cadre_flag: payload.cadre_flag,
+                    cadre_flag: true,
                     army_num: payload.army_num,
                     unit_id: payload.unit_id,
                     email: payload.email,
-                    phone: payload.phone
+                    phone: payload.phone,
                 }
               })
               .then((response)=>{
