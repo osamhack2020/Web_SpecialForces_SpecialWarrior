@@ -188,6 +188,8 @@ paths:
         회원가입 API
 
         계급은 class 입니다 0: 이병, 1:일병, 2:상병, 3:병장
+
+        > 2020-10-07 이름 추가했습니다
       requestBody:
         content:
           application/json:
@@ -212,6 +214,9 @@ paths:
                   type: string
                 unit_id:
                   type: integer
+                name:
+                  type: string
+                  description: 이름
                 email:
                   type: string
                 phone:
@@ -221,6 +226,7 @@ paths:
                 - password
                 - army_num
                 - unit_id
+                - name
                 - email
                 - phone
             examples:
@@ -645,6 +651,7 @@ paths:
           content:
             application/json:
               schema:
+                description: ''
                 type: object
                 properties:
                   success:
@@ -656,34 +663,45 @@ paths:
                       properties:
                         user_id:
                           type: string
+                        password:
+                          type: string
+                        cadre_flag:
+                          type: string
+                        admin_flag:
+                          type: string
                         class:
-                          type: integer
-                          description: 계급
+                          type: string
                         army_num:
                           type: string
-                          description: 군번
                         unit_id:
-                          type: integer
-                          description: 소속ID
+                          type: string
+                        name:
+                          type: string
                         email:
                           type: string
                         phone:
                           type: string
                         created_at:
                           type: string
-                          description: 가입 시각
+                        accessed_at:
+                          type: string
               examples:
                 example-1:
                   value:
                     success: true
                     result:
-                      - user_id: string
+                      - user_id: qwe
+                        password: 056eafe7cf52220de2df36845b8ed170c67e23e3
+                        cadre_flag: '1'
+                        admin_flag: '0'
                         class: '0'
-                        army_num: string
+                        army_num: qwe
                         unit_id: '123'
-                        email: string
-                        phone: string
-                        created_at: '2020-09-29 23:44:40'
+                        name: 김철수
+                        email: qwe
+                        phone: qwe
+                        created_at: '2020-10-07 19:35:41'
+                        accessed_at: '2020-10-07 23:54:22'
         '':
           content:
             application/json:
@@ -709,25 +727,20 @@ paths:
                       properties:
                         user_id:
                           type: string
-                          minLength: 1
                         class:
-                          type: string
-                          minLength: 1
+                          type: integer
                         army_num:
                           type: string
-                          minLength: 1
                         unit_id:
+                          type: integer
+                        name:
                           type: string
-                          minLength: 1
                         email:
                           type: string
-                          minLength: 1
                         phone:
                           type: string
-                          minLength: 1
                         created_at:
                           type: string
-                          minLength: 1
                 required:
                   - success
                   - result
@@ -748,6 +761,8 @@ paths:
         유저의 정보를 반환하는 API 입니다. 
 
         주로 로그인 직후에 유저 정보를 받아오거나, 유저 정보를 갱신할 필요가 있을 때 사용합니다.
+
+        >2020-10-07 이름추가
     parameters: []
   /api/v1/exercise/get_exercise_ids:
     get:
