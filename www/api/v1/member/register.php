@@ -6,7 +6,7 @@ require_once('../profile/add_today_profile.php');
 $input = json_decode(file_get_contents('php://input'),true);
 
 $res=array("success"=>false,"message"=>"");
-$inputs_list=array("user_id"=>"아이디","password"=>"패스워드","army_num"=>"군번","unit_id"=>"소속","email"=>"이메일","phone"=>"전화번호");
+$inputs_list=array("user_id"=>"아이디","password"=>"패스워드","army_num"=>"군번","name"=>"이름","unit_id"=>"소속","email"=>"이메일","phone"=>"전화번호");
 
 try{
   // no empty inputs(some can be empty)
@@ -41,7 +41,7 @@ try{
   // register user
   $encrypted_pass = sha1($input['password']);
   $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],0,$input[class],
-  '$input[army_num]',$input[unit_id],'$input[email]','$input[phone]','$date','$date')";
+  '$input[army_num]',$input[unit_id],$input[name],'$input[email]','$input[phone]','$date','$date')";
   mysqli_query($dbconn,$sql);
   add_today_profile($dbconn,$input['user_id']);
   $res['success']=true;

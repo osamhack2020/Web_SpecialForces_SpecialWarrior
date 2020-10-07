@@ -4,7 +4,6 @@ require_once('../dbsettings.php');
 require_once('../token_validator.php');
 
 $input = json_decode(file_get_contents('php://input'),true);
-$token = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
 $res=array("success"=>false,"message"=>"");
 
 try{

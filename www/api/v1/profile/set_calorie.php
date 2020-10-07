@@ -5,7 +5,6 @@ require_once('../token_validator.php');
 require_once('./get_today_profile_id.php');
 
 $input = json_decode(file_get_contents('php://input'),true);
-$token = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
 $res=array("success"=>false,"message"=>"");
 
 try{

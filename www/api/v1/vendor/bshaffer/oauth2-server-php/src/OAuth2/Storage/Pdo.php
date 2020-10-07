@@ -202,7 +202,11 @@ class Pdo implements
         } else {
             $stmt = $this->db->prepare(sprintf('INSERT INTO %s (access_token, client_id, expires, user_id, scope) VALUES (:access_token, :client_id, :expires, :user_id, :scope)', $this->config['access_token_table']));
         }
-
+      
+        $date = date("Y-m-d H:i:s"); 
+        $sql="UPDATE warrior SET accessed_at = '$date' WHERE user_id='$user_id'";
+        $stmt_access_update = $this->db->prepare($sql);
+        $stmt_access_update->execute();
         return $stmt->execute(compact('access_token', 'client_id', 'user_id', 'expires', 'scope'));
     }
 
@@ -447,6 +451,21 @@ class Pdo implements
     public function getUser($username)
     {
         $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where user_id=:user_id', $this->config['user_table']));
+        $stmt->execute(array('user_id' => $username));
+
+        if (!$userInfo = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            return false;
+        }
+
+        // the default behavior is to use "username" as the user_id
+        return array_merge(array(
+            'user_id' => $username
+        ), $userInfo);
+    }
+      
+    public function getUserInfo($username)
+    {
+        $stmt = $this->db->prepare($sql = sprintf('SELECT user_id,cadre_flag,admin_flag,class,army_num,unit_id,name,email,phone,created_at,accessed_at from %s where user_id=:user_id', $this->config['user_table']));
         $stmt->execute(array('user_id' => $username));
 
         if (!$userInfo = $stmt->fetch(\PDO::FETCH_ASSOC)) {
