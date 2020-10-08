@@ -13,12 +13,12 @@ $toDate = $date;
 
 try{
   //GET AVERAGE
-  $sql = "SELECT CAST(MIN(sleep_time) as UNSIGNED) as min,CAST(MAX(sleep_time) as UNSIGNED) as max,CAST(AVG(sleep_time) as UNSIGNED) as average FROM day_profile WHERE user_id = '$token[user_id]' AND date between '$fromDate' and '$toDate';";
+  $sql = "SELECT CAST(MIN(sleep_time) as UNSIGNED) as min,CAST(MAX(sleep_time) as UNSIGNED) as max,CAST(AVG(sleep_time) as UNSIGNED) as average FROM day_profile WHERE user_id = '$userInfo[user_id]' AND date between '$fromDate' and '$toDate';";
   $result = mysqli_query($dbconn,$sql);
   $row = mysqli_fetch_assoc($result);
   array_push($res['min_max_avg'], $row);
   //GET ALL RESULTS
-  $sql = "SELECT profile_id,date,sleep_time FROM day_profile WHERE user_id = '$token[user_id]' AND date between '$fromDate' and '$toDate';";
+  $sql = "SELECT profile_id,date,sleep_time FROM day_profile WHERE user_id = '$userInfo[user_id]' AND date between '$fromDate' and '$toDate';";
   $result = mysqli_query($dbconn,$sql);
   for($i=0;$i<$result->num_rows;$i++){
     $row = mysqli_fetch_assoc($result);

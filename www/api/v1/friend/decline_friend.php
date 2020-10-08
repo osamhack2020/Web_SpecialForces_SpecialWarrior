@@ -11,7 +11,7 @@ try{
     throw new Exception("대상이 입력되지 않았습니다");
   
   //DELETE REQUEST
-  $sql = "DELETE FROM comrade WHERE me='$input[target]' AND comrade='$token[user_id]'; "; // me is opponent(requester)
+  $sql = "DELETE FROM comrade WHERE me='$input[target]' AND comrade='$userInfo[user_id]'; "; // me is opponent(requester)
   $result = mysqli_query($dbconn,$sql);
   $res['success']=true;
 }

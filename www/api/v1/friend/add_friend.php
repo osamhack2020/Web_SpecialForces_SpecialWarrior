@@ -12,7 +12,7 @@ try{
     throw new Exception("자신은 추가할 수 없습니다");
   
   //check overlap
-  $sql = "SELECT * FROM comrade WHERE me = '$token[user_id]' AND comrade = '$input[target]'";
+  $sql = "SELECT * FROM comrade WHERE me = '$userInfo[user_id]' AND comrade = '$input[target]'";
   $result = mysqli_query($dbconn,$sql);
   $cnt = $result->num_rows;
   if($cnt)
@@ -28,7 +28,7 @@ try{
   if(empty($input['target']))
     throw new Exception("대상이 입력되지 않았습니다");
   
-  $sql = "INSERT INTO comrade(me, comrade) VALUES('$token[user_id]','$input[target]')";
+  $sql = "INSERT INTO comrade(me, comrade) VALUES('$userInfo[user_id]','$input[target]')";
   $result = mysqli_query($dbconn,$sql);
   $res['success']=true;
 }

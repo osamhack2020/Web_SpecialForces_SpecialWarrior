@@ -22,7 +22,7 @@ try{
   }
   
   $today_profile_id = get_today_profile_id($dbconn,$token)['result'][0]['profile_id'];
-  $sql = "INSERT INTO exercise_profile(exercise_id,exercise_weight,exercise_count,exercise_time,profile_id,user_id) VALUES($input[exercise_id],$input[exercise_weight],$input[exercise_count],$input[exercise_time],$today_profile_id,'$token[user_id]');";
+  $sql = "INSERT INTO exercise_profile(exercise_id,exercise_weight,exercise_count,exercise_time,profile_id,user_id) VALUES($input[exercise_id],$input[exercise_weight],$input[exercise_count],$input[exercise_time],$today_profile_id,'$userInfo[user_id]');";
   mysqli_query($dbconn,$sql);
   $res['success']=true;
 }

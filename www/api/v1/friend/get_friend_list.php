@@ -7,14 +7,14 @@ $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"result"=>array("requested"=>array(),"friend"=>array()));
 
 try{ 
-  $sql = "SELECT me as user_id FROM comrade WHERE comrade='$token[user_id]' AND accepted = 0;"; //opponent -> me (not accepted yet)
+  $sql = "SELECT me as user_id FROM comrade WHERE comrade='$userInfo[user_id]' AND accepted = 0;"; //opponent -> me (not accepted yet)
   $result = mysqli_query($dbconn,$sql);
   for($i=0;$i<$result->num_rows;$i++){
     $row = mysqli_fetch_assoc($result);
     
     array_push($res['result']['requested'], $row);
   }
-  $sql = "SELECT comrade as user_id FROM comrade WHERE me='$token[user_id]' AND accepted = 1;";
+  $sql = "SELECT comrade as user_id FROM comrade WHERE me='$userInfo[user_id]' AND accepted = 1;";
   $result = mysqli_query($dbconn,$sql);
   for($i=0;$i<$result->num_rows;$i++){
     $row = mysqli_fetch_assoc($result);

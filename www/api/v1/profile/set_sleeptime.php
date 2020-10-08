@@ -14,7 +14,7 @@ try{
   $today_profile_id = get_today_profile_id($dbconn,$token)['result'][0]['profile_id'];
   
   // UPDATE DATA
-  $sql = "UPDATE day_profile SET sleep_time=$input[sleep_time] WHERE user_id = '$token[user_id]' AND profile_id=$today_profile_id; ";
+  $sql = "UPDATE day_profile SET sleep_time=$input[sleep_time] WHERE user_id = '$userInfo[user_id]' AND profile_id=$today_profile_id; ";
   mysqli_query($dbconn,$sql);
   $res['success']=true;
 }
