@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: specialforces
+  title: SpecialForces API Documentation
   version: '1.0'
   contact:
     name: Seong Cheol Park
@@ -13,7 +13,9 @@ info:
     모든 API는 로그인 시 발급되는 access_token을 이용해 액세스 하여야 하며,<br>
     access_token이 없거나, 유효하지 않을 시 401 에러와 오류 메시지를 반환합니다.
 
-
+    > Changelog
+    2020-10-07 warrior 테이블에 name(이름) 필드 추가
+    2020-10-10 heartrate 테이블 및 API 추가
 
     > 운동 종류<br>
     {<br>
@@ -337,7 +339,7 @@ paths:
               schema:
                 type: object
       description: |
-        자신의 아이디에 운동 프로필을 추가합니다.
+        자신의 아이디에 (오늘의) 운동 프로필을 추가합니다. 지난 날짜는 추가할 수 없습니다.
         > !! exercise_weight, exercise_count, exercise_time 중 하나는 입력해야 합니다.
 
         >운동 종류는 ___/exercise/get_exercises 에서 가져올 수 있음. 실 데이터는 Overview 참고
@@ -368,7 +370,7 @@ paths:
                   exercise_time: 30
         description: |-
           1번 예제
-          > 윗몸일으키기 100개, 30분 동안 함
+          > 오늘 윗몸일으키기 100개, 30분 동안 함
       tags:
         - 운동
     parameters: []
@@ -784,7 +786,7 @@ paths:
                     items:
                       type: string
               examples:
-                example-2:
+                example-1:
                   value:
                     success: true
                     result:
@@ -990,6 +992,8 @@ paths:
                           type: integer
                         sleep_time:
                           type: integer
+                        heartrate_average:
+                          type: integer
               examples:
                 example-1:
                   value:
@@ -1002,6 +1006,7 @@ paths:
                         height: null
                         calorie: null
                         sleep_time: null
+                        heartrate_average: null
                 example-2:
                   value:
                     success: true
@@ -1013,6 +1018,19 @@ paths:
                         height: '190'
                         calorie: '2200'
                         sleep_time: '240'
+                        heartrate_average: null
+                example-3:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '42'
+                        user_id: string
+                        date: '2020-10-10'
+                        weight: null
+                        height: null
+                        calorie: null
+                        sleep_time: null
+                        heartrate_average: 120
       description: 오늘 혹은 지정한 날짜의 일일 프로필을 가져옵니다.
       requestBody:
         content:
@@ -1029,7 +1047,7 @@ paths:
               example-2:
                 value:
                   date: '2020-10-05'
-        description: ''
+        description: date를 입력하지 않으면 자동으로 오늘의 일일 프로필을 가져옵니다
       tags:
         - 프로필
   /api/v1/profile/get_sleeptime_data:
@@ -1159,6 +1177,308 @@ paths:
         >입력① ~ 다음입력② 사이의 체중은 ①로 유지됩니다. (회의내용)<br>
         Ex) 2020-10-01 30kg 입력, 2020-10-06 40kg 입력시<br>
         2020-10-01 ~ 2020-10-05 -> 30kg<br>2020-10-06 -> 40kg 
+  /api/v1/exercise/get_exercise_profile_data:
+    post:
+      summary: 운동 프로필 가져오기 API
+      operationId: post-api-v1-exercise-get_exercise_profile_data
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        exercise_profile_id:
+                          type: integer
+                        exercise_id:
+                          type: integer
+                          description: 운동 종류입니다
+                        exercise_weight:
+                          type: integer
+                        exercise_count:
+                          type: integer
+                        exercise_time:
+                          type: integer
+                          description: in minutes
+                        profile_id:
+                          type: string
+                        user_id:
+                          type: string
+                        created_at:
+                          type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - exercise_profile_id: '2'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '3'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '4'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '5'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '7'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '400'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+      description: 지정한 날짜의 운동 프로필을 가져옵니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: 기본값 오늘
+            examples:
+              example-1:
+                value: {}
+              example-2:
+                value:
+                  date: '2020-10-10'
+        description: date 기본값은 오늘입니다.(미지정시 오늘)
+      tags:
+        - 운동
+  /api/v1/heartrate/get_heartrate_profile_by_date:
+    post:
+      summary: 날짜로 심박수 가져오기 API
+      operationId: post-api-v1-heartrate-get_heartrate_profile_by_date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                        result:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              heartrate_profile_id:
+                                type: string
+                              heartrate:
+                                type: string
+                              profile_id:
+                                type: string
+                              user_id:
+                                type: string
+                              created_at:
+                                type: string
+                        min_max_avg:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              min:
+                                type: string
+                              max:
+                                type: string
+                              average:
+                                type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - date: '2020-10-10'
+                        result:
+                          - heartrate_profile_id: '1'
+                            heartrate: '80'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 22:56:57'
+                          - heartrate_profile_id: '2'
+                            heartrate: '90'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:03'
+                          - heartrate_profile_id: '3'
+                            heartrate: '100'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:06'
+                        min_max_avg:
+                          - min: '80'
+                            max: '100'
+                            average: '90'
+      description: |-
+        지정된 날짜의 모든 심박수 데이터를 가져옵니다.
+
+        그 날의 최대, 최소, 평균이 포함되어 있습니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: YYYY-mm-dd (기본값 오늘)
+        description: ''
+      tags:
+        - 심박수
+  /api/v1/heartrate/add_heartrate_profile:
+    parameters: []
+    post:
+      summary: 심박수 프로필 추가 API
+      operationId: post-api-v1-heartrate-add_heartrate_profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+      description: 오늘 일일 프로필에 심박수 프로필을 추가합니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                heartrate:
+                  type: integer
+                  description: |
+                    심박수
+              required:
+                - heartrate
+      tags:
+        - 심박수
+  /api/v1/heartrate/get_heartrate_profile_data:
+    get:
+      summary: 심박수 프로필 30일치 가져오기 API
+      tags:
+        - 심박수
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                        result:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              heartrate_profile_id:
+                                type: string
+                              heartrate:
+                                type: string
+                              profile_id:
+                                type: string
+                              user_id:
+                                type: string
+                              created_at:
+                                type: string
+                        min_max_avg:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              min:
+                                type: string
+                              max:
+                                type: string
+                              average:
+                                type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - date: '2020-10-10'
+                        result:
+                          - heartrate_profile_id: '1'
+                            heartrate: '80'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 22:56:57'
+                          - heartrate_profile_id: '2'
+                            heartrate: '90'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:03'
+                          - heartrate_profile_id: '3'
+                            heartrate: '100'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:06'
+                        min_max_avg:
+                          - min: '80'
+                            max: '100'
+                            average: '90'
+      operationId: get-api-v1-heartrate-get_heartrate_profile_data
+      description: 일별로 30일치 가져오기
 components:
   schemas: {}
   securitySchemes:
@@ -1182,3 +1502,4 @@ tags:
   - name: 프로필
   - name: 전우
   - name: 운동
+  - name: 심박수
