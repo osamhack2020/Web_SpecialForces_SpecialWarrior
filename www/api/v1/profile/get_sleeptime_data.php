@@ -30,5 +30,5 @@ catch(Exception $e){
   http_response_code(400); //bad request
   $res['message'] = $e->getMessage();
 }
-echo json_encode($res);
+echo json_encode($res,JSON_UNESCAPED_UNICODE);
 ?>

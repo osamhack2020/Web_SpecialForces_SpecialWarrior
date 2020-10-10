@@ -37,5 +37,5 @@ catch(Exception $e){
   $res['message'] = $e->getMessage();
 }
 
-echo json_encode($res);
+echo json_encode($res,JSON_UNESCAPED_UNICODE);
 ?>
