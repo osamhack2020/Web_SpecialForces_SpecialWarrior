@@ -5,5 +5,5 @@ if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
     die;
 }
 $token = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
-$userInfo = $storage->getUserDetails($token['user_id']);
+$userInfo = $storage->getUserInfo($token['user_id']);
 ?>

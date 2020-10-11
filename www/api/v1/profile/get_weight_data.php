@@ -13,7 +13,7 @@ $toDate = $date;
 
 try{
   //GET AVERAGE
-  $sql = "SELECT CAST(MIN(weight) as UNSIGNED) as min,CAST(MAX(weight) as UNSIGNED) as max,CAST(AVG(weight) as UNSIGNED) as average FROM day_profile WHERE user_id = '$token[user_id]' AND date between '$fromDate' and '$toDate';";
+  $sql = "SELECT CAST(MIN(weight) as UNSIGNED) as min,CAST(MAX(weight) as UNSIGNED) as max,CAST(AVG(weight) as UNSIGNED) as average FROM day_profile WHERE user_id = '$userInfo[user_id]' AND date between '$fromDate' and '$toDate';";
   $result = mysqli_query($dbconn,$sql);
   $row = mysqli_fetch_assoc($result);
   array_push($res['min_max_avg'], $row);
