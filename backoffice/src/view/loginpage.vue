@@ -2,7 +2,8 @@
   <v-app>
     <v-container fill-height>
       <v-card
-        class="mx-auto px-5 col-3"
+        min-width="400"
+        class="mx-auto px-5"
         align="center"
         elevation="10"
       >
@@ -35,8 +36,15 @@
             가입하기
           </div>
         </v-card-text>
+        <div class="mx-auto"
+        align="center"
+        elevation="10">
+          <v-alert max-width="330" dismissible dense v-for="item in this.$store.state.alerts" :key="item.idx" :type="item.type">
+            {{ item.message }}
+          </v-alert>
+      </div>
       </v-card>
-
+      
       <v-dialog
         v-model="showSignUpForm"
         max-width="600px"
@@ -120,7 +128,7 @@
             <v-btn
               color="blue darken-1"
               text
-              @click="showSignUpForm = false; signup(signUpData);"
+              @click="signup(signUpData);"
             >
               회원가입
             </v-btn>
@@ -157,6 +165,7 @@ export default {
         if(data.password == data.password_again){
           this.$store.dispatch('signup', data);
         }
+        this.showSignUpForm=false;
       }
     }
 }

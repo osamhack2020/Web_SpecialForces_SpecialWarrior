@@ -7,9 +7,11 @@ Vue.use(Vuex);
 
 const resourceHost = "https://spefor.ml/api/v1";
 const localTokenData = JSON.parse(localStorage.getItem('tokenData'));
-const localUserData = JSON.parse(localStorage.getItem('userData'));
 const initialState = localTokenData?  localTokenData : null;
+
+const localUserData = JSON.parse(localStorage.getItem('userData'));
 const initialUserData = localUserData?  localUserData : null;
+
 function SaveToken(state){
     localStorage.setItem('tokenData',JSON.stringify(state.tokenData));
 }
@@ -17,12 +19,33 @@ function SaveUser(state){
     localStorage.setItem('userData',JSON.stringify(state.userData));
 }
 
+const axiosInterceptor = axios.interceptors.response.use(
+    function (response) {
+        //status == 200
+        return response;
+    },
+
+    function (error) {
+        //status != 200
+        
+        if(error.response.data.error) //FROM AUTH Process
+            //alert(error.response.data.error_description);
+            store.commit('pushAlert',{idx:store.state.alerts.length,type:'error',message:error.response.data.error_description});
+        else //FROM API
+            store.commit('pushAlert',{idx:store.state.alerts.length,type:'error',message:error.response.data.message});
+
+        return Promise.reject(error);
+    }
+);
+axiosInterceptor;
+
 export const store = new Vuex.Store({
     state:{
         userData:initialUserData,
         tokenData:initialState,
-        showSnackbar:true,
-        snackbarMessage:"",
+        alerts:[
+            
+        ],
     },
     getters:{
         getTokenData: function(state){
@@ -33,12 +56,11 @@ export const store = new Vuex.Store({
         OnLoginSuccess(){
             router.push('/');
         },
-        showSnackbar(state,payload){
-            state.showSnackbar = true;
-            state.snackbarMessage = payload.message;
+        pushAlert(state,payload){
+            state.alerts.push({idx:state.alerts.length,message:payload.message,type:payload.type});
         },
-        closeSnackbar(state){
-            state.showSnackbar = false;
+        closeAlert(state,payload){
+            state.alerts.splice(payload.idx,1);
         },
         SetTokenData(state,payload){
             state.tokenData = payload;

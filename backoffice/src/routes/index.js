@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { store } from '../store';
-import loginpage from '../components/loginpage.vue';
-import mainpage from '../components/mainpage.vue';
 
+import loginpage from '../view/loginpage.vue';
+import mainpage from '../view/mainpage.vue';
+import notfound from '../view/notfound.vue';
 Vue.use(VueRouter);
 
 const requireAuth = () => (to, from, next) => { 
@@ -17,6 +18,11 @@ const router = new VueRouter({
     mode: 'history',
     routes: [
         {
+            path: '*',
+            name: 'notfound',
+            component: notfound,
+        },
+        {
             path: '/',
             name: 'home',
             component: mainpage,
@@ -25,7 +31,7 @@ const router = new VueRouter({
         {
             path: '/login',
             name: 'login',
-            component: loginpage
+            component: loginpage,
         },
     ]
 });
