@@ -14,22 +14,39 @@
 
         <v-btn
           v-for="link in links"
-          :key="link"
+          :key="link.name"
           text
+          :to="link.to"
         >
-          {{ link }}
+          {{ link.name }}
         </v-btn>
 
         <v-spacer></v-spacer>
 
-        <v-responsive max-width="260">
-          <v-text-field
-            dense
-            flat
-            hide-details
-            rounded
-            solo-inverted
-          >{{ this.$store.state.userData }}</v-text-field>
+        <v-responsive align="right">
+            <!-- <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="primary"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Dropdown
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in items"
+                  :key="index"
+                >
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu> -->
+              <v-chip small class="mr-1">{{ this.$store.getters.getUserData.unit_name }} <v-icon>mdi-chevron-down</v-icon></v-chip><br>
+              <v-chip small class="mr-1">{{ this.$store.getters.getUserData.name }}</v-chip>
+              <v-chip small class="mr-1" @click="logout()"><v-icon>mdi-power</v-icon>로그아웃</v-chip>
         </v-responsive>
       </v-container>
     </v-app-bar>
@@ -83,16 +100,37 @@
 </template>
 
 <script>
+import axios from 'axios';
+import {store} from '../store';
   export default {
     name:'mainpage',
     data: () => ({
       links: [
-        'Dashboard',
-        'Messages',
-        'Profile',
-        'Updates',
+        {name:'병사관리',to:'/management'},
+        {name:'모아보기',to:'/collection'},
+        {name:'전사현황',to:'/statusmanagement'},
+        {name:'FAQ',to:'/faq'},
+        {name:'공지사항',to:'/notice'},
       ],
+      accessibleUnit:{},
     }),
+    methods:{
+      getAccessibleUnit(){
+        axios(
+          {
+          method: 'get',
+          url: `${store.resourceHost}/cadre/get_warriors`,
+        })
+        .then((response)=>{
+            if(response.status==200){
+              this.accessibleUnit = response.data;
+            }
+        });
+      },
+      logout(){
+        this.$store.dispatch('logout');
+      }
+    },
   }
 </script>
 

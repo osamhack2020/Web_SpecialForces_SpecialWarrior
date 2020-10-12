@@ -1,6 +1,6 @@
 module.exports = {
   "outputDir": "docs",
-  "publicPath": "/SpecialForces-BackOffice/",
+  "publicPath": "",
   "devServer": {
     "host": "0.0.0.0",
     "disableHostCheck": true,

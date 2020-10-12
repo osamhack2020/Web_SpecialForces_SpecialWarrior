@@ -19,6 +19,12 @@ function SaveUser(state){
     localStorage.setItem('userData',JSON.stringify(state.userData));
 }
 
+function ClearToken(){
+    localStorage.removeItem('tokenData');
+}
+function ClearUser(){
+    localStorage.removeItem('userData');
+}
 const axiosInterceptor = axios.interceptors.response.use(
     function (response) {
         //status == 200
@@ -50,11 +56,17 @@ export const store = new Vuex.Store({
     getters:{
         getTokenData: function(state){
             return state.tokenData;
+        },
+        getUserData: function(state){
+            return state.userData[0];
         }
     },
     mutations:{
         OnLoginSuccess(){
             router.push('/');
+        },
+        OnLogout(){
+            router.push('/login');
         },
         pushAlert(state,payload){
             state.alerts.push({idx:state.alerts.length,message:payload.message,type:payload.type});
@@ -68,6 +80,7 @@ export const store = new Vuex.Store({
         },
         UnsetTokenData(state){
             state.tokenData = null;
+            ClearToken();
         },
         SetUserData(state,payload){
             state.userData = payload;
@@ -75,6 +88,7 @@ export const store = new Vuex.Store({
         },
         UnsetUserData(state){
             state.userData = null;
+            ClearUser();
         },
         SetAuthorization(state){
             axios.defaults.headers.common['Authorization'] = `Bearer ${state.tokenData.access_token}`
@@ -114,8 +128,10 @@ export const store = new Vuex.Store({
                   }
               });
         },
-        logout(){
-            localStorage.removeItem('tokenData');
+        logout({commit}){
+            commit('UnsetTokenData');
+            commit('UnsetUserData');
+            commit('OnLogout');
         },
         signup({commit}, payload){
             axios(
