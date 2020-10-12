@@ -49,13 +49,13 @@ class UserCredentials implements GrantTypeInterface
     public function validateRequest(RequestInterface $request, ResponseInterface $response)
     {
         if (!$request->request("password") || !$request->request("user_id")) {
-            $response->setError(400, 'invalid_request', 'Missing parameters: "user_id" and "password" required');
+            $response->setError(400, 'invalid_request', '아이디 혹은 패스워드가 입력되지 않았습니다');
 
             return null;
         }
 
         if (!$this->storage->checkUserCredentials($request->request("user_id"), $request->request("password"))) {
-            $response->setError(401, 'invalid_grant', 'Invalid username and password combination');
+            $response->setError(401, 'invalid_grant', '아이디와 패스워드가 일치하지 않습니다');
 
             return null;
         }
@@ -63,7 +63,7 @@ class UserCredentials implements GrantTypeInterface
         $userInfo = $this->storage->getUserDetails($request->request("user_id"));
 
         if (empty($userInfo)) {
-            $response->setError(400, 'invalid_grant', 'Unable to retrieve user information');
+            $response->setError(400, 'invalid_grant', '유저 정보가 없습니다');
 
             return null;
         }
