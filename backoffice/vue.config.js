@@ -1,5 +1,5 @@
 module.exports = {
-  "outputDir": "docs",
+  "outputDir": "../docs",
   "publicPath": "",
   "devServer": {
     "host": "0.0.0.0",

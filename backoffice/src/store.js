@@ -52,6 +52,7 @@ export const store = new Vuex.Store({
         alerts:[
             
         ],
+        accessibleUnit:null,
     },
     getters:{
         getTokenData: function(state){
@@ -59,10 +60,15 @@ export const store = new Vuex.Store({
         },
         getUserData: function(state){
             return state.userData[0];
-        }
+        },
+        getAccessibleUnit:function(state){
+            return state.accessibleUnit;
+        },
     },
     mutations:{
         OnLoginSuccess(){
+            this.dispatch("getAccessibleUnit");
+            this.commit('SetAuthorization');
             router.push('/');
         },
         OnLogout(){
@@ -92,6 +98,10 @@ export const store = new Vuex.Store({
         },
         SetAuthorization(state){
             axios.defaults.headers.common['Authorization'] = `Bearer ${state.tokenData.access_token}`
+        },
+
+        SetAccessibleUnit(state,payload){
+            state.accessibleUnit = payload;
         }
     },
     actions:{
@@ -123,7 +133,6 @@ export const store = new Vuex.Store({
               .then((response)=>{
                   if(response.status==200){
                     commit("SetTokenData",response.data);
-                    commit("SetAuthorization");
                     this.dispatch('fetchUser');
                   }
               });
@@ -150,10 +159,22 @@ export const store = new Vuex.Store({
               })
               .then((response)=>{
                   if(response.status==200){
-                    commit("showSnackbar",{message:"fdsa"});
+                    commit("pushAlert",{message:response.result,type:"error"});
                   }
               });
-        }
+        },
+        getAccessibleUnit({commit}){
+            axios(
+              {
+              method: 'get',
+              url: `${resourceHost}/cadre/get_accessible_unit`,
+            })
+            .then((response)=>{
+                if(response.status==200){
+                  commit('SetAccessibleUnit',response.data.result[0]);
+                }
+            });
+          },
     }
     
 })

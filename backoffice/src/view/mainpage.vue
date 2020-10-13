@@ -24,27 +24,24 @@
         <v-spacer></v-spacer>
 
         <v-responsive align="right">
-            <!-- <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="primary"
-                  dark
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  Dropdown
-                </v-btn>
-              </template>
+          {{this.$store.getters.getAccessibleUnit}}
+            <v-menu offset-y>
               <v-list>
                 <v-list-item
-                  v-for="(item, index) in items"
+                  v-for="(item, index) in this.$store.getters.getAccessibleUnit"
                   :key="index"
                 >
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                  <v-list-item-title>{{ item.unit_full_name }}</v-list-item-title>
                 </v-list-item>
               </v-list>
-            </v-menu> -->
-              <v-chip small class="mr-1">{{ this.$store.getters.getUserData.unit_name }} <v-icon>mdi-chevron-down</v-icon></v-chip><br>
+            </v-menu>
+              <v-chip small class="mr-1" @click="getAccessibleUnit();">
+                {{ this.$store.getters.getUserData.unit_full_name }}
+                <v-icon>mdi-chevron-down</v-icon>
+              </v-chip>
+
+              <br>
+
               <v-chip small class="mr-1">{{ this.$store.getters.getUserData.name }}</v-chip>
               <v-chip small class="mr-1" @click="logout()"><v-icon>mdi-power</v-icon>로그아웃</v-chip>
         </v-responsive>
@@ -100,8 +97,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import {store} from '../store';
   export default {
     name:'mainpage',
     data: () => ({
@@ -112,20 +107,13 @@ import {store} from '../store';
         {name:'FAQ',to:'/faq'},
         {name:'공지사항',to:'/notice'},
       ],
-      accessibleUnit:{},
     }),
+    rendered(){
+      this.getAccessibleUnit();
+    },
     methods:{
       getAccessibleUnit(){
-        axios(
-          {
-          method: 'get',
-          url: `${store.resourceHost}/cadre/get_warriors`,
-        })
-        .then((response)=>{
-            if(response.status==200){
-              this.accessibleUnit = response.data;
-            }
-        });
+        this.$store.dispatch('getAccessibleUnit');
       },
       logout(){
         this.$store.dispatch('logout');
