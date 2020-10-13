@@ -1,0 +1,1505 @@
+openapi: 3.0.0
+info:
+  title: SpecialForces API Documentation
+  version: '1.0'
+  contact:
+    name: Seong Cheol Park
+    url: '-'
+    email: gorae02@gmail.com
+  description: |-
+    Special Forces API documentation
+
+    >
+    모든 API는 로그인 시 발급되는 access_token을 이용해 액세스 하여야 하며,<br>
+    access_token이 없거나, 유효하지 않을 시 401 에러와 오류 메시지를 반환합니다.
+
+    > Changelog
+    2020-10-07 warrior 테이블에 name(이름) 필드 추가
+    2020-10-10 heartrate 테이블 및 API 추가
+
+    > 운동 종류<br>
+    {<br>
+    0: 팔굽<br>
+    1: 윗몸<br>
+    2: 뜀뛰기<br>
+    3: 벤치프레스<br>
+    4: 렛풀다운 <br>
+    5: 레그 익스텐션 <br>
+    6: 레그 프레스 <br>
+    7: 케이블 크로스오버<br>
+    }
+servers:
+  - url: 'https://spefor.ml'
+paths:
+  /api/v1/auth/login:
+    post:
+      summary: Login API
+      operationId: post-api-v1-auth-login
+      responses:
+        '200':
+          description: 토큰 정보 응답
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+                  token_type:
+                    type: string
+                  scope: {}
+                  refresh_token:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    access_token: 3acfb3bea5cefc3aecc0b25f50b9539b6f5df3dc
+                    expires_in: 3600
+                    token_type: Bearer
+                    scope: null
+                    refresh_token: 636b6291c0398a16244f08b3fae42a4b277342ab
+      description: 로그인
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                client_id:
+                  type: string
+                user_id:
+                  type: string
+                password:
+                  type: string
+              required:
+                - grant_type
+                - client_id
+                - user_id
+                - password
+            examples:
+              example-1:
+                value:
+                  grant_type: password
+                  client_id: app
+                  user_id: someuser
+                  password: verystrongpassword
+        description: |-
+          >앱에서 요청 시 grant_type="password", client_id="app" 입니다.<br>
+          Content-Type 에 유의하시기 바랍니다.(application/json)
+      parameters: []
+      security: []
+      tags:
+        - 멤버
+  /api/v1/test/testapi:
+    get:
+      summary: API 접근 테스트 API
+      tags:
+        - 테스트
+      responses:
+        '200':
+          description: API 접근 성공
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: API 접근 성공!
+        '401':
+          description: Unauthorized (접근 권한 없음 - Token Invalid)
+      operationId: get-api-v1-test-testapi
+      description: API 사용 테스트
+  /api/v1/test/testconnection:
+    get:
+      summary: 서버 접속 테스트 API
+      tags:
+        - 테스트
+      responses:
+        '200':
+          description: 서버 접속 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: server all good!
+      operationId: get-api-v1-test-test2
+      description: 서버 접속 테스트 API
+      security: []
+    parameters: []
+  /api/v1/member/register:
+    parameters: []
+    post:
+      summary: 회원가입 API
+      operationId: post-api-v1-member-register
+      responses:
+        '200':
+          description: 회원가입 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+          headers: {}
+        '400':
+          description: '회원가입 실패(중복, 생략등의 이유)'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: false
+                    message: 소속은(는) 공백일 수 없습니다
+      description: |-
+        회원가입 API
+
+        계급은 class 입니다 0: 이병, 1:일병, 2:상병, 3:병장
+
+        > 2020-10-07 이름 추가했습니다
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                password:
+                  type: string
+                class:
+                  type: integer
+                  description: |-
+                    계급입니다.
+                    입력되지 않을 시 자동으로 이병(기본값 0)
+                cadre_flag:
+                  type: boolean
+                  description: |-
+                    간부 여부입니다.
+                    입력되지 않을 시 자동으로 병사(기본값 false)
+                army_num:
+                  type: string
+                unit_id:
+                  type: integer
+                name:
+                  type: string
+                  description: 이름
+                email:
+                  type: string
+                phone:
+                  type: string
+              required:
+                - user_id
+                - password
+                - army_num
+                - unit_id
+                - name
+                - email
+                - phone
+            examples:
+              example-1:
+                value:
+                  user_id: someuser
+                  password: verystrongpassword
+                  class: 1
+                  cadre_flag: false
+                  army_num: 20-00000000
+                  unit_id: 8839
+                  email: em@i.l
+                  phone: 010-0000-0000
+        description: 회원가입 요청
+      security: []
+      tags:
+        - 멤버
+  /api/v1/member/find_afflication:
+    get:
+      summary: 부대 검색 API
+      tags:
+        - 멤버
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - 지상작전사령부 정보통신여단 111대대
+                      - 지상작전사령부 정보통신여단 112대대
+                      - 지상작전사령부 정보통신여단 311대대
+                      - 지상작전사령부 정보통신여단 312대대
+      operationId: get-api-v1-member-findafflication
+      description: |-
+        부대를 substring 으로 검색하여 결과를 반환합니다.
+        (미구현 상태)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                substring:
+                  type: string
+              required:
+                - substring
+            examples:
+              example-1:
+                value:
+                  substring: 정보통신여단
+      security: []
+    parameters: []
+  /api/v1/exercise/add_exercise_profile:
+    post:
+      summary: 운동 프로필 추가 API
+      operationId: post-api-v1-exercise-add_exercise_profile
+      responses:
+        '200':
+          description: 처리결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - success
+                  - message
+              examples:
+                example-1:
+                  value:
+                    success: false
+                    message: 입력 된 기록이 없습니다
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+      description: |
+        자신의 아이디에 (오늘의) 운동 프로필을 추가합니다. 지난 날짜는 추가할 수 없습니다.
+        > !! exercise_weight, exercise_count, exercise_time 중 하나는 입력해야 합니다.
+
+        >운동 종류는 ___/exercise/get_exercises 에서 가져올 수 있음. 실 데이터는 Overview 참고
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                exercise_id:
+                  type: integer
+                  description: 운동 종류 코드입니다
+                exercise_weight:
+                  type: integer
+                exercise_count:
+                  type: integer
+                exercise_time:
+                  type: integer
+                  description: 분 단위
+              required:
+                - exercise_id
+            examples:
+              example-1:
+                value:
+                  exercise_id: 0
+                  exercise_weight: 0
+                  exercise_count: 100
+                  exercise_time: 30
+        description: |-
+          1번 예제
+          > 오늘 윗몸일으키기 100개, 30분 동안 함
+      tags:
+        - 운동
+    parameters: []
+  /api/v1/profile/set_weight:
+    post:
+      summary: 체중 입력 API
+      operationId: post-api-v1-profile-setweight
+      responses:
+        '200':
+          description: 처리 결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: |-
+        자신의 체중을 입력합니다. <br>
+        >체중 기입일 ~ 미기입기간 ~ 기입일 사이는 현재 입력하는 체중으로 채워집니다.<br> 예) 7월 15일, 7월 20일에 180kg 입력했다면, 7/15 ~ 7/20은 180kg.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                weight:
+                  type: integer
+              required:
+                - weight
+            examples:
+              example-1:
+                value:
+                  weight: 180
+        description: 체중 입력
+      tags:
+        - 프로필
+    parameters: []
+  /api/v1/profile/set_sleeptime:
+    parameters: []
+    post:
+      summary: 수면시간 입력 API
+      operationId: post-api-v1-profile-set_sleeptime
+      responses:
+        '200':
+          description: 처리 결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: 수면 시간 입력 API입니다. 수면 시간을 입력받아 오늘의 profile에 저장합니다.
+      tags:
+        - 프로필
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sleep_time:
+                  type: integer
+                  description: 분단위
+            examples:
+              example-1:
+                value:
+                  sleep_time: 480
+  /api/v1/friend/get_friend_list:
+    get:
+      summary: 전우 목록 API
+      tags:
+        - 전우
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: object
+                    properties:
+                      requested:
+                        type: array
+                        uniqueItems: true
+                        minItems: 1
+                        items:
+                          required:
+                            - user_id
+                          properties:
+                            user_id:
+                              type: string
+                              minLength: 1
+                      friend:
+                        type: array
+                        items:
+                          required: []
+                          properties: {}
+                    required:
+                      - requested
+                      - friend
+                required:
+                  - success
+                  - result
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      requested:
+                        - user_id: string
+                      friend:
+                        - user_id: somefriend
+      operationId: get-api-friend-list
+      description: |-
+        자신의 전우 목록을 리스팅합니다
+        > requested 는 친구 요청 받으나, 아직 본인이 수락하지 않은 상대의 아이디.<br>
+         friend 는 상호 수락으로 친구가 된 상대의 아이디입니다.
+    parameters: []
+  /api/v1/friend/add_friend:
+    post:
+      summary: 전우 추가 API
+      operationId: post-api-v1-friend-add_friend
+      description: 상대를 전우로 추가합니다. 수락은 별도입니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+                  description: 상대의 아이디입니다
+              required:
+                - target
+            examples:
+              example-1:
+                value:
+                  target: id_of_target
+        description: ''
+      tags:
+        - 전우
+      responses:
+        '200':
+          description: 처리 결과 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+                example-2:
+                  value:
+                    success: false
+                    message: 이미 요청되었습니다
+                example-3:
+                  value:
+                    success: false
+                    message: 그런 대상은 없습니다
+                example-4:
+                  value:
+                    success: false
+                    message: 자신은 추가할 수 없습니다
+    parameters: []
+  /api/v1/friend/accept_friend:
+    post:
+      summary: 전우 추가 수락 API
+      operationId: post-api-v1-friend-accept_friend
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: 상대의 전우 추가 요청을 수락합니다
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+              required:
+                - target
+            examples:
+              example-1:
+                value:
+                  target: someone_to_accept
+      tags:
+        - 전우
+    parameters: []
+  /api/v1/friend/decline_friend:
+    post:
+      summary: 전우 추가 거절 API
+      operationId: post-api-v1-friend-decline_friend
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      description: 상대의 전우 추가 요청을 거절합니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target:
+                  type: string
+              required:
+                - target
+            examples:
+              example-1:
+                value:
+                  target: someone_to_decline
+      tags:
+        - 전우
+    parameters: []
+  /api/v1/member/get_userinfo:
+    get:
+      summary: 유저 정보 API
+      tags:
+        - 멤버
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
+                        password:
+                          type: string
+                        cadre_flag:
+                          type: string
+                        admin_flag:
+                          type: string
+                        class:
+                          type: string
+                        army_num:
+                          type: string
+                        unit_id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        phone:
+                          type: string
+                        created_at:
+                          type: string
+                        accessed_at:
+                          type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - user_id: qwe
+                        password: 056eafe7cf52220de2df36845b8ed170c67e23e3
+                        cadre_flag: '1'
+                        admin_flag: '0'
+                        class: '0'
+                        army_num: qwe
+                        unit_id: '123'
+                        name: 김철수
+                        email: qwe
+                        phone: qwe
+                        created_at: '2020-10-07 19:35:41'
+                        accessed_at: '2020-10-07 23:54:22'
+        '':
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      required:
+                        - user_id
+                        - class
+                        - army_num
+                        - unit_id
+                        - email
+                        - phone
+                        - created_at
+                      properties:
+                        user_id:
+                          type: string
+                        class:
+                          type: integer
+                        army_num:
+                          type: string
+                        unit_id:
+                          type: integer
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        phone:
+                          type: string
+                        created_at:
+                          type: string
+                required:
+                  - success
+                  - result
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - user_id: string
+                        class: '0'
+                        army_num: string
+                        unit_id: '123'
+                        email: string
+                        phone: string
+                        created_at: '2020-09-29 23:44:40'
+      operationId: get-api-v1-member-get_userinfo
+      description: |-
+        유저의 정보를 반환하는 API 입니다. 
+
+        주로 로그인 직후에 유저 정보를 받아오거나, 유저 정보를 갱신할 필요가 있을 때 사용합니다.
+
+        >2020-10-07 이름추가
+    parameters: []
+  /api/v1/exercise/get_exercise_ids:
+    get:
+      summary: 운동 종목 모두 가져오기 API
+      tags:
+        - 운동
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - exercise_id: '0'
+                        exercise_name: 팔굽혀펴기
+                        exercise_part: ''
+                      - exercise_id: '1'
+                        exercise_name: 윗몸일으키기
+                        exercise_part: ''
+                      - exercise_id: '2'
+                        exercise_name: 뜀뛰기
+                        exercise_part: ''
+                      - exercise_id: '3'
+                        exercise_name: 벤치프레스
+                        exercise_part: ''
+                      - exercise_id: '4'
+                        exercise_name: 렛풀다운
+                        exercise_part: ''
+                      - exercise_id: '5'
+                        exercise_name: 레그 익스텐션
+                        exercise_part: ''
+                      - exercise_id: '6'
+                        exercise_name: 레그 프레스
+                        exercise_part: ''
+                      - exercise_id: '7'
+                        exercise_name: 케이블 크로스오버
+                        exercise_part: ''
+        '':
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      required:
+                        - exercise_id
+                        - exercise_name
+                        - exercise_part
+                      properties:
+                        exercise_id:
+                          type: string
+                          minLength: 1
+                        exercise_name:
+                          type: string
+                          minLength: 1
+                        exercise_part:
+                          type: string
+                required:
+                  - success
+                  - result
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - exercise_id: '0'
+                        exercise_name: 팔굽혀펴기
+                        exercise_part: ''
+                      - exercise_id: '1'
+                        exercise_name: 윗몸일으키기
+                        exercise_part: ''
+                      - exercise_id: '2'
+                        exercise_name: 뜀뛰기
+                        exercise_part: ''
+                      - exercise_id: '3'
+                        exercise_name: 벤치프레스
+                        exercise_part: ''
+                      - exercise_id: '4'
+                        exercise_name: 렛풀다운
+                        exercise_part: ''
+                      - exercise_id: '5'
+                        exercise_name: 레그 익스텐션
+                        exercise_part: ''
+                      - exercise_id: '6'
+                        exercise_name: 레그 프레스
+                        exercise_part: ''
+                      - exercise_id: '7'
+                        exercise_name: 케이블 크로스오버
+                        exercise_part: ''
+          description: 결과
+      operationId: get-api-v1-exercise-get_exercises_ids
+      description: 가능한 운동(종목) 정보 을 모두 가져옵니다.
+    parameters: []
+  /api/v1/profile/set_height:
+    post:
+      summary: 신장 입력 API
+      operationId: post-api-v1-profile-set_height
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                required:
+                  - success
+                  - message
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      tags:
+        - 프로필
+      description: 신장 입력(cm)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                height:
+                  type: integer
+            examples:
+              example-1:
+                value:
+                  height: 180
+  /api/v1/profile/set_calorie:
+    post:
+      summary: 칼로리 입력 API
+      operationId: post-api-v1-profile-set_calorie
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                required:
+                  - success
+                  - message
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    message: ''
+      tags:
+        - 프로필
+      description: 칼로리 입력 (kcal)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                calorie:
+                  type: integer
+            examples:
+              example-1:
+                value:
+                  calorie: 2200
+  /api/v1/profile/get_profile:
+    post:
+      summary: 일일 프로필 가져오기 API
+      operationId: post-api-v1-profile-get_profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        profile_id:
+                          type: integer
+                        user_id:
+                          type: string
+                        date:
+                          type: string
+                          description: YYYY-MM-DD
+                        weight:
+                          type: integer
+                        height:
+                          type: integer
+                        calorie:
+                          type: integer
+                        sleep_time:
+                          type: integer
+                        heartrate_average:
+                          type: integer
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '19'
+                        user_id: string
+                        date: '2020-10-06'
+                        weight: '3'
+                        height: null
+                        calorie: null
+                        sleep_time: null
+                        heartrate_average: null
+                example-2:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '16'
+                        user_id: string
+                        date: '2020-10-05'
+                        weight: '3'
+                        height: '190'
+                        calorie: '2200'
+                        sleep_time: '240'
+                        heartrate_average: null
+                example-3:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '42'
+                        user_id: string
+                        date: '2020-10-10'
+                        weight: null
+                        height: null
+                        calorie: null
+                        sleep_time: null
+                        heartrate_average: 120
+      description: 오늘 혹은 지정한 날짜의 일일 프로필을 가져옵니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: '기본값 오늘(Today), YYYY-MM-DD'
+            examples:
+              example-1:
+                value: {}
+              example-2:
+                value:
+                  date: '2020-10-05'
+        description: date를 입력하지 않으면 자동으로 오늘의 일일 프로필을 가져옵니다
+      tags:
+        - 프로필
+  /api/v1/profile/get_sleeptime_data:
+    get:
+      summary: 수면시간 데이터 가져오기 API
+      tags:
+        - 프로필
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    description: 결과
+                    items:
+                      type: object
+                      properties:
+                        profile_id:
+                          type: integer
+                        date:
+                          type: string
+                        sleep_time:
+                          type: integer
+                  min_max_avg:
+                    type: array
+                    description: '최소,최대,평균'
+                    items:
+                      type: object
+                      properties:
+                        min:
+                          type: integer
+                        max:
+                          type: integer
+                        average:
+                          type: integer
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '7'
+                        date: '2020-10-04'
+                        sleep_time: '360'
+                      - profile_id: '16'
+                        date: '2020-10-05'
+                        sleep_time: '240'
+                      - profile_id: '19'
+                        date: '2020-10-06'
+                        sleep_time: '220'
+                    min_max_avg:
+                      - min: '220'
+                        max: '360'
+                        average: '273'
+      operationId: get-api-v1-profile-get_sleeptime_data
+      description: '수면시간을 일별로 30일치를 가져옵니다. (데이터들의 최소,최대,평균이 함께 제공됩니다)'
+  /api/v1/profile/get_weight_data:
+    get:
+      summary: 체중 데이터 가져오기 API
+      tags:
+        - 프로필
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: object
+                      properties:
+                        profile_id:
+                          type: integer
+                        date:
+                          type: string
+                          minLength: 1
+                        weight:
+                          type: integer
+                  min_max_avg:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: object
+                      properties:
+                        min:
+                          type: integer
+                        max:
+                          type: integer
+                        average:
+                          type: integer
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '7'
+                        date: '2020-10-04'
+                        weight: '30'
+                      - profile_id: '16'
+                        date: '2020-10-05'
+                        weight: '31'
+                      - profile_id: '19'
+                        date: '2020-10-06'
+                        weight: '32'
+                    min_max_avg:
+                      - min: '30'
+                        max: '32'
+                        average: '31'
+      operationId: get-api-v1-profile-get_weight_data
+      description: |-
+        체중을 일별로 30일치를 가져옵니다. (데이터들의 최소,최대,평균이 함께 제공됩니다)
+        >입력① ~ 다음입력② 사이의 체중은 ①로 유지됩니다. (회의내용)<br>
+        Ex) 2020-10-01 30kg 입력, 2020-10-06 40kg 입력시<br>
+        2020-10-01 ~ 2020-10-05 -> 30kg<br>2020-10-06 -> 40kg 
+  /api/v1/exercise/get_exercise_profile_data:
+    post:
+      summary: 운동 프로필 가져오기 API
+      operationId: post-api-v1-exercise-get_exercise_profile_data
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        exercise_profile_id:
+                          type: integer
+                        exercise_id:
+                          type: integer
+                          description: 운동 종류입니다
+                        exercise_weight:
+                          type: integer
+                        exercise_count:
+                          type: integer
+                        exercise_time:
+                          type: integer
+                          description: in minutes
+                        profile_id:
+                          type: string
+                        user_id:
+                          type: string
+                        created_at:
+                          type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - exercise_profile_id: '2'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '3'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '4'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '5'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '500'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+                      - exercise_profile_id: '7'
+                        exercise_id: '0'
+                        exercise_weight: '0'
+                        exercise_count: '400'
+                        exercise_time: '0'
+                        profile_id: '42'
+                        user_id: string
+                        created_at: '2020-10-10'
+      description: 지정한 날짜의 운동 프로필을 가져옵니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: 기본값 오늘
+            examples:
+              example-1:
+                value: {}
+              example-2:
+                value:
+                  date: '2020-10-10'
+        description: date 기본값은 오늘입니다.(미지정시 오늘)
+      tags:
+        - 운동
+  /api/v1/heartrate/get_heartrate_profile_by_date:
+    post:
+      summary: 날짜로 심박수 가져오기 API
+      operationId: post-api-v1-heartrate-get_heartrate_profile_by_date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                        result:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              heartrate_profile_id:
+                                type: string
+                              heartrate:
+                                type: string
+                              profile_id:
+                                type: string
+                              user_id:
+                                type: string
+                              created_at:
+                                type: string
+                        min_max_avg:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              min:
+                                type: string
+                              max:
+                                type: string
+                              average:
+                                type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - date: '2020-10-10'
+                        result:
+                          - heartrate_profile_id: '1'
+                            heartrate: '80'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 22:56:57'
+                          - heartrate_profile_id: '2'
+                            heartrate: '90'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:03'
+                          - heartrate_profile_id: '3'
+                            heartrate: '100'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:06'
+                        min_max_avg:
+                          - min: '80'
+                            max: '100'
+                            average: '90'
+      description: |-
+        지정된 날짜의 모든 심박수 데이터를 가져옵니다.
+
+        그 날의 최대, 최소, 평균이 포함되어 있습니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  description: YYYY-mm-dd (기본값 오늘)
+        description: ''
+      tags:
+        - 심박수
+  /api/v1/heartrate/add_heartrate_profile:
+    parameters: []
+    post:
+      summary: 심박수 프로필 추가 API
+      operationId: post-api-v1-heartrate-add_heartrate_profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+      description: 오늘 일일 프로필에 심박수 프로필을 추가합니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                heartrate:
+                  type: integer
+                  description: |
+                    심박수
+              required:
+                - heartrate
+      tags:
+        - 심박수
+  /api/v1/heartrate/get_heartrate_profile_data:
+    get:
+      summary: 심박수 프로필 30일치 가져오기 API
+      tags:
+        - 심박수
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                        result:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              heartrate_profile_id:
+                                type: string
+                              heartrate:
+                                type: string
+                              profile_id:
+                                type: string
+                              user_id:
+                                type: string
+                              created_at:
+                                type: string
+                        min_max_avg:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              min:
+                                type: string
+                              max:
+                                type: string
+                              average:
+                                type: string
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    result:
+                      - date: '2020-10-10'
+                        result:
+                          - heartrate_profile_id: '1'
+                            heartrate: '80'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 22:56:57'
+                          - heartrate_profile_id: '2'
+                            heartrate: '90'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:03'
+                          - heartrate_profile_id: '3'
+                            heartrate: '100'
+                            profile_id: '42'
+                            user_id: string
+                            created_at: '2020-10-10 23:05:06'
+                        min_max_avg:
+                          - min: '80'
+                            max: '100'
+                            average: '90'
+      operationId: get-api-v1-heartrate-get_heartrate_profile_data
+      description: 일별로 30일치 가져오기
+components:
+  schemas: {}
+  securitySchemes:
+    access_token:
+      type: http
+      scheme: bearer
+      description: API 접근 시 필요
+    user credentials:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: ''
+          refreshUrl: ''
+          scopes: {}
+      description: ''
+security:
+  - access_token: []
+tags:
+  - name: 멤버
+  - name: 테스트
+  - name: 프로필
+  - name: 전우
+  - name: 운동
+  - name: 심박수
