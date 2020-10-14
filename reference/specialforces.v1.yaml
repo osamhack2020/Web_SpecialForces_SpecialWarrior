@@ -13,9 +13,10 @@ info:
     모든 API는 로그인 시 발급되는 access_token을 이용해 액세스 하여야 하며,<br>
     access_token이 없거나, 유효하지 않을 시 401 에러와 오류 메시지를 반환합니다.
 
-    > Changelog
-    2020-10-07 warrior 테이블에 name(이름) 필드 추가
-    2020-10-10 heartrate 테이블 및 API 추가
+    > Changelog<br>
+    2020-10-07 warrior 테이블에 name(이름) 필드 추가<br>
+    2020-10-10 heartrate 테이블 및 API 추가<br>
+    2020-10-13 find_afflication API 구현 완료, 유저정보 가져오기 API 응답에 unit_full_name 추가, 문서 오류 수정(minor)
 
     > 운동 종류<br>
     {<br>
@@ -240,6 +241,7 @@ paths:
                   cadre_flag: false
                   army_num: 20-00000000
                   unit_id: 8839
+                  name: 나야나
                   email: em@i.l
                   phone: 010-0000-0000
         description: 회원가입 요청
@@ -247,7 +249,7 @@ paths:
       tags:
         - 멤버
   /api/v1/member/find_afflication:
-    get:
+    post:
       summary: 부대 검색 API
       tags:
         - 멤버
@@ -258,6 +260,7 @@ paths:
           content:
             application/json:
               schema:
+                description: ''
                 type: object
                 properties:
                   success:
@@ -265,20 +268,33 @@ paths:
                   result:
                     type: array
                     items:
-                      type: string
+                      type: object
+                      properties:
+                        unit_full_name:
+                          type: string
+                        unit_id:
+                          type: string
               examples:
                 example-1:
                   value:
                     success: true
                     result:
-                      - 지상작전사령부 정보통신여단 111대대
-                      - 지상작전사령부 정보통신여단 112대대
-                      - 지상작전사령부 정보통신여단 311대대
-                      - 지상작전사령부 정보통신여단 312대대
-      operationId: get-api-v1-member-findafflication
-      description: |-
-        부대를 substring 으로 검색하여 결과를 반환합니다.
-        (미구현 상태)
+                      - unit_full_name: 지상작전사령부 정보통신여단 제112통신대대 1중대
+                        unit_id: '1'
+                      - unit_full_name: 지상작전사령부 정보통신여단 제112통신대대 2중대
+                        unit_id: '2'
+                      - unit_full_name: 지상작전사령부 정보통신여단 제112통신대대 3중대
+                        unit_id: '3'
+                      - unit_full_name: 지상작전사령부 정보통신여단 제112통신대대 본부중대
+                        unit_id: '4'
+                example-2:
+                  value:
+                    success: true
+                    result:
+                      - unit_full_name: 지상작전사령부 정보통신여단 제112통신대대 2중대
+                        unit_id: '2'
+      operationId: post-api-v1-member-findafflication
+      description: 부대를 substring 으로 검색하여 결과를 반환합니다
       requestBody:
         content:
           application/json:
@@ -293,6 +309,9 @@ paths:
               example-1:
                 value:
                   substring: 정보통신여단
+              example-2:
+                value:
+                  substring: 2중대
       security: []
     parameters: []
   /api/v1/exercise/add_exercise_profile:
@@ -687,6 +706,9 @@ paths:
                           type: string
                         accessed_at:
                           type: string
+                        unit_full_name:
+                          type: string
+                          description: 소속된 부대명
               examples:
                 example-1:
                   value:
@@ -715,8 +737,6 @@ paths:
                     type: boolean
                   result:
                     type: array
-                    uniqueItems: true
-                    minItems: 1
                     items:
                       required:
                         - user_id
@@ -752,9 +772,9 @@ paths:
                     success: true
                     result:
                       - user_id: string
-                        class: '0'
+                        class: 0
                         army_num: string
-                        unit_id: '123'
+                        unit_id: 123
                         email: string
                         phone: string
                         created_at: '2020-09-29 23:44:40'
@@ -985,24 +1005,34 @@ paths:
                           type: string
                           description: YYYY-MM-DD
                         weight:
-                          type: integer
+                          type:
+                            - integer
+                            - 'null'
                         height:
-                          type: integer
+                          type:
+                            - integer
+                            - 'null'
                         calorie:
-                          type: integer
+                          type:
+                            - integer
+                            - 'null'
                         sleep_time:
-                          type: integer
+                          type:
+                            - integer
+                            - 'null'
                         heartrate_average:
-                          type: integer
+                          type:
+                            - integer
+                            - 'null'
               examples:
                 example-1:
                   value:
                     success: true
                     result:
-                      - profile_id: '19'
+                      - profile_id: 19
                         user_id: string
                         date: '2020-10-06'
-                        weight: '3'
+                        weight: 3
                         height: null
                         calorie: null
                         sleep_time: null
@@ -1011,19 +1041,19 @@ paths:
                   value:
                     success: true
                     result:
-                      - profile_id: '16'
+                      - profile_id: 16
                         user_id: string
                         date: '2020-10-05'
-                        weight: '3'
-                        height: '190'
-                        calorie: '2200'
-                        sleep_time: '240'
+                        weight: 3
+                        height: 190
+                        calorie: 2200
+                        sleep_time: 240
                         heartrate_average: null
                 example-3:
                   value:
                     success: true
                     result:
-                      - profile_id: '42'
+                      - profile_id: 42
                         user_id: string
                         date: '2020-10-10'
                         weight: null
@@ -1095,19 +1125,19 @@ paths:
                   value:
                     success: true
                     result:
-                      - profile_id: '7'
+                      - profile_id: 7
                         date: '2020-10-04'
-                        sleep_time: '360'
-                      - profile_id: '16'
+                        sleep_time: 360
+                      - profile_id: 16
                         date: '2020-10-05'
-                        sleep_time: '240'
-                      - profile_id: '19'
+                        sleep_time: 240
+                      - profile_id: 19
                         date: '2020-10-06'
-                        sleep_time: '220'
+                        sleep_time: 220
                     min_max_avg:
-                      - min: '220'
-                        max: '360'
-                        average: '273'
+                      - min: 220
+                        max: 360
+                        average: 273
       operationId: get-api-v1-profile-get_sleeptime_data
       description: '수면시간을 일별로 30일치를 가져옵니다. (데이터들의 최소,최대,평균이 함께 제공됩니다)'
   /api/v1/profile/get_weight_data:
@@ -1128,8 +1158,6 @@ paths:
                     type: boolean
                   result:
                     type: array
-                    uniqueItems: true
-                    minItems: 1
                     items:
                       type: object
                       properties:
@@ -1158,19 +1186,19 @@ paths:
                   value:
                     success: true
                     result:
-                      - profile_id: '7'
+                      - profile_id: 7
                         date: '2020-10-04'
-                        weight: '30'
-                      - profile_id: '16'
+                        weight: 30
+                      - profile_id: 16
                         date: '2020-10-05'
-                        weight: '31'
-                      - profile_id: '19'
+                        weight: 31
+                      - profile_id: 19
                         date: '2020-10-06'
-                        weight: '32'
+                        weight: 32
                     min_max_avg:
-                      - min: '30'
-                        max: '32'
-                        average: '31'
+                      - min: 30
+                        max: 32
+                        average: 31
       operationId: get-api-v1-profile-get_weight_data
       description: |-
         체중을 일별로 30일치를 가져옵니다. (데이터들의 최소,최대,평균이 함께 제공됩니다)
@@ -1220,12 +1248,12 @@ paths:
                   value:
                     success: true
                     result:
-                      - exercise_profile_id: '2'
-                        exercise_id: '0'
-                        exercise_weight: '0'
-                        exercise_count: '500'
-                        exercise_time: '0'
-                        profile_id: '42'
+                      - exercise_profile_id: 2
+                        exercise_id: 0
+                        exercise_weight: 0
+                        exercise_count: 500
+                        exercise_time: 0
+                        profile_id: 42
                         user_id: string
                         created_at: '2020-10-10'
                       - exercise_profile_id: '3'
