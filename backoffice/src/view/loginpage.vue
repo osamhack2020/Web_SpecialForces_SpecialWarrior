@@ -86,15 +86,8 @@
                 </v-col>
                 <v-col cols="6">
                   <v-text-field
-                    v-model="signUpData.email"
-                    label="이메일*"
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="signUpData.phone"
-                    label="전화번호*"
+                    v-model="signUpData.name"
+                    label="이름*"
                     required
                   ></v-text-field>
                 </v-col>
@@ -107,14 +100,54 @@
                 </v-col>
                 <v-col cols="6">
                   <v-text-field
-                    v-model="signUpData.unit_id"
-                    label="소속*"
+                    v-model="signUpData.email"
+                    label="이메일*"
                     required
                   ></v-text-field>
                 </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    v-model="signUpData.phone"
+                    label="전화번호*"
+                    required
+                  ></v-text-field>
+                </v-col>
+                
+                <v-col cols="12">
+                  <v-menu offset-y>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="signUpData.unit_full_name"
+                        @input="findAfflication();"
+                        v-bind="attrs"
+                        v-on="on"
+                        label="소속*"
+                        required
+                      ></v-text-field>
+                    </template>
+                    
+                    <v-list dense rounded>
+                    <v-virtual-scroll
+                      :items="fetchedAfflicationData"
+                      height="240"
+                      item-height="42"
+                    >
+                      <template v-slot="{ item }">
+                        <v-list-item :key="item.unit_id" @click = "setSelectedUnitIntoSignupData(item)">
+                            <v-list-item-title>
+                              {{item.unit_full_name}}
+                            </v-list-item-title>
+                        </v-list-item>
+                      </template>
+                    </v-virtual-scroll>
+                  </v-list>
+                  </v-menu>
+
+                  
+                </v-col>
               </v-row>
             </v-container>
-            <small>*은 필수 작성입니다</small>
+            <h4>*은 필수 작성입니다</h4>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -140,7 +173,8 @@
 </template>
 
 <script>
-
+import axios from 'axios';
+import {resourceHost} from '../store';
 
 export default {
     name:'loginpage',
@@ -152,20 +186,53 @@ export default {
         password:"",
         password_again:"",
         army_num:"",
+        name:"",
         unit_id:"",
+        unit_full_name:"",
         email:"",
         phone:"",
       },
+
+      fetchedAfflicationData:[],
     }),
     methods:{
       login(id,pw){
         this.$store.dispatch('login', {id, pw});
       },
       signup(data){
-        if(data.password == data.password_again){
-          this.$store.dispatch('signup', data);
-        }
         this.showSignUpForm=false;
+        if(data.password != data.password_again){
+          this.$store.commit('pushAlert',{message:'패스워드가 일치하지 않습니다',type:'error'});
+          return;
+        }
+        if(this.compareSelectedUnitWithInput() == -1){
+          this.$store.commit('pushAlert',{message:'올바른 소속을 선택하지 않았습니다',type:'error'});
+          return;
+        }
+        this.$store.dispatch('signup', data);
+      },
+      findAfflication(){
+        axios(
+            {
+            method: 'post',
+            url: `${resourceHost}/member/find_afflication`,
+            data: {
+              substring:this.signUpData.unit_full_name,
+            }
+          })
+          .then((response)=>{
+              if(response.status==200){
+                this.fetchedAfflicationData = response.data.result;
+              }
+          }
+        );
+      },
+      setSelectedUnitIntoSignupData(data){
+        this.signUpData.unit_full_name = data.unit_full_name;
+        this.signUpData.unit_id = data.unit_id;
+      },
+      compareSelectedUnitWithInput(){
+        return this.fetchedAfflicationData.findIndex(d=>d.unit_full_name ===this.signUpData.unit_full_name)
       }
     }
 }

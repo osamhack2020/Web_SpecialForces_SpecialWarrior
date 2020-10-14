@@ -5,7 +5,7 @@ import router from './routes/index.js';
 
 Vue.use(Vuex);
 
-const resourceHost = "https://spefor.ml/api/v1";
+export const resourceHost = "https://spefor.ml/api/v1";
 const localTokenData = JSON.parse(localStorage.getItem('tokenData'));
 const initialState = localTokenData?  localTokenData : null;
 
@@ -79,6 +79,7 @@ export const store = new Vuex.Store({
             router.push('/');
         },
         OnLogout(){
+            this.commit("clearAlert");
             router.push('/login');
         },
         pushAlert(state,payload){
@@ -86,6 +87,9 @@ export const store = new Vuex.Store({
         },
         closeAlert(state,payload){
             state.alerts.splice(payload.idx,1);
+        },
+        clearAlert(state){
+            state.alerts=[];
         },
         SetTokenData(state,payload){
             state.tokenData = payload;
@@ -164,13 +168,14 @@ export const store = new Vuex.Store({
                     cadre_flag: true,
                     army_num: payload.army_num,
                     unit_id: payload.unit_id,
+                    name:payload.name,
                     email: payload.email,
                     phone: payload.phone,
                 }
               })
               .then((response)=>{
                   if(response.status==200){
-                    commit("pushAlert",{message:response.result,type:"error"});
+                    commit("pushAlert",{message:response.message,type:"info"});
                   }
               });
         },

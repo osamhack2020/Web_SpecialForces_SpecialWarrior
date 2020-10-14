@@ -48,7 +48,7 @@
                   <v-list-item-title>{{item.unit_full_name}}</v-list-item-title>
                 </v-list-item>
               </v-list-item-group>
-              </v-list>
+            </v-list>
           </v-menu>
           <br>
           <v-chip small class="mr-1">{{ this.$store.getters.getUserData.name }}</v-chip>
