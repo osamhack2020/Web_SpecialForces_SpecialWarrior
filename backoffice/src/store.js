@@ -53,22 +53,29 @@ export const store = new Vuex.Store({
             
         ],
         accessibleUnit:null,
+        selectedUnit:null,
     },
     getters:{
         getTokenData: function(state){
             return state.tokenData;
         },
         getUserData: function(state){
-            return state.userData[0];
+            return state.userData;
         },
         getAccessibleUnit:function(state){
             return state.accessibleUnit;
         },
+        getSelectedUnit:function(state){
+            return state.selectedUnit;
+        },
     },
     mutations:{
         OnLoginSuccess(){
-            this.dispatch("getAccessibleUnit");
             this.commit('SetAuthorization');
+        },
+        AfterLoginSuccess(state){
+            this.dispatch("getAccessibleUnit");
+            this.commit("SetSelectedUnit",{unit_full_name:state.userData.unit_full_name, unit_id:state.userData.unit_id});
             router.push('/');
         },
         OnLogout(){
@@ -102,6 +109,9 @@ export const store = new Vuex.Store({
 
         SetAccessibleUnit(state,payload){
             state.accessibleUnit = payload;
+        },
+        SetSelectedUnit(state,payload){
+            state.selectedUnit = payload;
         }
     },
     actions:{
@@ -113,8 +123,8 @@ export const store = new Vuex.Store({
               })
               .then((response)=>{
                   if(response.status==200){
-                    commit("SetUserData",response.data.result);
-                    commit("OnLoginSuccess")
+                    commit("SetUserData",response.data.result[0]);
+                    commit("AfterLoginSuccess");
                   }
               });
         },
@@ -133,6 +143,7 @@ export const store = new Vuex.Store({
               .then((response)=>{
                   if(response.status==200){
                     commit("SetTokenData",response.data);
+                    commit('OnLoginSuccess');
                     this.dispatch('fetchUser');
                   }
               });

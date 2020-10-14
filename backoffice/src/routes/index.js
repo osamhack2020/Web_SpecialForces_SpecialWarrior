@@ -2,17 +2,18 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { store } from '../store';
 import axios from 'axios';
+
 import loginpage from '../view/loginpage.vue';
 import mainpage from '../view/mainpage.vue';
 import notfound from '../view/notfound.vue';
 Vue.use(VueRouter);
 
 const requireAuth = () => (to, from, next) => { 
-    if(store.state.tokenData){
+    if(store.state.tokenData && store.state.userData){
         if(!axios.defaults.headers.common['Authorization']){
-            store.commit("OnLoginSuccess"); //called only once if Header is not set
+            store.commit("OnLoginSuccess"); //called only once if Header is not set (On refreshing page)
+            store.commit("AfterLoginSuccess");
         }
-            
         return next();
     }
     next('/login');

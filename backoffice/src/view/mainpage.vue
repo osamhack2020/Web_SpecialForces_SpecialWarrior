@@ -22,28 +22,37 @@
         </v-btn>
 
         <v-spacer></v-spacer>
-
+              
         <v-responsive align="right">
-          {{this.$store.getters.getAccessibleUnit}}
-            <v-menu offset-y>
-              <v-list>
-                <v-list-item
-                  v-for="(item, index) in this.$store.getters.getAccessibleUnit"
-                  :key="index"
-                >
-                  <v-list-item-title>{{ item.unit_full_name }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-              <v-chip small class="mr-1" @click="getAccessibleUnit();">
-                {{ this.$store.getters.getUserData.unit_full_name }}
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip 
+                small
+                class="mr-1"
+                @click="setMatched();getAccessibleUnit();"
+                v-bind="attrs"
+                v-on="on"
+              >
+                {{ $store.getters.getSelectedUnit.unit_full_name }}
                 <v-icon>mdi-chevron-down</v-icon>
               </v-chip>
-
-              <br>
-
-              <v-chip small class="mr-1">{{ this.$store.getters.getUserData.name }}</v-chip>
-              <v-chip small class="mr-1" @click="logout()"><v-icon>mdi-power</v-icon>로그아웃</v-chip>
+            </template>
+            
+            <v-list dense rounded>
+              <v-list-item-group color="primary" v-model="test">
+                <v-list-item
+                  v-for="item in $store.getters.getAccessibleUnit"
+                  :key="item.unit_id"
+                  @click="$store.commit('SetSelectedUnit',item);"
+                >
+                  <v-list-item-title>{{item.unit_full_name}}</v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
+              </v-list>
+          </v-menu>
+          <br>
+          <v-chip small class="mr-1">{{ this.$store.getters.getUserData.name }}</v-chip>
+          <v-chip small class="mr-1" @click="logout()"><v-icon>mdi-power</v-icon>로그아웃</v-chip>
         </v-responsive>
       </v-container>
     </v-app-bar>
@@ -107,11 +116,13 @@
         {name:'FAQ',to:'/faq'},
         {name:'공지사항',to:'/notice'},
       ],
+      test: 0,
     }),
-    rendered(){
-      this.getAccessibleUnit();
-    },
     methods:{
+      setMatched(){
+        let matchingIndex = this.$store.getters.getAccessibleUnit.findIndex(d=>d.unit_id ===this.$store.getters.getSelectedUnit.unit_id);
+        this.test = matchingIndex;
+      },
       getAccessibleUnit(){
         this.$store.dispatch('getAccessibleUnit');
       },
