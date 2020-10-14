@@ -29,6 +29,12 @@ try{
   if($row['cnt'])
     throw new Exception("사용할 수 없는 이메일입니다");
   
+  // user can only select unit_id that exists
+  $sql = "SELECT unit_id FROM unit WHERE unit_id = $input[unit_id]";
+  $result = mysqli_query($dbconn,$sql);
+  if($result->num_rows == 0)
+    throw new Exception("사용 할 수 없는 소속(부대)입니다");
+  
   // able to skip unnecessary fields
    if(!$input['cadre_flag'])
     $input['cadre_flag'] = 0;
