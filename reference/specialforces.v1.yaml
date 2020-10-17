@@ -16,7 +16,8 @@ info:
     > Changelog<br>
     2020-10-07 warrior 테이블에 name(이름) 필드 추가<br>
     2020-10-10 heartrate 테이블 및 API 추가<br>
-    2020-10-13 find_afflication API 구현 완료, 유저정보 가져오기 API 응답에 unit_full_name 추가, 문서 오류 수정(minor)
+    2020-10-13 find_afflication API 구현 완료, 유저정보 가져오기 API 응답에 unit_full_name 추가, 문서 오류 수정(minor)<br>
+    2020-10-17 몸무게, 키 FLOAT 로 수정, add_exercise_profile 에 exercise_time 단위 초로 변경
 
     > 운동 종류<br>
     {<br>
@@ -377,7 +378,7 @@ paths:
                   type: integer
                 exercise_time:
                   type: integer
-                  description: 분 단위
+                  description: 초 단위
               required:
                 - exercise_id
             examples:
@@ -1006,20 +1007,24 @@ paths:
                           description: YYYY-MM-DD
                         weight:
                           type:
-                            - integer
                             - 'null'
+                            - number
+                          description: float
                         height:
                           type:
-                            - integer
                             - 'null'
+                            - number
+                          description: float
                         calorie:
                           type:
-                            - integer
                             - 'null'
+                            - number
+                          description: float
                         sleep_time:
                           type:
-                            - integer
                             - 'null'
+                            - number
+                          description: 'float, minute'
                         heartrate_average:
                           type:
                             - integer
