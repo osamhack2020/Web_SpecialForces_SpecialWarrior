@@ -96,7 +96,7 @@
               min-height="70vh"
               rounded="lg"
             >
-              <!--  -->
+              <router-view></router-view>
             </v-sheet>
           </v-col>
         </v-row>
@@ -110,7 +110,7 @@
     name:'mainpage',
     data: () => ({
       links: [
-        {name:'병사관리',to:'/management'},
+        {name:'병사관리',to:'/'},
         {name:'모아보기',to:'/collection'},
         {name:'전사현황',to:'/statusmanagement'},
         {name:'FAQ',to:'/faq'},

@@ -23,6 +23,7 @@
           outlined dense
           label="PASSWORD"
           type="password"
+          @keyup.enter="login(id,pw)"
         ></v-text-field>
           <v-btn class="mb-3" dark block @click="login(id,pw)">
             Login
