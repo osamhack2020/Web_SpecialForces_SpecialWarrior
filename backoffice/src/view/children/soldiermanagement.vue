@@ -26,13 +26,23 @@
             </v-text-field>
         </v-card>
 
-        <v-card class="mt-2">
+        <v-card class="mt-2 pa-3 text-center">
             <v-data-table
-              :headers="headers"
-              :items="filteredWarriors"
-              :items-per-page="10"
-              class="elevation-1"
-            ></v-data-table>
+                :headers="headers"
+                :items="filteredWarriors"
+                :items-per-page="10"
+                class="elevation-1"
+                :loading="isLoading"
+                hide-default-footer
+                @page-count="pageCount = $event"
+                :page.sync="page"
+            >
+            </v-data-table>
+            <v-pagination
+                class="mt-2"
+                v-model="page"
+                :length="pageCount"
+            ></v-pagination>
         </v-card>
     </v-container>
 </template>
@@ -45,6 +55,7 @@ export default {
     name:'soldiermanagement',
     data:()=>(
       { 
+        isLoading:false,
         headers: [
           { text: '군번', value: 'army_num' },
           { text: '이름',value: 'name'},
@@ -53,6 +64,8 @@ export default {
           { text: '체력등급',value: 'latest_examine_data.grade'},
           { text: '마지막 체력 측정',value: 'latest_examine_data.latest_examine'},
         ],
+        page:1,
+        pageCount:0,
         warriors:[],
         filteredWarriors:[],
         warriorClassFilter:0,
@@ -61,12 +74,26 @@ export default {
     created(){
         this.getWarriors();
     },
+    computed:{
+        getSelectedUnit(){
+            return this.$store.getters.getSelectedUnit;
+        }
+    },
+    watch:{
+        getSelectedUnit(){
+            this.getWarriors();
+        }
+    },
     methods:{
         getWarriors(){
+            this.isLoading = true;
             axios(
                 {
                 method: 'post',
                 url: `${resourceHost}/cadre/get_warriors`,
+                data:{
+                    unit_id:this.$store.getters.getSelectedUnit.unit_id,
+                }
               })
               .then((response)=>{
                   if(response.status==200){
@@ -78,6 +105,9 @@ export default {
                         this.warriors[i].class_korean = this.getMilClass(this.warriors[i].class);
                         this.warriors[i].today_profile.sleep_time = this.getHourAndMinute(this.warriors[i].today_profile.sleep_time);
                     }
+
+                    //Load Finished
+                    this.isLoading = false;
                   }
               });
         },
