@@ -3,23 +3,14 @@ require_once __DIR__.'/../auth/settings.php';
 require_once('../dbsettings.php');
 require_once('../token_validator.php');
 
-/*
-  Get Daily Profile Function
-  2020-10-?? goraegori
-  Input : user_id, date(*optional)
-  Output : success,result(profile_id,user_id,date,weight,height,calorie,sleep_time,heartrate_average)
-*/
-
-function get_profile($dbconn,$user_id,$date){
+function get_user_name($dbconn,$user_id){
   $res=array("success"=>false,"result"=>array());
   try{
-    if(empty($date))
-      $date = date("Y-m-d");
     
-    $sql = "SELECT * FROM day_profile WHERE user_id = '$user_id' AND date = '$date';";
+    $sql = "SELECT name FROM warrior WHERE user_id = '$user_id';";
     $result = mysqli_query($dbconn,$sql);
     $row = mysqli_fetch_assoc($result);
-    $res['result']= $row;
+    array_push($res['result'], $row);
     $res['success']=true;
   }
   catch(Exception $e){

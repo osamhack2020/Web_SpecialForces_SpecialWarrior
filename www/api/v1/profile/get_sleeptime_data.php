@@ -3,6 +3,13 @@ require_once __DIR__.'/../auth/settings.php';
 require_once('../dbsettings.php');
 require_once('../token_validator.php');
 
+/*
+  Get Sleeptime Data API
+  2020-10-?? goraegori
+  Input : 
+  Output : success,result({profile_id,date,sleep_time},...),min_max_avg(min,max,average)
+*/
+
 $input = json_decode(file_get_contents('php://input'),true);
 // 일별로, 30일치
 $res=array("success"=>false,"result"=>array(),"min_max_avg"=>array());

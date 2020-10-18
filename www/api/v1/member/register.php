@@ -46,11 +46,12 @@ try{
   $date = date("Y-m-d H:i:s"); 
   // register user
   $encrypted_pass = sha1($input['password']);
-  $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],0,$input[class],
-  '$input[army_num]',$input[unit_id],$input[name],'$input[email]','$input[phone]','$date','$date')";
+  $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],0,NULL,$input[class],
+  '$input[army_num]',$input[unit_id],'$input[name]','$input[email]','$input[phone]','$date','$date')";
   mysqli_query($dbconn,$sql);
   add_today_profile($dbconn,$input['user_id']);
   $res['success']=true;
+  $res['message']="회원가입 성공";
 }
 catch(Exception $e){
   http_response_code(400); //bad request
