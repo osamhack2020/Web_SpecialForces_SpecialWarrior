@@ -112,7 +112,7 @@
       links: [
         {name:'병사관리',to:'/'},
         {name:'모아보기',to:'/collection'},
-        {name:'전사현황',to:'/statusmanagement'},
+        {name:'전사현황',to:'/warriorstatus'},
         {name:'FAQ',to:'/faq'},
         {name:'공지사항',to:'/notice'},
       ],

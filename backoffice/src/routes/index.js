@@ -7,8 +7,11 @@ import loginpage from '../view/loginpage.vue';
 import mainpage from '../view/mainpage.vue';
 import notfound from '../view/notfound.vue';
 import soldiermanagement from '../view/children/soldiermanagement.vue';
+import collection from '../view/children/collection.vue';
+import warriorstatus from '../view/children/warriorstatus.vue';
 import faq from '../view/children/faq.vue';
 import notice from '../view/children/notice.vue';
+import notice_write from '../view/notice_write.vue';
 Vue.use(VueRouter);
 
 const requireAuth = () => (to, from, next) => { 
@@ -37,9 +40,15 @@ const router = new VueRouter({
             beforeEnter:requireAuth(),
             children: [
                 { path: "", component: soldiermanagement },
-                { path: "/management", component: soldiermanagement },
-                { path: "/faq", component: faq },
-                { path: "/notice", component: notice },
+                { path: "management", component: soldiermanagement },
+                { path: "collection", component: collection },
+                { path: "warriorstatus", component: warriorstatus },
+                { path: "faq", component: faq },
+                { 
+                    path: "notice", 
+                    component: notice,
+                    children:[{ path:"write", component: notice_write }],
+                },
             ],
         },
         {

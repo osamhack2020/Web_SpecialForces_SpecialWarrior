@@ -1,24 +1,24 @@
 <template>
-<v-container>
-  <v-expansion-panels focusable popout>
-    <v-progress-circular
-      v-if="faq.length==0"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <v-expansion-panel
-      v-for="(item,i) in faq"
-      :key="i"
-    >
-      <v-expansion-panel-header>
-        {{item.question}}
-      </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        <span class="text-body-1">{{item.answer}}</span>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
-</v-container>
+  <v-container>
+    <v-expansion-panels focusable popout>
+      <v-progress-circular
+        v-if="faq.length==0"
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+      <v-expansion-panel
+        v-for="(item,i) in faq"
+        :key="i"
+      >
+        <v-expansion-panel-header>
+          {{item.question}}
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <span class="text-body-1">{{item.answer}}</span>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </v-container>
 </template>
 
 <script>

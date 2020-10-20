@@ -18,13 +18,13 @@ function SaveToken(state){
 function SaveUser(state){
     localStorage.setItem('userData',JSON.stringify(state.userData));
 }
-
 function ClearToken(){
     localStorage.removeItem('tokenData');
 }
 function ClearUser(){
     localStorage.removeItem('userData');
 }
+
 const axiosInterceptor = axios.interceptors.response.use(
     function (response) {
         //status == 200
@@ -47,13 +47,21 @@ axiosInterceptor;
 
 export const store = new Vuex.Store({
     state:{
+        //Auth
         userData:initialUserData,
         tokenData:initialState,
+        
+        //Alert
         alerts:[
             
         ],
+        
+        //UnitSelection
         accessibleUnit:null,
         selectedUnit:null,
+
+        //notice
+        isNoticeNeedRefresh:false,
     },
     getters:{
         getTokenData: function(state){
@@ -68,8 +76,12 @@ export const store = new Vuex.Store({
         getSelectedUnit:function(state){
             return state.selectedUnit;
         },
+        getIsNoticeNeedRefresh: function(state){
+            return state.isNoticeNeedRefresh;
+        }
     },
     mutations:{
+        //Auth
         OnLoginSuccess(){
             this.commit('SetAuthorization');
         },
@@ -111,11 +123,17 @@ export const store = new Vuex.Store({
             axios.defaults.headers.common['Authorization'] = `Bearer ${state.tokenData.access_token}`
         },
 
+        //UnitSelection
         SetAccessibleUnit(state,payload){
             state.accessibleUnit = payload;
         },
         SetSelectedUnit(state,payload){
             state.selectedUnit = payload;
+        },
+
+        //Notice
+        SetNoticeRefresh(state,payload){
+            state.isNoticeNeedRefresh = payload;
         }
     },
     actions:{

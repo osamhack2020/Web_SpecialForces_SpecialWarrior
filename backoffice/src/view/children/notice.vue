@@ -1,11 +1,14 @@
 <template>
   <v-container>
-    <v-expansion-panels focusable popout>
-      <v-progress-circular
-      v-if="notice.length==0"
+    <v-progress-circular
+      v-if="isLoading"
       indeterminate
       color="primary"
-      ></v-progress-circular>
+    ></v-progress-circular>
+    <v-container class="text-center" v-if="notice.length==0 && !isLoading">
+      공지사항이 없습니다
+    </v-container>
+    <v-expansion-panels focusable popout>
       <v-expansion-panel
         v-for="(item,i) in notice"
         :key="i"
@@ -23,6 +26,9 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <span class="text-body-2">{{item.content}}</span>
+          <div class="block text-right">
+            <v-icon @click="deleteNotice(item.notice_id)">mdi-delete</v-icon>
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -33,7 +39,9 @@
       bottom
       right
       fixed
+      @click="$router.push('notice/write')"
     ><v-icon>mdi-pencil</v-icon></v-btn>
+    <router-view></router-view>
   </v-container>
 </template>
 
@@ -44,21 +52,63 @@ export default {
 
     name:'notice',
     data:()=>({
+      isLoading:false,
       notice:[],
     }),
     created:function(){
       this.getNotice();
     },
+    computed:{
+      isNoticeNeedRefresh(){
+        return this.$store.getters.getIsNoticeNeedRefresh;
+      },
+      getSelectedUnit(){
+        return this.$store.getters.getSelectedUnit;
+      }
+    },
+    watch:{
+      isNoticeNeedRefresh(){
+        if(this.isNoticeNeedRefresh) {
+          this.getNotice();
+          this.$store.commit('SetNoticeRefresh',false);
+        }
+      },
+      getSelectedUnit(){
+        this.getNotice();
+      }
+    },
     methods:{
         getNotice(){
+          this.isLoading=true;
           axios(
             {
-            method: 'get',
+            method: 'post',
             url: `${resourceHost}/notice/get_notice`,
+            data:{
+              unit_id:this.$store.getters.getSelectedUnit.unit_id,
+            }
           })
           .then((response)=>{
               if(response.status==200){
                   this.notice = response.data.result;
+                  this.isLoading=false;
+              }
+          });
+        },
+        deleteNotice(notice_id){
+          this.isLoading=true;
+          axios(
+            {
+            method: 'post',
+            url: `${resourceHost}/cadre/delete_notice`,
+            data:{
+              notice_id:notice_id,
+            }
+          })
+          .then((response)=>{
+              if(response.status==200){
+                  this.isLoading=false;
+                  this.getNotice();
               }
           });
         },
