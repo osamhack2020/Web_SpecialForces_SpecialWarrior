@@ -6,11 +6,15 @@ require_once('../profile/get_profile_function.php');
 require_once('../profile/get_latest_examine_data_function.php');
 require_once('./get_accessible_unit_function.php');
 
+/*
+  Get Warriors API
+  2020-10-xx goraegori
+  Input : unit_id
+  Output : success, result({warrior userInfo, latest_examine_data, today_profile},...)
+*/
+
 $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"result"=>array());
-
-// input { class, name }
-// class {-1:전체, 0: 이병, 1:일병, 2:상병, 3:병장}
 
 try{
   if(!$cadre_flag) throw new Exception("간부만 접근할 수 있습니다");

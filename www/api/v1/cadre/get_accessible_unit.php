@@ -5,6 +5,13 @@ require_once('./cadre_validator.php');
 require_once('../member/get_unitname_function.php');
 require_once('./get_accessible_unit_function.php');
 
+/*
+  Get Accessible Unit API
+  2020-10-17 goraegori
+  Input : user_id
+  Output : success, result(unit_id,...)
+*/
+
 $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"result"=>array());
 
