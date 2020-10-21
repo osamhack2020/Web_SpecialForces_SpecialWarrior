@@ -20,7 +20,7 @@ try{
   $sql = "SELECT * FROM notice WHERE unit_id=$input[unit_id]";
   $result = mysqli_query($dbconn,$sql);
   while($row = mysqli_fetch_assoc($result)){
-     $row['name'] = get_user_name($dbconn,$userInfo['user_id'])['result'][0]['name'];
+     $row['name'] = get_user_name($dbconn,$userInfo['user_id']);
      array_push($res['result'], $row); 
   }
   $res['success']=true;
