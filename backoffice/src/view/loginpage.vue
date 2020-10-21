@@ -40,10 +40,10 @@
         <div class="mx-auto"
         align="center"
         elevation="10">
-          <v-alert max-width="330" dismissible dense v-for="item in this.$store.state.alerts" :key="item.idx" :type="item.type">
+          <v-alert max-width="330" dismissible dense v-for="(item,index) in this.$store.state.alerts" :key="index" :type="item.type">
             {{ item.message }}
           </v-alert>
-      </div>
+        </div>
       </v-card>
       
       <v-dialog

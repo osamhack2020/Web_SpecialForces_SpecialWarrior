@@ -11,7 +11,7 @@
                 <v-chip>一</v-chip>
                 <v-chip>二</v-chip>
                 <v-chip>三</v-chip>
-                <v-chip>王<span class="text--secondary text-caption">(병장임.. 아이콘 필요합니다..)</span></v-chip>
+                <v-chip>王</v-chip>
             </v-chip-group>
             <v-text-field
               outlined
@@ -37,6 +37,16 @@
                 @page-count="pageCount = $event"
                 :page.sync="page"
             >
+                <template v-slot:item.actions="{ item }">
+                    <v-btn :to="`management/${item.user_id}`">
+                        <v-icon
+                          small
+                          class="mr-2"
+                        >
+                          mdi-account-details
+                        </v-icon>
+                    </v-btn>
+                </template>
             </v-data-table>
             <v-pagination
                 class="mt-2"
@@ -44,6 +54,8 @@
                 :length="pageCount"
             ></v-pagination>
         </v-card>
+
+        <router-view></router-view>
     </v-container>
 </template>
 
@@ -63,6 +75,7 @@ export default {
           { text: '어제 수면시간',value: 'today_profile.sleep_time'},
           { text: '체력등급',value: 'latest_examine_data.grade'},
           { text: '마지막 체력 측정',value: 'latest_examine_data.latest_examine'},
+          { text: '자세히 보기', value: 'actions', sortable: false },
         ],
         page:1,
         pageCount:0,

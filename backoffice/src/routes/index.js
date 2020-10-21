@@ -10,8 +10,11 @@ import soldiermanagement from '../view/children/soldiermanagement.vue';
 import collection from '../view/children/collection.vue';
 import warriorstatus from '../view/children/warriorstatus.vue';
 import faq from '../view/children/faq.vue';
+import faq_write from '../view/faq_write.vue';
 import notice from '../view/children/notice.vue';
 import notice_write from '../view/notice_write.vue';
+
+import soldierdetail from '../view/children/soldierdetail.vue';
 Vue.use(VueRouter);
 
 const requireAuth = () => (to, from, next) => { 
@@ -39,11 +42,25 @@ const router = new VueRouter({
             component: mainpage,
             beforeEnter:requireAuth(),
             children: [
-                { path: "", component: soldiermanagement },
-                { path: "management", component: soldiermanagement },
+                { 
+                    path: "/",
+                    redirect: 'management'
+                },
+                { 
+                    path: "management", component: soldiermanagement,
+
+                    children:[
+                        { path: ':user_id', component: soldierdetail},
+                    ]
+
+                },
                 { path: "collection", component: collection },
                 { path: "warriorstatus", component: warriorstatus },
-                { path: "faq", component: faq },
+                { 
+                    path: "faq",
+                    component: faq,
+                    children:[{ path:"write", component: faq_write }],
+                },
                 { 
                     path: "notice", 
                     component: notice,

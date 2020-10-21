@@ -12,12 +12,12 @@
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>공지 글쓰기</v-toolbar-title>
+          <v-toolbar-title>FAQ 글쓰기</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn
               icon
-              @click="writeNotice()"
+              @click="writeFaq()"
             >
               <v-icon>mdi-content-save</v-icon>
             </v-btn>
@@ -27,14 +27,14 @@
           <v-text-field
             clearable
             clear-icon="mdi-close-circle"
-            label="제목"
-            v-model="subject"
+            label="질문"
+            v-model="question"
           ></v-text-field>
           <v-textarea
             filled
-            label="내용"
+            label="답변"
             auto-grow
-            v-model="content"
+            v-model="answer"
           ></v-textarea>
         </v-container>
       </v-card>
@@ -45,42 +45,41 @@
 import axios from 'axios';
 import {resourceHost} from '../store';
 export default {
-    name:'notice_write',
+    name:'faq_write',
     data:()=>({
         dialog:true,
-        subject:"",
-        content:"",
+        question:"",
+        answer:"",
     }),
     methods:{
         closeDialog(){
             this.dialog=false;
-            this.refreshNotice();
+            this.refreshFaq();
             this.$router.push('../');
         },
-        writeNotice(){
-            if(!this.subject || !this.content) {
-              this.$store.commit('showSnackbar',{message:"제목, 내용을 작성해주세요"});
+        writeFaq(){
+            if(!this.question || !this.answer) {
+              this.$store.commit('showSnackbar',{message:"질문, 응답을 작성해주세요"});
               return;
             }
             axios(
                 {
                 method: 'post',
-                url: `${resourceHost}/cadre/write_notice`,
+                url: `${resourceHost}/cadre/write_faq`,
                 data:{
-                    unit_id:this.$store.getters.getSelectedUnit.unit_id,
-                    subject:this.subject,
-                    content:this.content,
+                    question:this.question,
+                    answer:this.answer,
                 }
               })
               .then((response)=>{
                   if(response.status==200){
-                    this.$store.commit('pushAlert',{message:"공지를 추가했습니다",type:"info"});
+                    this.$store.commit('pushAlert',{message:"FAQ를 추가했습니다",type:"info"});
                     this.closeDialog();
                   }
               });
         },
-        refreshNotice(){
-            this.$store.commit('SetNoticeRefresh',true);
+        refreshFaq(){
+            this.$store.commit('SetFaqRefresh',true);
         }
     }
 

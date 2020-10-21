@@ -1,10 +1,11 @@
 <template>
   <v-container>
-    <v-progress-circular
-      v-if="isLoading"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
+    <v-container v-if="isLoading" class="text-center">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+    </v-container>
     <v-container class="text-center" v-if="notice.length==0 && !isLoading">
       공지사항이 없습니다
     </v-container>
@@ -27,7 +28,14 @@
         <v-expansion-panel-content>
           <span class="text-body-2">{{item.content}}</span>
           <div class="block text-right">
-            <v-icon @click="deleteNotice(item.notice_id)">mdi-delete</v-icon>
+            <v-icon
+              @click="deleteNotice(item.notice_id)"
+              @mouseover="isHovering = true" 
+              @mouseout="isHovering = false" 
+              :color="isHovering?'red':''"
+            >
+              mdi-delete
+            </v-icon>
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -53,6 +61,7 @@ export default {
     name:'notice',
     data:()=>({
       isLoading:false,
+      isHovering:false,
       notice:[],
     }),
     created:function(){
@@ -109,6 +118,7 @@ export default {
               if(response.status==200){
                   this.isLoading=false;
                   this.getNotice();
+                  this.$store.commit('pushAlert',{message:"공지를 삭제했습니다",type:"info"});
               }
           });
         },

@@ -52,16 +52,20 @@ export const store = new Vuex.Store({
         tokenData:initialState,
         
         //Alert
-        alerts:[
-            
-        ],
+        alerts:[],
+
+        //Snackbar
+        snackbar:{message:"",show:false},
         
         //UnitSelection
         accessibleUnit:null,
         selectedUnit:null,
 
-        //notice
+        //Notice
         isNoticeNeedRefresh:false,
+
+        //FAQ
+        isFaqNeedRefresh:false,
     },
     getters:{
         getTokenData: function(state){
@@ -78,6 +82,12 @@ export const store = new Vuex.Store({
         },
         getIsNoticeNeedRefresh: function(state){
             return state.isNoticeNeedRefresh;
+        },
+        getIsFaqNeedRefresh: function(state){
+            return state.isFaqNeedRefresh;
+        },
+        getSnackbar: function(state){
+            return state.snackbar;
         }
     },
     mutations:{
@@ -88,20 +98,12 @@ export const store = new Vuex.Store({
         AfterLoginSuccess(state){
             this.dispatch("getAccessibleUnit");
             this.commit("SetSelectedUnit",{unit_full_name:state.userData.unit_full_name, unit_id:state.userData.unit_id});
+            this.commit("clearAlert");
             router.push('/');
         },
         OnLogout(){
             this.commit("clearAlert");
             router.push('/login');
-        },
-        pushAlert(state,payload){
-            state.alerts.push({idx:state.alerts.length,message:payload.message,type:payload.type});
-        },
-        closeAlert(state,payload){
-            state.alerts.splice(payload.idx,1);
-        },
-        clearAlert(state){
-            state.alerts=[];
         },
         SetTokenData(state,payload){
             state.tokenData = payload;
@@ -123,6 +125,27 @@ export const store = new Vuex.Store({
             axios.defaults.headers.common['Authorization'] = `Bearer ${state.tokenData.access_token}`
         },
 
+        //Alert
+        pushAlert(state,payload){
+            state.alerts.push({message:payload.message,type:payload.type});
+            this.commit('showSnackbar',{message:payload.message});
+        },
+        closeAlert(state,payload){
+            state.alerts.splice(payload,1);
+        },
+        clearAlert(state){
+            state.alerts=[];
+        },
+
+        //Snackbar
+        showSnackbar(state,payload){
+            state.snackbar.message=payload.message;
+            state.snackbar.show=true;
+        },
+        closeSnackbar(state){
+            state.snackbar.show=false;
+        },
+
         //UnitSelection
         SetAccessibleUnit(state,payload){
             state.accessibleUnit = payload;
@@ -134,6 +157,10 @@ export const store = new Vuex.Store({
         //Notice
         SetNoticeRefresh(state,payload){
             state.isNoticeNeedRefresh = payload;
+        },
+        //FAQ
+        SetFaqRefresh(state,payload){
+            state.isFaqNeedRefresh = payload;
         }
     },
     actions:{

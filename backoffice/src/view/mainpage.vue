@@ -63,16 +63,25 @@
           <v-col cols="2">
             <v-sheet rounded="lg">
               <v-list color="transparent">
+                <v-list-item>
+                <v-list-item-title>
+                  <v-icon>mdi-bell</v-icon>
+                  알림 로그
+                </v-list-item-title>
+                </v-list-item>
+
+                <v-divider class="my-2"></v-divider>
+
                 <v-list-item
-                  v-for="n in 5"
-                  :key="n"
+                  v-for="(item,index) in this.$store.state.alerts"
+                  :key="index"
                   link
+                  @click="$store.commit('closeAlert',index)"
                 >
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      List Item {{ n }}
-                    </v-list-item-title>
-                  </v-list-item-content>
+                <v-list-item-title>
+                  <v-icon>mdi-exclamation-thick</v-icon>
+                  {{ item.message }}
+                </v-list-item-title>
                 </v-list-item>
 
                 <v-divider class="my-2"></v-divider>
@@ -80,10 +89,12 @@
                 <v-list-item
                   link
                   color="grey lighten-4"
+                  @click="$store.commit('clearAlert');"
                 >
                   <v-list-item-content>
                     <v-list-item-title>
-                      Refresh
+                      <v-icon>mdi-delete-forever</v-icon>
+                      모두 삭제
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
@@ -102,6 +113,20 @@
         </v-row>
       </v-container>
     </v-main>
+
+    <v-snackbar v-model="$store.getters.getSnackbar.show">
+      {{ $store.getters.getSnackbar.message }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="pink"
+          text
+          v-bind="attrs"
+          @click="$store.commit('closeSnackbar');"
+        >
+          닫기
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -110,7 +135,7 @@
     name:'mainpage',
     data: () => ({
       links: [
-        {name:'병사관리',to:'/'},
+        {name:'병사관리',to:'/management'},
         {name:'모아보기',to:'/collection'},
         {name:'전사현황',to:'/warriorstatus'},
         {name:'FAQ',to:'/faq'},
@@ -120,7 +145,7 @@
     }),
     methods:{
       setMatched(){
-        let matchingIndex = this.$store.getters.getAccessibleUnit.findIndex(d=>d.unit_id ===this.$store.getters.getSelectedUnit.unit_id);
+        let matchingIndex = this.$store.getters.getAccessibleUnit.findIndex(d=>d.unit_id === this.$store.getters.getSelectedUnit.unit_id);
         this.test = matchingIndex;
       },
       getAccessibleUnit(){
