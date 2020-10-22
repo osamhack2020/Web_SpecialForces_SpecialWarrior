@@ -34,11 +34,22 @@ const axiosInterceptor = axios.interceptors.response.use(
     function (error) {
         //status != 200
         
-        if(error.response.data.error) //FROM AUTH Process
+        if(error.response.data.error){ //FROM AUTH Process
             //alert(error.response.data.error_description);
+            if( error.response.data.error_description.indexOf("expired") != -1 ){
+                //Needs Refresh
+                return store.dispatch('refreshToken')
+                .then(()=>{
+                    error.config.headers['Authorization'] = `Bearer ${store.getters.getTokenData.access_token}`;
+                    return axios.request(error.config);
+                });
+            }
+            else
             store.commit('pushAlert',{idx:store.state.alerts.length,type:'error',message:error.response.data.error_description});
-        else //FROM API
+        }
+        else{ //FROM API
             store.commit('pushAlert',{idx:store.state.alerts.length,type:'error',message:error.response.data.message});
+        }
 
         return Promise.reject(error);
     }
@@ -127,7 +138,7 @@ export const store = new Vuex.Store({
 
         //Alert
         pushAlert(state,payload){
-            state.alerts.push({message:payload.message,type:payload.type});
+            state.alerts= [{message:payload.message,type:payload.type}];
             this.commit('showSnackbar',{message:payload.message});
         },
         closeAlert(state,payload){
@@ -165,7 +176,7 @@ export const store = new Vuex.Store({
     },
     actions:{
         fetchUser({commit}){
-            axios(
+            return axios(
                 {
                 method: 'get',
                 url: `${resourceHost}/member/get_userinfo`,
@@ -178,7 +189,7 @@ export const store = new Vuex.Store({
               });
         },
         login({commit}, payload){
-            axios(
+            return axios(
                 {
                 method: 'post',
                 url: `${resourceHost}/auth/login`,
@@ -194,6 +205,24 @@ export const store = new Vuex.Store({
                     commit("SetTokenData",response.data);
                     commit('OnLoginSuccess');
                     this.dispatch('fetchUser');
+                  }
+              });
+        },
+        refreshToken({commit}){
+            return axios(
+                {
+                method: 'post',
+                url: `${resourceHost}/auth/login`,
+                data: {
+                  grant_type: 'refresh_token',
+                  client_id: 'webapp',
+                  refresh_token: this.getters.getTokenData.refresh_token
+                }
+              })
+              .then((response)=>{
+                  if(response.status==200){
+                    commit("SetTokenData",response.data);
+                    commit('OnLoginSuccess');
                   }
               });
         },

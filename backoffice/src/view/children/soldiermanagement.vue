@@ -47,6 +47,11 @@
                         </v-icon>
                     </v-btn>
                 </template>
+                <template
+                  v-slot:no-data
+                >
+                  결과가 없습니다
+                </template>
             </v-data-table>
             <v-pagination
                 class="mt-2"
