@@ -17,7 +17,8 @@ info:
     2020-10-07 warrior 테이블에 name(이름) 필드 추가<br>
     2020-10-10 heartrate 테이블 및 API 추가<br>
     2020-10-13 find_afflication API 구현 완료, 유저정보 가져오기 API 응답에 unit_full_name 추가, 문서 오류 수정(minor)<br>
-    2020-10-17 몸무게, 키 FLOAT 로 수정, add_exercise_profile 에 exercise_time 단위 초로 변경
+    2020-10-17 몸무게, 키 FLOAT 로 수정, add_exercise_profile 에 exercise_time 단위 초로 변경<br>
+    2020-10-22 Token Refresh 추가(로그인 API 확인)
 
     > 운동 종류<br>
     {<br>
@@ -55,14 +56,21 @@ paths:
                   refresh_token:
                     type: string
               examples:
-                example-1:
+                로그인 응답:
                   value:
                     access_token: 3acfb3bea5cefc3aecc0b25f50b9539b6f5df3dc
                     expires_in: 3600
                     token_type: Bearer
                     scope: null
                     refresh_token: 636b6291c0398a16244f08b3fae42a4b277342ab
-      description: 로그인
+                리프레쉬 응답:
+                  value:
+                    access_token: 25a06b36216e14db7d1896ceb33e9af73ccc880b
+                    expires_in: 3600
+                    token_type: Bearer
+                    scope: null
+                    refresh_token: 3c5efac745fdeec275191f4fd575eea8d52f9434
+      description: 로그인 / 리프레쉬
       requestBody:
         content:
           application/json:
@@ -71,27 +79,46 @@ paths:
               properties:
                 grant_type:
                   type: string
+                  description: password/refresh_token 중 선택
                 client_id:
-                  type: string
+                  type:
+                    - string
+                    - 'null'
+                  description: 리프레쉬 시에는 불필요
                 user_id:
                   type: string
+                  description: 리프레쉬 시에는 불필요
                 password:
                   type: string
+                  description: 리프레쉬 시에는 불필요
+                refresh_token:
+                  type:
+                    - string
+                    - 'null'
+                  description: 리프레쉬 시에만 필요
               required:
                 - grant_type
                 - client_id
                 - user_id
                 - password
+                - refresh_token
             examples:
-              example-1:
+              로그인 예제:
                 value:
                   grant_type: password
                   client_id: app
                   user_id: someuser
                   password: verystrongpassword
-        description: |-
-          >앱에서 요청 시 grant_type="password", client_id="app" 입니다.<br>
+              리프레쉬 예제:
+                value:
+                  grant_type: refresh_token
+                  client_id: app
+                  refresh_token: 636b6291c0398a16244f08b3fae42a4b277342ab
+        description: |
+          >앱에서 Login 요청 시 grant_type="password", client_id="app" 입니다.<br>
           Content-Type 에 유의하시기 바랍니다.(application/json)
+
+          >Refresh 요청 시 grant_type="refresh_token", refresh_token="{{ Refresh_Token }}" 입니다
       parameters: []
       security: []
       tags:
