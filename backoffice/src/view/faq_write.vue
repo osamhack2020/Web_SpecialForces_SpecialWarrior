@@ -55,7 +55,7 @@ export default {
         closeDialog(){
             this.dialog=false;
             this.refreshFaq();
-            this.$router.push('../');
+            this.$router.push('/faq');
         },
         writeFaq(){
             if(!this.question || !this.answer) {

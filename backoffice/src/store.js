@@ -138,7 +138,7 @@ export const store = new Vuex.Store({
 
         //Alert
         pushAlert(state,payload){
-            state.alerts= [{message:payload.message,type:payload.type}];
+            state.alerts.push({message:payload.message,type:payload.type});
             this.commit('showSnackbar',{message:payload.message});
         },
         closeAlert(state,payload){

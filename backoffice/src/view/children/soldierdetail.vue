@@ -2,6 +2,7 @@
     <v-bottom-sheet
       v-model="dialog"
       inset
+      scrollable
     >
       <v-card>
         <v-toolbar>
@@ -13,11 +14,12 @@
           </v-btn>
           <v-toolbar-title>{{getMilClass(userInfo.class)}} {{userInfo.name}}</v-toolbar-title>
         </v-toolbar>
-        <v-container>
+        <v-container class="scroll-y" v-if="!isLoading">
           <v-card>
             <v-card-subtitle>
               유저 정보
             </v-card-subtitle>
+            <v-card-text>
               <v-list-item two-line>
                 <v-list-item-content>
                   <v-list-item-subtitle>{{header.user_id}}</v-list-item-subtitle>
@@ -54,51 +56,20 @@
                   <v-list-item-title>{{userInfo.phone}}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
+            </v-card-text>
             </v-card>
 
-            <v-card>
+            <v-card class="mt-3">
               <v-card-subtitle>
                 일일 프로필
+                <span class="text-caption">{{userInfo.today_profile.date}}</span>
               </v-card-subtitle>
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-subtitle>{{header.user_id}}</v-list-item-subtitle>
-                  <v-list-item-title>{{userInfo.user_id}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-subtitle>{{header.class}}</v-list-item-subtitle>
-                  <v-list-item-title>{{getMilClass(userInfo.class)}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-subtitle>{{header.name}}</v-list-item-subtitle>
-                  <v-list-item-title>{{userInfo.name}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-subtitle>{{header.army_num}}</v-list-item-subtitle>
-                  <v-list-item-title>{{userInfo.army_num}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-subtitle>{{header.email}}</v-list-item-subtitle>
-                  <v-list-item-title>{{userInfo.email}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item two-line>
-                <v-list-item-content>
-                  <v-list-item-subtitle>{{header.phone}}</v-list-item-subtitle>
-                  <v-list-item-title>{{userInfo.phone}}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
+              <v-card-text>
+                테이블 들어갈 자리
+              </v-card-text>
             </v-card>
             {{userInfo}}
-            <!--
+        </v-container>
             <v-sheet
               class="pa-3"
               v-if="isLoading"
@@ -106,8 +77,7 @@
               <v-skeleton-loader
                 type="list-item-avatar-three-line,card, article, article"
               ></v-skeleton-loader>
-            </v-sheet>-->
-        </v-container>
+            </v-sheet>
       </v-card>
     </v-bottom-sheet>
 </template>
@@ -165,7 +135,7 @@ export default {
             this.userInfo = response.data.result[0];
             
             //Load Finished
-            // this.isLoading = false;
+            this.isLoading = false;
           }
         });
       },
@@ -186,5 +156,7 @@ export default {
 </script>
 
 <style>
-
+  .scroll-y{
+    overflow-y:scroll;
+  }
 </style>

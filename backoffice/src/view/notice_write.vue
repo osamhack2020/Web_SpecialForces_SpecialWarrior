@@ -55,7 +55,7 @@ export default {
         closeDialog(){
             this.dialog=false;
             this.refreshNotice();
-            this.$router.push('../');
+            this.$router.push('/notice');
         },
         writeNotice(){
             if(!this.subject || !this.content) {

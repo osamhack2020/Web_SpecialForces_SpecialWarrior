@@ -40,8 +40,8 @@
         <div class="mx-auto"
         align="center"
         elevation="10">
-          <v-alert max-width="330" dismissible dense v-for="(item,index) in this.$store.state.alerts" :key="index" :type="item.type">
-            {{ item.message }}
+          <v-alert max-width="330" dense v-if="this.$store.state.alerts.length" :type="this.$store.state.alerts[this.$store.state.alerts.length-1].type">
+            {{ this.$store.state.alerts[this.$store.state.alerts.length-1].message }}
           </v-alert>
         </div>
       </v-card>
