@@ -19,6 +19,7 @@ info:
     2020-10-13 find_afflication API 구현 완료, 유저정보 가져오기 API 응답에 unit_full_name 추가, 문서 오류 수정(minor)<br>
     2020-10-17 몸무게, 키 FLOAT 로 수정, add_exercise_profile 에 exercise_time 단위 초로 변경<br>
     2020-10-22 Token Refresh 추가(로그인 API 확인)
+    2020-10-24 전우목록을 같은 소속에서만 받아오도록 변경, 전우 요청,거절 API 제거
 
     > 운동 종류<br>
     {<br>
@@ -518,176 +519,23 @@ paths:
                   success:
                     type: boolean
                   result:
-                    type: object
-                    properties:
-                      requested:
-                        type: array
-                        uniqueItems: true
-                        minItems: 1
-                        items:
-                          required:
-                            - user_id
-                          properties:
-                            user_id:
-                              type: string
-                              minLength: 1
-                      friend:
-                        type: array
-                        items:
-                          required: []
-                          properties: {}
-                    required:
-                      - requested
-                      - friend
-                required:
-                  - success
-                  - result
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
               examples:
                 example-1:
                   value:
                     success: true
                     result:
-                      requested:
-                        - user_id: string
-                      friend:
-                        - user_id: somefriend
+                      - user_id: skyinpus
+                      - user_id: somefriend
+                      - user_id: someone
+                      - user_id: testaccount
       operationId: get-api-friend-list
-      description: |-
-        자신의 전우 목록을 리스팅합니다
-        > requested 는 친구 요청 받으나, 아직 본인이 수락하지 않은 상대의 아이디.<br>
-         friend 는 상호 수락으로 친구가 된 상대의 아이디입니다.
-    parameters: []
-  /api/v1/friend/add_friend:
-    post:
-      summary: 전우 추가 API
-      operationId: post-api-v1-friend-add_friend
-      description: 상대를 전우로 추가합니다. 수락은 별도입니다.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                target:
-                  type: string
-                  description: 상대의 아이디입니다
-              required:
-                - target
-            examples:
-              example-1:
-                value:
-                  target: id_of_target
-        description: ''
-      tags:
-        - 전우
-      responses:
-        '200':
-          description: 처리 결과 반환
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-              examples:
-                example-1:
-                  value:
-                    success: true
-                    message: ''
-                example-2:
-                  value:
-                    success: false
-                    message: 이미 요청되었습니다
-                example-3:
-                  value:
-                    success: false
-                    message: 그런 대상은 없습니다
-                example-4:
-                  value:
-                    success: false
-                    message: 자신은 추가할 수 없습니다
-    parameters: []
-  /api/v1/friend/accept_friend:
-    post:
-      summary: 전우 추가 수락 API
-      operationId: post-api-v1-friend-accept_friend
-      responses:
-        '200':
-          description: OK
-          headers: {}
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-              examples:
-                example-1:
-                  value:
-                    success: true
-                    message: ''
-      description: 상대의 전우 추가 요청을 수락합니다
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                target:
-                  type: string
-              required:
-                - target
-            examples:
-              example-1:
-                value:
-                  target: someone_to_accept
-      tags:
-        - 전우
-    parameters: []
-  /api/v1/friend/decline_friend:
-    post:
-      summary: 전우 추가 거절 API
-      operationId: post-api-v1-friend-decline_friend
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-              examples:
-                example-1:
-                  value:
-                    success: true
-                    message: ''
-      description: 상대의 전우 추가 요청을 거절합니다.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                target:
-                  type: string
-              required:
-                - target
-            examples:
-              example-1:
-                value:
-                  target: someone_to_decline
-      tags:
-        - 전우
+      description: 자신의 전우 목록을 리스팅합니다
     parameters: []
   /api/v1/member/get_userinfo:
     get:
