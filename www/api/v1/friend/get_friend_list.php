@@ -4,21 +4,14 @@ require_once('../dbsettings.php');
 require_once('../token_validator.php');
 
 $input = json_decode(file_get_contents('php://input'),true);
-$res=array("success"=>false,"result"=>array("requested"=>array(),"friend"=>array()));
+$res=array("success"=>false,"result"=>array());
 
 try{ 
-  $sql = "SELECT me as user_id FROM comrade WHERE comrade='$userInfo[user_id]' AND accepted = 0;"; //opponent -> me (not accepted yet)
+  $sql = "SELECT user_id FROM warrior WHERE user_id != '$userInfo[user_id]' AND unit_id = $userInfo[unit_id] AND cadre_flag=0;";
   $result = mysqli_query($dbconn,$sql);
   for($i=0;$i<$result->num_rows;$i++){
     $row = mysqli_fetch_assoc($result);
-    
-    array_push($res['result']['requested'], $row);
-  }
-  $sql = "SELECT comrade as user_id FROM comrade WHERE me='$userInfo[user_id]' AND accepted = 1;";
-  $result = mysqli_query($dbconn,$sql);
-  for($i=0;$i<$result->num_rows;$i++){
-    $row = mysqli_fetch_assoc($result);
-    array_push($res['result']['friend'], $row);
+    array_push($res['result'], $row);
   }
   $res['success']=true;
 }

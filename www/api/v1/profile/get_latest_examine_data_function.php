@@ -70,7 +70,7 @@ function get_latest_examine_date($pushup_date,$situp_date,$run_date){
   Output : grade
 */
 function get_examine_grade($pushup_grade,$situp_grade,$run_grade){
-  return min($pushup_grade,$situp_grade,$run_grade);
+  return max($pushup_grade,$situp_grade,$run_grade);
 }
 
 /*
