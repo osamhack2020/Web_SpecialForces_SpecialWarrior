@@ -1,6 +1,10 @@
 <template>
     <v-container>
-        모아보기
+        <v-card>
+            <v-card-subtitle>
+                병사 수면상태
+            </v-card-subtitle>
+        </v-card>
     </v-container>
 </template>
 

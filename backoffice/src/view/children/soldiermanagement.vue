@@ -150,6 +150,8 @@ export default {
             this.filteredWarriors = this.filteredWarriors.filter(item => item.name.includes(this.warriorNameFilter));
         },
         getHourAndMinute(minute){
+            if(!minute)
+                return "미입력";
             return `${parseInt(minute/60)}시간 ${parseInt(minute%60)}분`;
         },
         getMilClass(classnum){
