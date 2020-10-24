@@ -14,7 +14,7 @@
           </v-btn>
           <v-toolbar-title>{{getMilClass(userInfo.class)}} {{userInfo.name}}</v-toolbar-title>
         </v-toolbar>
-        <v-container class="scroll-y" v-if="!isLoading">
+        <v-container class="scroll-y" v-if="isLoadedUserInfo && isLoadedHeartrate && isLoadedWeight && isLoadedSleeptime">
           <v-card>
             <v-card-subtitle>
               유저 정보
@@ -158,14 +158,16 @@
 
           <v-card class="mt-3">
             <v-card-subtitle>
-              최근 30일간 수면시간(분)
+              <v-icon color="purple lighten-1">mdi-power-sleep</v-icon>
+              최근 30일간 수면시간
             </v-card-subtitle>
             <v-card-text>
               <v-sparkline
                 fill
-                smooth="10"
+                smooth="15"
                 :value="sleeptimeArray"
                 auto-draw
+                color="purple lighten-1"
                 label-size="3"
               >
                 <template v-slot:label="item" class="text-caption">
@@ -198,11 +200,101 @@
               </v-simple-table>
             </v-card-text>
           </v-card>
+
+          <v-card class="mt-3">
+            <v-card-subtitle>
+              <v-icon color="green">mdi-ruler</v-icon>
+              최근 30일간 체중
+            </v-card-subtitle>
+            <v-card-text>
+              <v-sparkline
+                fill
+                smooth="15"
+                :value="weightArray"
+                auto-draw
+                color="green"
+                label-size="3"
+              >
+                <template v-slot:label="item" class="text-caption">
+                  {{ processEmpty(item.value,null,true) }}
+                </template>
+              </v-sparkline>
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th>
+                        최저 체중
+                      </th>
+                      <th>
+                        최대 체중
+                      </th>
+                      <th>
+                        평균 체중
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ processEmpty(getArrayMin(weightArray),"kg") }}</td>
+                      <td>{{ processEmpty(getArrayMax(weightArray),"kg") }}</td>
+                      <td>{{ processEmpty(getArrayAverage(weightArray),"kg") }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-card-text>
+          </v-card>
+
+          <v-card class="mt-3">
+            <v-card-subtitle>
+              <v-icon color="red darken-1">mdi-heart</v-icon>
+              최근 30일간 심박수
+            </v-card-subtitle>
+            <v-card-text>
+              <v-sparkline
+                fill
+                smooth="15"
+                :value="heartrateArray"
+                auto-draw
+                color="red darken-1"
+                label-size="3"
+              >
+                <template v-slot:label="item" class="text-caption">
+                  {{ processEmpty(item.value,null,true) }}
+                </template>
+              </v-sparkline>
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th>
+                        최저 심박수
+                      </th>
+                      <th>
+                        최대 심박수
+                      </th>
+                      <th>
+                        평균 심박수
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ processEmpty(getArrayMin(heartrateArray),"bpm") }}</td>
+                      <td>{{ processEmpty(getArrayMax(heartrateArray),"bpm") }}</td>
+                      <td>{{ processEmpty(getArrayAverage(heartrateArray),"bpm") }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-card-text>
+          </v-card>
         </v-container>
 
         <v-sheet
           class="pa-3"
-          v-if="isLoading"
+          v-if="!(isLoadedUserInfo && isLoadedHeartrate && isLoadedWeight && isLoadedSleeptime)"
         >
           <v-skeleton-loader
             type="list-item-avatar-three-line,card, article, article"
@@ -218,11 +310,20 @@ import {resourceHost} from '../../store';
 export default {
     name:'soldierdetail',
     data:()=>({
-      isLoading:false,
+      isLoadedUserInfo:false,
+      isLoadedSleeptime:false,
+      isLoadedHeartrate:false,
+      isLoadedWeight:false,
       dialog:true,
-      userInfo:{},
+      userInfo:[],
       userSleeptimeData:[],
+      userHeartrateData:[],
+      userWeightData:[],
+
       sleeptimeArray:[],
+      heartrateArray:[],
+      weightArray:[],
+
       header:{
         user_id:"아이디",
         class:"계급",
@@ -238,7 +339,7 @@ export default {
     computed:{
       user_id(){
         return this.$route.params.user_id;
-      }
+      },
     },
     watch:{
       dialog(){
@@ -250,6 +351,8 @@ export default {
     created(){
       this.getWarriorInfo();
       this.getSleeptimeData();
+      this.getHeartrateData();
+      this.getWeightData();
     },
     methods:{
       closeDialog(){
@@ -257,7 +360,6 @@ export default {
         this.$router.push('../');
       },
       getWarriorInfo(){
-        this.isLoading = true;
         return axios(
           {
             method: 'post',
@@ -271,12 +373,11 @@ export default {
             this.userInfo = response.data.result[0];
             this.getBMI(this.userInfo.today_profile.weight,this.userInfo.today_profile.height);
             //Load Finished
-            this.isLoading = false;
+            this.isLoadedUserInfo = true;
           }
         });
       },
       getSleeptimeData(){
-        this.isLoading = true;
         return axios(
           {
             method: 'post',
@@ -289,6 +390,44 @@ export default {
           if(response.status==200){
             this.userSleeptimeData = response.data;
             this.setSleeptimeArray();
+            //Load Finished
+            this.isLoadedSleeptime = true;
+          }
+        });
+      },
+      getWeightData(){
+        return axios(
+          {
+            method: 'post',
+            url: `${resourceHost}/cadre/get_weight_data`,
+            data:{
+              user_id:this.user_id,
+            }
+        })
+        .then((response)=>{
+          if(response.status==200){
+            this.userWeightData = response.data;
+            this.setWeightArray();
+            //Load Finished
+            this.isLoadedWeight = true;
+          }
+        });
+      },
+      getHeartrateData(){
+        return axios(
+          {
+            method: 'post',
+            url: `${resourceHost}/cadre/get_heartrate_data`,
+            data:{
+              user_id:this.user_id,
+            }
+        })
+        .then((response)=>{
+          if(response.status==200){
+            this.userHeartrateData = response.data;
+            this.setHeartrateArray();
+            //Load Finished
+            this.isLoadedHeartrate = true;
           }
         });
       },
@@ -298,6 +437,22 @@ export default {
             this.sleeptimeArray.push(0);
           else
             this.sleeptimeArray.push(parseInt(item.sleep_time));
+        });
+      },
+      setWeightArray(){
+        this.userWeightData.result.forEach((item)=>{
+          if(!item.weight) 
+            this.weightArray.push(0);
+          else
+            this.weightArray.push(parseInt(item.weight));
+        });
+      },
+      setHeartrateArray(){
+        this.userHeartrateData.result.forEach((item)=>{
+          if(!item.min_max_avg.average) 
+            this.heartrateArray.push(0);
+          else
+            this.heartrateArray.push(parseInt(item.min_max_avg.average));
         });
       },
       getMilClass(classnum){
@@ -313,10 +468,18 @@ export default {
         }
       },
 
-      processEmpty(str,unit=''){
-        if(!str)
-          return this.stringEmpty;
-        return str+' '+unit;
+      processEmpty(str,unit='',dense=false){
+        if(dense){
+          if(str==0)
+            return '-';
+          return str;
+        }
+        else{
+          if(!str)
+            return this.stringEmpty;
+          return str+' '+unit;
+        }
+        
       },
       processEmptyExerciseCount(exercise){
         if(!exercise)
@@ -434,6 +597,30 @@ export default {
           numString = '0'+numString;
         }
         return numString;
+      },
+      getArrayMin(arr){
+        var min = 987654321;
+        arr.forEach((item)=>{
+          if(item == 0) return;
+          min = Math.min(min,item);
+        });
+        return min==987654321?0:min;
+      },
+      getArrayMax(arr){
+        var max = 0;
+        arr.forEach((item)=>{
+          max = Math.max(max,item);
+        });
+        return max;
+      },
+      getArrayAverage(arr){
+        var sum=0, cnt=0;
+        arr.forEach((item)=>{
+          if(item == 0) return;
+          sum+=item;
+          cnt++;
+        });
+        return cnt?(sum/cnt).toFixed(2):0;
       }
     },
 }

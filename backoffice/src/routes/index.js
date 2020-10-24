@@ -38,7 +38,6 @@ const router = new VueRouter({
         },
         {
             path: '/',
-            name: 'home',
             component: mainpage,
             beforeEnter:requireAuth(),
             children: [

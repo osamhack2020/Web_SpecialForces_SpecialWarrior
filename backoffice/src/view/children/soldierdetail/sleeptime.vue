@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-subtitle>
-      최근 30일간 수면시간(분)
+      최근 30일간 수면시간
     </v-card-subtitle>
     <v-card-text>
       <v-sparkline
