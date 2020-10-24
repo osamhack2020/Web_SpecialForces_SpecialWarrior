@@ -4,6 +4,12 @@ require_once('../dbsettings.php');
 require_once('../token_validator.php');
 require_once('./get_today_profile_id.php');
 
+/*
+  Set Sleeptime for Daily Profile
+  2020-10-?? goraegori
+  Input : sleep_time
+  Output : success,message
+*/
 $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"message"=>"");
 

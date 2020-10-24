@@ -3,20 +3,24 @@ require_once __DIR__.'/../auth/settings.php';
 require_once('../dbsettings.php');
 require_once('../token_validator.php');
 
-function get_unitname($dbconn,$unit_id){
-  $res=array("success"=>false,"result"=>array());
+/*
+  get user unit_id Function
+  2020-10-21 goraegori
+  Input : user_id
+  Output : unit_id
+*/
+
+function get_user_unit_id($dbconn,$user_id){
   try{
     
-    $sql = "SELECT unit_full_name,unit_id FROM unit WHERE unit_id = '$unit_id';";
+    $sql = "SELECT unit_id FROM warrior WHERE user_id = '$user_id';";
     $result = mysqli_query($dbconn,$sql);
     $row = mysqli_fetch_assoc($result);
-    array_push($res['result'], $row);
-    $res['success']=true;
+    return $row['unit_id'];
   }
   catch(Exception $e){
     http_response_code(400); //bad request
-    $res['message'] = $e->getMessage();
+    return;
   }
-  return $res;
 }
 ?>

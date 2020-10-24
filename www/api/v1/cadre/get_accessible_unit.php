@@ -3,16 +3,21 @@ require_once __DIR__.'/../auth/settings.php';
 require_once('../dbsettings.php');
 require_once('./cadre_validator.php');
 require_once('../member/get_unitname_function.php');
+require_once('./get_accessible_unit_function.php');
+
+/*
+  Get Accessible Unit API
+  2020-10-17 goraegori
+  Input : user_id
+  Output : success, result(unit_id,...)
+*/
 
 $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"result"=>array());
 
 try{
   if(!$cadre_flag) throw new Exception("간부만 접근할 수 있습니다");
-  $sql = "SELECT admin_privilege FROM warrior WHERE user_id = '$userInfo[user_id]'"; //Except cadre, only shows soldiers on same unit.
-  $result = mysqli_query($dbconn,$sql);
-  $row = mysqli_fetch_assoc($result);
-  $array_accessible_split=explode('|',$row['admin_privilege']);
+  $array_accessible_split=get_accessible_unit($dbconn,$userInfo['user_id']);
   $array_accessible=array();
   foreach($array_accessible_split as $value){
     array_push($array_accessible, get_unitname($dbconn,$value)['result'][0]);

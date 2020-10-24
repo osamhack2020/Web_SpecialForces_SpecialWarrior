@@ -8,7 +8,7 @@ $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"result"=>array());
 
 try{
-  $userInfo['unit_name'] = get_unitname($dbconn,$userInfo['unit_id'])['result'][0];
+  $userInfo['unit_full_name'] = get_unitname($dbconn,$userInfo['unit_id'])['result'][0]['unit_full_name'];
   array_push($res['result'], $userInfo);
   $res['success']=true;
 }

@@ -29,6 +29,12 @@ try{
   if($row['cnt'])
     throw new Exception("사용할 수 없는 이메일입니다");
   
+  // user can only select unit_id that exists
+  $sql = "SELECT unit_id FROM unit WHERE unit_id = $input[unit_id]";
+  $result = mysqli_query($dbconn,$sql);
+  if($result->num_rows == 0)
+    throw new Exception("사용 할 수 없는 소속(부대)입니다");
+  
   // able to skip unnecessary fields
    if(!$input['cadre_flag'])
     $input['cadre_flag'] = 0;
@@ -40,11 +46,12 @@ try{
   $date = date("Y-m-d H:i:s"); 
   // register user
   $encrypted_pass = sha1($input['password']);
-  $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],0,$input[class],
-  '$input[army_num]',$input[unit_id],$input[name],'$input[email]','$input[phone]','$date','$date')";
+  $sql = "INSERT INTO $warriors_table VALUES('$input[user_id]','$encrypted_pass',$input[cadre_flag],0,NULL,$input[class],
+  '$input[army_num]',$input[unit_id],'$input[name]','$input[email]','$input[phone]','$date','$date')";
   mysqli_query($dbconn,$sql);
   add_today_profile($dbconn,$input['user_id']);
   $res['success']=true;
+  $res['message']="회원가입 성공";
 }
 catch(Exception $e){
   http_response_code(400); //bad request

@@ -1,16 +1,18 @@
 <?php
 require_once __DIR__.'/../auth/settings.php';
 require_once('../dbsettings.php');
-require_once('../token_validator.php');
 
 $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"result"=>array());
 
-try{ 
-  $sql = "SELECT user_id FROM warrior WHERE user_id != '$userInfo[user_id]' AND unit_id = $userInfo[unit_id] AND cadre_flag=0;";
+//input : {substring}
+
+//output : {unit_name, unit_id}
+
+try{
+  $sql = "SELECT unit_full_name,unit_id FROM unit WHERE unit_full_name LIKE '%$input[substring]%'";
   $result = mysqli_query($dbconn,$sql);
-  for($i=0;$i<$result->num_rows;$i++){
-    $row = mysqli_fetch_assoc($result);
+  while($row = mysqli_fetch_assoc($result)){
     array_push($res['result'], $row);
   }
   $res['success']=true;
