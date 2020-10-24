@@ -156,7 +156,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="mt-3">
+          <v-card class="mt-3 text-black">
             <v-card-subtitle>
               <v-icon color="purple lighten-1">mdi-power-sleep</v-icon>
               최근 30일간 수면시간
@@ -629,5 +629,8 @@ export default {
 <style>
   .scroll-y{
     overflow-y:scroll;
+  }
+  .v-card__subtitle{
+    color:#000000DE !important;
   }
 </style>
