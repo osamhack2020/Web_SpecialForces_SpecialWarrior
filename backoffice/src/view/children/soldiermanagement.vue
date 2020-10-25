@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card class="pa-3">
+        <v-card class="px-3 pt-3">
             <v-chip-group
               mandatory
               active-class="primary--text"
@@ -14,6 +14,7 @@
                 <v-chip>王</v-chip>
             </v-chip-group>
             <v-text-field
+              dense
               outlined
               clearable
               single-line

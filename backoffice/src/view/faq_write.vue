@@ -5,7 +5,7 @@
       max-width="80vh"
     >
       <v-card>
-        <v-toolbar>
+        <v-toolbar dark>
           <v-btn
             icon
             @click="closeDialog()"

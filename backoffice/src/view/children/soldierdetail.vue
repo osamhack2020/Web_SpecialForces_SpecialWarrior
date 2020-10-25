@@ -5,17 +5,18 @@
       scrollable
     >
       <v-card>
-        <v-toolbar>
+        <v-toolbar dark>
+          <v-toolbar-title>{{getMilClass(userInfo.class)}} {{userInfo.name}} 정보</v-toolbar-title>
+          <v-spacer></v-spacer>
           <v-btn
             icon
             @click="closeDialog()"
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>{{getMilClass(userInfo.class)}} {{userInfo.name}}</v-toolbar-title>
         </v-toolbar>
         <v-container class="scroll-y" v-if="isLoadedUserInfo && isLoadedHeartrate && isLoadedWeight && isLoadedSleeptime">
-          <v-card>
+          <v-card v-if="isLoadedUserInfo">
             <v-card-subtitle>
               유저 정보
             </v-card-subtitle>
@@ -59,7 +60,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="mt-3">
+          <v-card class="mt-3" v-if="isLoadedUserInfo">
             <v-card-subtitle>
               일일 프로필
               <span class="text-caption">{{userInfo.today_profile.date}}</span>
@@ -114,7 +115,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="mt-3">
+          <v-card class="mt-3" v-if="isLoadedUserInfo">
             <v-card-subtitle>
               최근 체력검정
             </v-card-subtitle>
@@ -156,7 +157,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="mt-3 text-black">
+          <v-card class="mt-3 text-black" v-if="isLoadedSleeptime">
             <v-card-subtitle>
               <v-icon color="purple lighten-1">mdi-power-sleep</v-icon>
               최근 30일간 수면시간
@@ -201,7 +202,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="mt-3">
+          <v-card class="mt-3" v-if="isLoadedWeight">
             <v-card-subtitle>
               <v-icon color="green">mdi-ruler</v-icon>
               최근 30일간 체중
@@ -246,7 +247,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="mt-3">
+          <v-card class="mt-3" v-if="isLoadedHeartrate">
             <v-card-subtitle>
               <v-icon color="red darken-1">mdi-heart</v-icon>
               최근 30일간 심박수
@@ -350,9 +351,6 @@ export default {
     },
     created(){
       this.getWarriorInfo();
-      this.getSleeptimeData();
-      this.getHeartrateData();
-      this.getWeightData();
     },
     methods:{
       closeDialog(){
@@ -372,6 +370,10 @@ export default {
           if(response.status==200){
             this.userInfo = response.data.result[0];
             this.getBMI(this.userInfo.today_profile.weight,this.userInfo.today_profile.height);
+            
+            this.getSleeptimeData();
+            this.getHeartrateData();
+            this.getWeightData();
             //Load Finished
             this.isLoadedUserInfo = true;
           }

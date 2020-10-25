@@ -24,6 +24,11 @@
                     <div class="mr-1"><v-icon small>mdi-clock</v-icon>{{getDate(item.created_at)}}</div>
             </v-col>
           </v-row>
+          <template v-slot:actions>
+            <v-icon color="primary">
+              $expand
+            </v-icon>
+          </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <span class="text-body-2">{{item.content}}</span>
@@ -41,6 +46,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <v-btn
+      class="mb-13"
       elevation="2"
       fab
       dark

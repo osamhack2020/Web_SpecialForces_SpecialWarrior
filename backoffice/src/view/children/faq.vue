@@ -16,6 +16,11 @@
       >
         <v-expansion-panel-header>
           {{item.question}}
+          <template v-slot:actions>
+            <v-icon color="primary">
+              $expand
+            </v-icon>
+          </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <span class="text-body-1">{{item.answer}}</span>
@@ -33,6 +38,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <v-btn
+      class="mb-13"
       elevation="2"
       fab
       dark
