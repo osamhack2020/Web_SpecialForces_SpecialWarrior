@@ -1,5 +1,4 @@
 <template>
-    <v-app>
     <v-dialog
       v-model="dialog"
       persistent
@@ -68,7 +67,6 @@
         </v-container>
       </v-card>
     </v-dialog>
-    </v-app>
 </template>
 
 <script>
@@ -100,7 +98,7 @@ export default {
     data:()=>({
         dialog:true,
         opensource:{
-          names:["vue.js","vue-router","vue-cli","vuex","vuetify","axios"],
+          names:["vue.js","vue-router","vue-cli","vuex","vuetify","axios","chart.js","vue-chartjs"],
           licenses:[
             license.MIT("2013-present","Yuxi (Evan) You"),
             license.MIT("2013-present","Evan You"),
@@ -108,6 +106,8 @@ export default {
             license.MIT("2015-present","Evan You"),
             license.MIT("2016-2020","John Jeremy Leider"),
             license.MIT("2014-present","Matt Zabriskie"),
+            license.MIT("2018","Chart.js Contributors"),
+            license.MIT("2016","Jakub Juszczak")
           ],
           homepages:[
             "https://github.com/vuejs/vue",
@@ -116,6 +116,8 @@ export default {
             "https://github.com/vuejs/vuex",
             "https://github.com/vuetifyjs/vuetify",
             "https://github.com/axios/axios",
+            "https://github.com/chartjs/Chart.js",
+            "https://github.com/apertureless/vue-chartjs",
           ],
           images:[
             "https://vuejs.org/images/logo.png",
@@ -123,6 +125,9 @@ export default {
             "https://vuejs.org/images/logo.png",
             "https://vuejs.org/images/logo.png",
             "https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-dark.svg",
+            "",
+            "https://camo.githubusercontent.com/ca884126d1d74829f36c8fa2e6947d8a411aed1f/68747470733a2f2f7777772e63686172746a732e6f72672f6d656469612f6c6f676f2d7469746c652e737667",
+            "https://github.com/apertureless/vue-chartjs/raw/develop/assets/vue-chartjs.png"
           ]
         },
         opened:-1,

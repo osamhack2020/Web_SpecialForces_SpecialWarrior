@@ -25,7 +25,7 @@
           <tbody>
             <tr>
               <td>{{ processEmptyExerciseCount(userInfo.latest_examine_data.latest_pushup,"회") }}</td>
-              <td>{{ processEmptyExerciseCount(userInfo.latest_examine_data.latest_situp,"회") }} {{userInfo.latest_examine_data.latest_situp}}</td>
+              <td>{{ processEmptyExerciseCount(userInfo.latest_examine_data.latest_situp,"회") }}</td>
               <td>{{ processEmptyExerciseTime(userInfo.latest_examine_data.latest_run) }}</td>
               <td>{{ getExamineGradeToKorean(userInfo.latest_examine_data.grade) }}</td>
             </tr>
@@ -45,10 +45,10 @@
 <script>
 export default {
   name:'latestexamine',
-  props:{
-    userInfo:Object,
-  },
+  props:['userInfo'],
   data:()=>({
+    stringEmptyExercise:"미측정",
+    stringEmpty:"미입력"
   }),
   methods:{
     getExamineGradeToKorean(grade){
@@ -79,6 +79,11 @@ export default {
       if(!exercise)
         return this.stringEmptyExercise;
       return exercise.created_at;
+    },
+    getMinuteAndSecond(second){
+      if(!second)
+        return this.stringEmpty;
+      return `${parseInt(second/60)}분 ${parseInt(second%60)}초`;
     },
   }
 }

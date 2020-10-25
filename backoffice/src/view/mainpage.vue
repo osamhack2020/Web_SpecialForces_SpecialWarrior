@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <v-app-bar
       app
-      
+      :prominent="this.$vuetify.breakpoint.mdAndDown"
       dark
     >
       <v-container class="py-0 fill-height">
@@ -112,6 +112,7 @@
       </template>
     </v-snackbar>
     <v-footer
+      app
       absolute
       dark
       class="font-weight-medium"
