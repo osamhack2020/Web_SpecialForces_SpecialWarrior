@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="isLoadedHeartrateData">
+  <v-card>
     <v-card-subtitle>
       <v-icon color="red darken-1">mdi-heart</v-icon>
       병사 심박수 상태
@@ -21,7 +21,12 @@
       </v-btn-toggle>
     </v-card-subtitle>
     <v-card-text>
-      <barchart class="col-10 mx-auto" :chart-data="heartrateArray"></barchart>
+      <v-skeleton-loader
+        loading
+        type="article, article, article"
+        v-show="!isLoadedHeartrateData"
+      ></v-skeleton-loader>
+      <barchart v-if="isLoadedHeartrateData" class="col-10 mx-auto" :chart-data="heartrateArray"></barchart>
     </v-card-text>
   </v-card>
 </template>
@@ -33,6 +38,7 @@ import barchart from './barchart.vue';
 export default {
   name:'heartrate',
   components:{barchart},
+  props:['selectedDate'],
   computed:{
     getSelectedUnit(){
       return this.$store.getters.getSelectedUnit;
@@ -42,35 +48,17 @@ export default {
     getSelectedUnit(){
       this.getHeartrateDataOfAll();
     },
+    selectedDate(){
+      this.getHeartrateDataOfAll();
+    }
   },
   created(){
+    this.initializeHeartrateArray();
     this.getHeartrateDataOfAll();
   },
   data:()=>({
     heartrateData:[],
-    heartrateArray:{
-      labels:[],
-      datasets:[
-        {
-          label: '평균 심박수',
-          backgroundColor: '#ab47bc',
-          data: [],
-        },
-        {
-          label: '최소 심박수',
-          backgroundColor: '#f87979',
-          data: [],
-        },
-        {
-          label: '최대 심박수',
-          backgroundColor: '#4CAF50',
-          data: [],
-        },
-      ],
-      ascending:0,
-      sorted:false,
-      type:2,
-    },
+    heartrateArray:{},
     isLoadedHeartrateData:false,
   }),
   methods:{
@@ -81,6 +69,7 @@ export default {
             url: `${resourceHost}/cadre/get_heartrate_data_of_all`,
             data:{
               unit_id:this.$store.getters.getSelectedUnit.unit_id,
+              date:this.selectedDate,
             }
         })
         .then((response)=>{
@@ -88,7 +77,7 @@ export default {
             this.heartrateData = response.data;
             this.setHeartrateArray();
             //Load Finished
-            this.isLoadedHeartrateData = true;
+            
           }
         });
     },
@@ -146,6 +135,7 @@ export default {
       });
       
       this.sortHeartrateArray();
+      this.isLoadedHeartrateData = true;
     },
     sortArraybySortOrder(array,order_array){
       return array.map((item,index)=>{return array[order_array[index]]});
@@ -169,9 +159,9 @@ export default {
         });
         //Sort Array
         this.heartrateArray.labels = this.sortArraybySortOrder(this.heartrateArray.labels,sorted_order);
-        this.heartrateArray.datasets[0].data = this.sortArraybySortOrder(this.heartrateArray.datasets[0].data,sorted_order);
-        this.heartrateArray.datasets[1].data = this.sortArraybySortOrder(this.heartrateArray.datasets[1].data,sorted_order);
-        this.heartrateArray.datasets[2].data = this.sortArraybySortOrder(this.heartrateArray.datasets[2].data,sorted_order);
+        for(var i=0;i<this.heartrateArray.datasets.length;i++){
+          this.heartrateArray.datasets[i].data = this.sortArraybySortOrder(this.heartrateArray.datasets[i].data,sorted_order);
+        }
         this.heartrateArray.sorted=true;
         //change address of heartrateArray to fire redraw
         this.heartrateArray = {...this.heartrateArray};

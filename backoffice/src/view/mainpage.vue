@@ -115,6 +115,7 @@
       app
       absolute
       dark
+      padless
       class="font-weight-medium"
     >
       <v-col

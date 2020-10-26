@@ -34,6 +34,7 @@
           v-if="!(isLoadedUserInfo && isLoadedHeartrate && isLoadedWeight && isLoadedSleeptime)"
         >
           <v-skeleton-loader
+            loading
             type="list-item-avatar-three-line,card, article, article"
           ></v-skeleton-loader>
         </v-sheet>

@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="isLoadedWeightData">
+  <v-card>
     <v-card-subtitle>
       <v-icon color="green">mdi-ruler</v-icon>
       병사 체중 상태
@@ -21,7 +21,12 @@
       </v-btn-toggle>
     </v-card-subtitle>
     <v-card-text>
-      <barchart class="col-10 mx-auto" :chart-data="weightArray"></barchart>
+      <v-skeleton-loader
+        loading
+        type="article, article, article"
+        v-show="!isLoadedWeightData"
+      ></v-skeleton-loader>
+      <barchart v-if="isLoadedWeightData" class="col-10 mx-auto" :chart-data="weightArray"></barchart>
     </v-card-text>
   </v-card>
 </template>
@@ -33,6 +38,7 @@ import barchart from './barchart.vue';
 export default {
   name:'weight',
   components:{barchart},
+  props:['selectedDate'],
   computed:{
     getSelectedUnit(){
       return this.$store.getters.getSelectedUnit;
@@ -42,35 +48,17 @@ export default {
     getSelectedUnit(){
       this.getWeightDataOfAll();
     },
+    selectedDate(){
+      this.getWeightDataOfAll();
+    }
   },
   created(){
+    this.initializeWeightArray();
     this.getWeightDataOfAll();
   },
   data:()=>({
     weightData:[],
-    weightArray:{
-      labels:[],
-      datasets:[
-        {
-          label: '평균 체중',
-          backgroundColor: '#ab47bc',
-          data: [],
-        },
-        {
-          label: '최소 체중',
-          backgroundColor: '#f87979',
-          data: [],
-        },
-        {
-          label: '최대 체중',
-          backgroundColor: '#4CAF50',
-          data: [],
-        },
-      ],
-      ascending:0,
-      sorted:false,
-      type:1,
-    },
+    weightArray:{},
     isLoadedWeightData:false,
   }),
   methods:{
@@ -81,6 +69,7 @@ export default {
             url: `${resourceHost}/cadre/get_weight_data_of_all`,
             data:{
               unit_id:this.$store.getters.getSelectedUnit.unit_id,
+              date:this.selectedDate,
             }
         })
         .then((response)=>{
@@ -88,11 +77,26 @@ export default {
             this.weightData = response.data;
             this.setWeightArray();
             //Load Finished
-            this.isLoadedWeightData = true;
           }
         });
     },
     initializeWeightArray(){
+      if(this.selectedDate){
+        this.weightArray = {
+          labels:[],
+          datasets:[
+            {
+              label: '체중',
+              backgroundColor: '#ab47bc',
+              data: [],
+            },
+          ],
+          ascending:0,
+          sorted:false,
+          type:1,
+        };
+        return;
+      }
       this.weightArray = {
         labels:[],
         datasets:[
@@ -123,29 +127,41 @@ export default {
       this.weightData.forEach((item)=>{
         this.weightArray.labels.push(item.name);
       });
-      //평균 수면시간
-      this.weightData.forEach((item)=>{
-        if(!item.min_max_avg.average) 
-          this.weightArray.datasets[0].data.push(0);
-        else
-          this.weightArray.datasets[0].data.push(parseInt(item.min_max_avg.average));
-      });
-      //최소
-      this.weightData.forEach((item)=>{
-        if(!item.min_max_avg.min) 
-          this.weightArray.datasets[1].data.push(0);
-        else
-          this.weightArray.datasets[1].data.push(parseInt(item.min_max_avg.min));
-      });
-      //최대
-      this.weightData.forEach((item)=>{
-        if(!item.min_max_avg.max) 
-          this.weightArray.datasets[2].data.push(0);
-        else
-          this.weightArray.datasets[2].data.push(parseInt(item.min_max_avg.max));
-      });
+      if(!this.selectedDate){
+        //평균
+        this.weightData.forEach((item)=>{
+          if(!item.min_max_avg.average) 
+            this.weightArray.datasets[0].data.push(0);
+          else
+            this.weightArray.datasets[0].data.push(parseInt(item.min_max_avg.average));
+        });
+        //최소
+        this.weightData.forEach((item)=>{
+          if(!item.min_max_avg.min) 
+            this.weightArray.datasets[1].data.push(0);
+          else
+            this.weightArray.datasets[1].data.push(parseInt(item.min_max_avg.min));
+        });
+        //최대
+        this.weightData.forEach((item)=>{
+          if(!item.min_max_avg.max) 
+            this.weightArray.datasets[2].data.push(0);
+          else
+            this.weightArray.datasets[2].data.push(parseInt(item.min_max_avg.max));
+        });
+      }
+      else{
+        //체중
+        this.weightData.forEach((item)=>{
+          if(!item.result[0].weight) 
+            this.weightArray.datasets[0].data.push(0);
+          else
+            this.weightArray.datasets[0].data.push(parseInt(item.result[0].weight));
+        });
+      }
       
       this.sortWeightArray();
+      this.isLoadedWeightData = true;
     },
     sortArraybySortOrder(array,order_array){
       return array.map((item,index)=>{return array[order_array[index]]});
@@ -169,9 +185,9 @@ export default {
         });
         //Sort Array
         this.weightArray.labels = this.sortArraybySortOrder(this.weightArray.labels,sorted_order);
-        this.weightArray.datasets[0].data = this.sortArraybySortOrder(this.weightArray.datasets[0].data,sorted_order);
-        this.weightArray.datasets[1].data = this.sortArraybySortOrder(this.weightArray.datasets[1].data,sorted_order);
-        this.weightArray.datasets[2].data = this.sortArraybySortOrder(this.weightArray.datasets[2].data,sorted_order);
+        for(var i=0;i<this.weightArray.datasets.length;i++){
+          this.weightArray.datasets[i].data = this.sortArraybySortOrder(this.weightArray.datasets[i].data,sorted_order);
+        }
         this.weightArray.sorted=true;
         //change address of weightArray to fire redraw
         this.weightArray = {...this.weightArray};

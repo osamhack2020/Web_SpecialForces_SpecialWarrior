@@ -45,7 +45,8 @@ const axiosInterceptor = axios.interceptors.response.use(
             }
             else if(error.response.data.error_description.indexOf("invalid") != -1){
                 //Refresh Token expired, too
-                store.commit('logout');
+                store.dispatch('logout');
+                return;
             }
             else
             store.commit('showSnackbar',{message:error.response.data.error_description});
@@ -174,7 +175,7 @@ export const store = new Vuex.Store({
         //FAQ
         SetFaqRefresh(state,payload){
             state.isFaqNeedRefresh = payload;
-        }
+        },
     },
     actions:{
         fetchUser({commit}){

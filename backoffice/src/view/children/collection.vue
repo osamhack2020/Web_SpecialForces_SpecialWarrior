@@ -1,25 +1,77 @@
 <template>
-  <v-container>
-    <sleeptime></sleeptime>
-    <weight class="mt-3"></weight>
-    <heartrate class="mt-3"></heartrate>
-  </v-container>
+	<v-sheet>
+		<v-tabs
+			grow
+			v-model="selectedTab"
+			@change="$router.push(selectedTab?'/collection/day':'/collection/month')"
+		>
+			<v-tab>
+				<v-icon>mdi-calendar-month</v-icon>
+				월간
+			</v-tab>
+			<v-tab>
+				<v-icon>mdi-calendar-today</v-icon>
+				일간
+			</v-tab>
+		</v-tabs>
+		
+		<v-tabs-items v-model="selectedTab"  style="min-height:100vh">
+			<v-tab-item>
+				<router-view name="month"></router-view>
+			</v-tab-item>
+			<v-tab-item>
+				<v-menu offset-y :close-on-content-click="false" transition="scroll-y-transition">
+					<template v-slot:activator="{ on, attrs }">
+						<v-btn
+							color="primary"
+							dark
+							v-bind="attrs"
+							v-on="on"
+						>
+						<v-icon>mdi-calendar-search</v-icon>
+						날짜 변경
+						</v-btn>
+					</template>
+					<v-card>
+						<v-date-picker
+							color="primary"
+							v-model="selectedDate"
+							:first-day-of-week="0"
+							:show-current="currentDate"
+							:allowed-dates="getAllowedDates"
+							locale="ko-kr"
+						></v-date-picker>
+					</v-card>
+				</v-menu>
+				<router-view name="day" :selectedDate="selectedDate"></router-view>
+			</v-tab-item>
+		</v-tabs-items>
+	</v-sheet>
 </template>
 
 <script>
-import sleeptime from './collection/sleeptime.vue';
-import weight from './collection/weight.vue';
-import heartrate from './collection/heartrate.vue';
-
 export default {
-    name:'collection',
-    components:{sleeptime,weight,heartrate},
-    methods:{
-    },
-
+	name:'collection',
+	data:()=>({
+		selectedDate: null,
+		currentDate: null,
+		selectedTab:0,
+	}),
+	created(){
+		this.selectedDate = this.currentDate = this.getTodayDate();
+	},
+	methods:{
+		getTodayDate(){
+			let date = new Date();
+			return date.getFullYear() + '-'+ (date.getMonth()+1) + '-' + date.getDate()
+		},
+		getAllowedDates(date){return date <= this.currentDate},
+	},
 }
 </script>
 
 <style>
-
+	.v-date-picker-title__date{
+		font-size:32px;
+	}
 </style>
