@@ -25,6 +25,7 @@ Vue.use(VueRouter);
 
 const requireAuth = () => (to, from, next) => { 
     if(store.state.tokenData && store.state.userData){
+        // store.commit("OnLoginSuccess"); //called only once if Header is not set (On refreshing page)
         if(!axios.defaults.headers.common['Authorization']){
             store.commit("OnLoginSuccess"); //called only once if Header is not set (On refreshing page)
             store.commit("AfterLoginSuccess");

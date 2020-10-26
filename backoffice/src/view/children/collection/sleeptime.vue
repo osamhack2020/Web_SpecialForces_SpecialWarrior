@@ -95,7 +95,36 @@ export default {
           }
         });
     },
+    initailizeSleeptimeArray(){
+      this.sleeptimeArray = {
+        labels:[],
+        datasets:[
+          {
+            label: '평균 수면시간',
+            backgroundColor: '#ab47bc',
+            data: [],
+            hourAndMinute: [],
+          },
+          {
+            label: '최소 수면시간',
+            backgroundColor: '#f87979',
+            data: [],
+            hourAndMinute: [],
+          },
+          {
+            label: '최대 수면시간',
+            backgroundColor: '#4CAF50',
+            data: [],
+            hourAndMinute: [],
+          },
+        ],
+        ascending:0,
+        sorted:false,
+        type:0,
+      };
+    },
     setSleeptimeArray(){
+      this.initailizeSleeptimeArray();
       //이름
       this.sleeptimeData.forEach((item)=>{
         this.sleeptimeArray.labels.push(item.name);

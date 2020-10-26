@@ -92,7 +92,33 @@ export default {
           }
         });
     },
+    initializeWeightArray(){
+      this.weightArray = {
+        labels:[],
+        datasets:[
+          {
+            label: '평균 체중',
+            backgroundColor: '#ab47bc',
+            data: [],
+          },
+          {
+            label: '최소 체중',
+            backgroundColor: '#f87979',
+            data: [],
+          },
+          {
+            label: '최대 체중',
+            backgroundColor: '#4CAF50',
+            data: [],
+          },
+        ],
+        ascending:0,
+        sorted:false,
+        type:1,
+      };
+    },
     setWeightArray(){
+      this.initializeWeightArray();
       //이름
       this.weightData.forEach((item)=>{
         this.weightArray.labels.push(item.name);

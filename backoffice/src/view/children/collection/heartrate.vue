@@ -92,7 +92,33 @@ export default {
           }
         });
     },
+    initializeHeartrateArray(){
+      this.heartrateArray = {
+        labels:[],
+        datasets:[
+          {
+            label: '평균 심박수',
+            backgroundColor: '#ab47bc',
+            data: [],
+          },
+          {
+            label: '최소 심박수',
+            backgroundColor: '#f87979',
+            data: [],
+          },
+          {
+            label: '최대 심박수',
+            backgroundColor: '#4CAF50',
+            data: [],
+          },
+        ],
+        ascending:0,
+        sorted:false,
+        type:2,
+      };
+    },
     setHeartrateArray(){
+      this.initializeHeartrateArray();
       //이름
       this.heartrateData.forEach((item)=>{
         this.heartrateArray.labels.push(item.name);
