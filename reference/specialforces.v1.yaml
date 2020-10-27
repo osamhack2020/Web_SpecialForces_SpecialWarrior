@@ -22,6 +22,7 @@ info:
     2020-10-22 Token Refresh 추가(로그인 API 확인)
     2020-10-24 전우목록을 같은 소속에서만 받아오도록 변경, 전우 요청,거절 API 제거
     2020-10-27 운동 프로필 가져오기 API exercise_id 별로 받아올수 있도록 수정
+    2020-10-27 유저정보 가져오기 API 최근 체력검정 결과 포함하도록 수정
 
     > 운동 종류<br>
     {<br>
@@ -562,8 +563,6 @@ paths:
                       properties:
                         user_id:
                           type: string
-                        password:
-                          type: string
                         cadre_flag:
                           type: string
                         admin_flag:
@@ -584,26 +583,72 @@ paths:
                           type: string
                         accessed_at:
                           type: string
+                        latest_examine_data:
+                          type: object
+                          properties:
+                            latest_pushup:
+                              type: object
+                              properties:
+                                exercise_count:
+                                  type: integer
+                                  description: 팔굽혀펴기 갯수
+                                created_at:
+                                  type: string
+                                  description: 시행일
+                            latest_situp:
+                              type: object
+                              properties:
+                                exercise_count:
+                                  type: integer
+                                created_at:
+                                  type: string
+                                  description: 시행일
+                            latest_run:
+                              type: object
+                              properties:
+                                exercise_time:
+                                  type: integer
+                                created_at:
+                                  type: string
+                                  description: 시행일
+                            grade:
+                              type: number
+                              description: 체력검정 등급
+                            latest_examine:
+                              type: string
+                              description: '가장 최근의 체력검정(팔굽,윗몸,뜀뛰기 중 가장최근)'
                         unit_full_name:
                           type: string
-                          description: 소속된 부대명
+                          description: 부대명 처음부터 끝까지
               examples:
-                example-1:
+                결과:
                   value:
                     success: true
                     result:
-                      - user_id: qwe
-                        password: 056eafe7cf52220de2df36845b8ed170c67e23e3
-                        cadre_flag: '1'
+                      - user_id: testaccount
+                        cadre_flag: '0'
                         admin_flag: '0'
-                        class: '0'
-                        army_num: qwe
-                        unit_id: '123'
-                        name: 김철수
-                        email: qwe
-                        phone: qwe
-                        created_at: '2020-10-07 19:35:41'
-                        accessed_at: '2020-10-07 23:54:22'
+                        class: '3'
+                        army_num: 20-10101111
+                        unit_id: '2'
+                        name: 강산
+                        email: smskksk@naver.com
+                        phone: '01012345678'
+                        created_at: '2020-10-17 03:16:40'
+                        accessed_at: '2020-10-27 17:29:58'
+                        latest_examine_data:
+                          latest_pushup:
+                            exercise_count: '15'
+                            created_at: '2020-10-27'
+                          latest_situp:
+                            exercise_count: '15'
+                            created_at: '2020-10-17'
+                          latest_run:
+                            exercise_time: '0'
+                            created_at: '2020-10-17'
+                          grade: 999
+                          latest_examine: '2020-10-27'
+                        unit_full_name: 지상작전사령부 정보통신여단 제112통신대대 2중대
         '':
           content:
             application/json:
@@ -663,6 +708,15 @@ paths:
         주로 로그인 직후에 유저 정보를 받아오거나, 유저 정보를 갱신할 필요가 있을 때 사용합니다.
 
         >2020-10-07 이름추가
+
+        >2020-10-27 최근 체력검정 결과 포함<br>
+        grade :{<br>
+          0 : 특급,<br>
+          1 : 1급,<br>
+          2 : 2급,<br>
+          3 : 3급,<br>
+          999 : 불합격,<br>
+        }
     parameters: []
   /api/v1/exercise/get_exercise_ids:
     get:
