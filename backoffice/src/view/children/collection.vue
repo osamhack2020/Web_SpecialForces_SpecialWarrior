@@ -1,6 +1,7 @@
 <template>
-	<v-sheet>
+	<div>
 		<v-tabs
+			class="rounded"
 			grow
 			v-model="selectedTab"
 			@change="$router.push(selectedTab?'/collection/day':'/collection/month')"
@@ -50,7 +51,7 @@
 				<router-view name="day" :selectedDate="selectedDate"></router-view>
 			</v-tab-item>
 		</v-tabs-items>
-	</v-sheet>
+	</div>
 </template>
 
 <script>
