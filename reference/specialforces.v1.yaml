@@ -19,10 +19,10 @@ info:
     2020-10-10 heartrate 테이블 및 API 추가<br>
     2020-10-13 find_afflication API 구현 완료, 유저정보 가져오기 API 응답에 unit_full_name 추가, 문서 오류 수정(minor)<br>
     2020-10-17 몸무게, 키 FLOAT 로 수정, add_exercise_profile 에 exercise_time 단위 초로 변경<br>
-    2020-10-22 Token Refresh 추가(로그인 API 확인)
-    2020-10-24 전우목록을 같은 소속에서만 받아오도록 변경, 전우 요청,거절 API 제거
-    2020-10-27 운동 프로필 가져오기 API exercise_id 별로 받아올수 있도록 수정
-    2020-10-27 유저정보 가져오기 API 최근 체력검정 결과 포함하도록 수정
+    2020-10-22 Token Refresh 추가(로그인 API 확인)<br>
+    2020-10-24 전우목록을 같은 소속에서만 받아오도록 변경, 전우 요청,거절 API 제거<br>
+    2020-10-27 운동 프로필 가져오기 API exercise_id 별로 받아올수 있도록 수정<br>
+    2020-10-27 유저정보 가져오기 API 최근 체력검정 결과 포함하도록 수정<br>
 
     > 운동 종류<br>
     {<br>
