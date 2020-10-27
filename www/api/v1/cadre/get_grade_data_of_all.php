@@ -25,6 +25,7 @@ try{
     $row = mysqli_fetch_assoc($result);
     $grade_data['grade']=get_latest_examine_data($dbconn,$row['user_id'])['result']['grade'];
     $grade_data['name'] = $row['name'];
+    $grade_data['user_id'] = $row['user_id'];
     array_push($res,$grade_data);
   }
   

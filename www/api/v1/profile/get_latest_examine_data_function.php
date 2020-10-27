@@ -11,7 +11,7 @@
 
 function get_latest_examine_data($dbconn,$user_id){
   //$input = json_decode(file_get_contents('php://input'),true);
-  $res=array("success"=>false,"result"=>array("latest_pushup"=>null,"latest_situp"=>null,"latest_run"=>null));
+  $res=array("success"=>false,"result"=>array("latest_pushup"=>null,"latest_situp"=>null,"latest_run"=>null,"grades"=>array()));
   try{
     //Get latest pushup and information
     $sql = "SELECT exercise_count,created_at FROM exercise_profile WHERE user_id='$user_id' AND exercise_id=0 ORDER BY exercise_count DESC LIMIT 1;";
@@ -33,9 +33,9 @@ function get_latest_examine_data($dbconn,$user_id){
     
     //Get Examine Grade
     $res['result']['grade'] = get_examine_grade(
-      get_pushup_grade($res['result']['latest_pushup']['exercise_count']),
-      get_situp_grade($res['result']['latest_situp']['exercise_count']),
-      get_run_grade($res['result']['latest_run']['exercise_time'])
+      $res['result']['grades'][0]=get_pushup_grade($res['result']['latest_pushup']['exercise_count']),
+      $res['result']['grades'][1]=get_situp_grade($res['result']['latest_situp']['exercise_count']),
+      $res['result']['grades'][2]=get_run_grade($res['result']['latest_run']['exercise_time'])
     );
     
     //Get Latest Examine
