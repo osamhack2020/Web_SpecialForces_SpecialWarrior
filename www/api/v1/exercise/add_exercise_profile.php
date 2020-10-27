@@ -4,6 +4,14 @@ require_once('../dbsettings.php');
 require_once('../token_validator.php');
 require_once('../profile/get_today_profile_id.php');
 
+
+/*
+  Add Exercise Profile API
+  2020-10-xx goraegori
+  Input : exercise_weight, exercise_count, exercise_time
+  Output : success, message
+*/
+
 $input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"message"=>"");
 $date = date("Y-m-d"); 

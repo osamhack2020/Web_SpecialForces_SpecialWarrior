@@ -12,7 +12,7 @@ try{
   if(empty($input['date'])){
     $input['date']=date("Y-m-d");
   }
-  $result = get_heartrate_profile_by_date($dbconn,$input['date'],$userInfo);
+  $result = get_heartrate_profile_by_date($dbconn,$input['date'],$userInfo['user_id']);
   array_push($res['result'],$result);
   $res['success'] = true;
 }
