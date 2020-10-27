@@ -7,7 +7,7 @@ require_once('./get_profile_function.php');
 /*
   Get Daily Profile API
   2020-10-?? goraegori
-  Input : user_id, date(*optional)
+  Input :  date(*optional)
   Output : success,result(profile_id,user_id,date,weight,height,calorie,sleep_time,heartrate_average)
 */
 $input = json_decode(file_get_contents('php://input'),true);
