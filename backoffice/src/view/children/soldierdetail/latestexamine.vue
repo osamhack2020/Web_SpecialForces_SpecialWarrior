@@ -30,6 +30,12 @@
               <td>{{ getExamineGradeToKorean(userInfo.latest_examine_data.grade) }}</td>
             </tr>
             <tr>
+              <td>{{ getExamineGradeToKorean(userInfo.latest_examine_data.grades[0]) }}</td>
+              <td>{{ getExamineGradeToKorean(userInfo.latest_examine_data.grades[1]) }}</td>
+              <td>{{ getExamineGradeToKorean(userInfo.latest_examine_data.grades[2]) }}</td>
+              <td></td>
+            </tr>
+            <tr>
               <td>{{ processEmptyExerciseDateTime(userInfo.latest_examine_data.latest_pushup) }}</td>
               <td>{{ processEmptyExerciseDateTime(userInfo.latest_examine_data.latest_situp) }}</td>
               <td>{{ processEmptyExerciseDateTime(userInfo.latest_examine_data.latest_run) }}</td>

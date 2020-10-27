@@ -14,6 +14,8 @@ import collection from '../view/children/collection.vue';
 import collection_month from '../view/children/collection_month.vue';
 import collection_day from '../view/children/collection_day.vue';
 
+import warriorstatus from '../view/children/warriorstatus.vue';
+
 import faq from '../view/children/faq.vue';
 import faq_write from '../view/faq_write.vue';
 
@@ -56,7 +58,7 @@ const router = new VueRouter({
                     path: "management", component: soldiermanagement,
 
                     children:[
-                        { path: ':user_id', component: soldierdetail},
+                        { path: ':user_id', component: soldierdetail, props:{from:'management'}},
                     ]
 
                 },
@@ -67,6 +69,13 @@ const router = new VueRouter({
                         { path:'/', redirect:'month'},
                         { path:'month', components:{month:collection_month} },
                         { path:'day', components:{day:collection_day}, props:true }
+                    ]
+                },
+                {
+                    path: "warriorstatus",
+                    component: warriorstatus,
+                    children:[
+                        { path: ':user_id', component: soldierdetail, props:{from:'warriorstatus'}},
                     ]
                 },
                 { 

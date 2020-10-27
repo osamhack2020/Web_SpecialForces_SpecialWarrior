@@ -54,6 +54,7 @@ import heartrateprofile from './soldierdetail/heartrateprofile.vue';
 
 export default {
     name:'soldierdetail',
+    props:['from'],
     components:{userinfo,sleeptime,dailyprofile,latestexamine,weightprofile,heartrateprofile},
     data:()=>({
       isLoadedUserInfo:false,
@@ -92,7 +93,7 @@ export default {
     methods:{
       closeDialog(){
         this.dialog=false;
-        this.$router.push('../');
+        this.$router.push('/'+this.from);
       },
       getWarriorInfo(){
         return axios(
