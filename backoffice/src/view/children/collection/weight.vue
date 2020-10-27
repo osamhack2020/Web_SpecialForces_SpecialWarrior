@@ -87,7 +87,7 @@ export default {
           datasets:[
             {
               label: '체중',
-              backgroundColor: '#ab47bc',
+              backgroundColor: '#4CAF50',
               data: [],
             },
           ],

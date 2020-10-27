@@ -10,6 +10,10 @@
       공지사항이 없습니다
     </v-container>
     <v-expansion-panels focusable popout>
+      <v-card-title>
+        <v-icon left>mdi-information</v-icon>
+        공지사항
+      </v-card-title>
       <v-expansion-panel
         v-for="(item,i) in notice"
         :key="i"
@@ -69,6 +73,7 @@ export default {
       isLoading:false,
       isHovering:false,
       notice:[],
+      show:false,
     }),
     created:function(){
       this.getNotice();

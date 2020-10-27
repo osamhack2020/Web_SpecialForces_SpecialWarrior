@@ -10,6 +10,10 @@
       FAQ가 없습니다
     </v-container>
     <v-expansion-panels focusable popout>
+      <v-card-title>
+        <v-icon left>mdi-frequently-asked-questions</v-icon>
+        FAQ
+      </v-card-title>
       <v-expansion-panel
         v-for="(item,i) in faq"
         :key="i"

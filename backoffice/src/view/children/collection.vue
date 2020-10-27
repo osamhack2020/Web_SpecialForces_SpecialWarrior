@@ -20,20 +20,24 @@
 				<router-view name="month"></router-view>
 			</v-tab-item>
 			<v-tab-item>
-				<v-menu offset-y :close-on-content-click="false" transition="scroll-y-transition">
+				<v-menu offset-y :close-on-content-click="false" transition="scroll-y-transition" >
 					<template v-slot:activator="{ on, attrs }">
-						<v-btn
-							color="primary"
-							dark
-							v-bind="attrs"
-							v-on="on"
-						>
-						<v-icon>mdi-calendar-search</v-icon>
-						날짜 변경
-						</v-btn>
+						<v-container>
+							<v-btn
+								block
+								color="primary"
+								dark
+								v-bind="attrs"
+								v-on="on"
+							>
+							<v-icon>mdi-calendar-search</v-icon>
+							날짜 변경
+							</v-btn>
+						</v-container>
 					</template>
 					<v-card>
 						<v-date-picker
+							full-width
 							color="primary"
 							v-model="selectedDate"
 							:first-day-of-week="0"
