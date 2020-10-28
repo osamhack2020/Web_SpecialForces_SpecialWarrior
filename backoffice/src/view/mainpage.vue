@@ -85,20 +85,7 @@
         </v-sheet>
       </v-container>
     </v-main>
-
-    <v-snackbar v-model="$store.getters.getSnackbar.show">
-      {{ $store.getters.getSnackbar.message }}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="primary"
-          text
-          v-bind="attrs"
-          @click="$store.commit('closeSnackbar');"
-        >
-          닫기
-        </v-btn>
-      </template>
-    </v-snackbar>
+    
     <v-footer
       app
       dark

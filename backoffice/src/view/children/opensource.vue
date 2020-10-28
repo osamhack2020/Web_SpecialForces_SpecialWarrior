@@ -135,7 +135,7 @@ export default {
     methods:{
         closeDialog(){
             this.dialog=false;
-            this.$router.push('/');
+            this.$router.go('-1');
         }
     }
 

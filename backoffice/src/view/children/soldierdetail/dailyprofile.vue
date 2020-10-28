@@ -1,8 +1,9 @@
 <template>
   <v-card>
     <v-card-subtitle>
+      <v-icon>mdi-timelapse</v-icon>
       일일 프로필
-      <span class="text-caption">{{userInfo.today_profile.date}}</span>
+      <v-chip small>{{userInfo.today_profile.date}}</v-chip>
     </v-card-subtitle>
     <v-card-text>
       <v-simple-table>
@@ -39,8 +40,9 @@
       </v-simple-table>
     </v-card-text>
     <v-card-subtitle>
+      <v-icon>mdi-label-percent</v-icon>
       BMI
-      <span class="text-caption">{{ getBMILabel() }}</span>
+      <v-chip small :color="getBMIColor()">{{ getBMILabel() }}</v-chip>
     </v-card-subtitle>
     <v-card-text class="text-center">
       <v-progress-linear
@@ -98,7 +100,7 @@ export default {
         return 'red';
     },
     getBMILabel(){
-      if(!this.profileBmi) return;
+      if(!this.profileBmi) return this.stringEmpty;
       if( this.profileBmi < 18.5){
         return '저체중';
       }

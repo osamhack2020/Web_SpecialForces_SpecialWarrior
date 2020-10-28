@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-subtitle>
+      <v-icon>mdi-table-clock</v-icon>
       최근 체력검정
     </v-card-subtitle>
     <v-card-text>

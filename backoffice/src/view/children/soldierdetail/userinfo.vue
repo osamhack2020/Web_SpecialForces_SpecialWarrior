@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-subtitle>
+      <v-icon>mdi-account-circle</v-icon>
       유저 정보
     </v-card-subtitle>
     <v-card-text>
