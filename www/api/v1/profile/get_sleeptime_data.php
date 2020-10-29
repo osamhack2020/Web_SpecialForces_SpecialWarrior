@@ -2,7 +2,7 @@
 require_once __DIR__.'/../auth/settings.php';
 require_once('../dbsettings.php');
 require_once('../token_validator.php');
-require_once('./get_sleeptime_data.php');
+require_once('./get_sleeptime_data_function.php');
 
 /*
   Get Sleeptime Data API
