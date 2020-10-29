@@ -29,6 +29,8 @@ try{
     }
     else{
       $heartrate_data=get_heartrate_profile_by_date($dbconn,$input['date'],$row['user_id']);
+      if(empty($heartrate_data['result']))
+        continue;
     }
     $heartrate_data['name'] = $row['name'];
     array_push($res,$heartrate_data);

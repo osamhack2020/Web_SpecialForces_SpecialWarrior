@@ -28,6 +28,8 @@ try{
     }
     else{
       $calorie_data=get_calorie_data_of_date($dbconn,$row['user_id'],$input['date']);
+      if(empty($calorie_data['result']))
+        continue;
     }
     $calorie_data['name'] = $row['name'];
     array_push($res,$calorie_data);

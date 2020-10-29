@@ -28,6 +28,8 @@ try{
     }
     else{
       $weight_data=get_weight_data_of_date($dbconn,$row['user_id'],$input['date']);
+      if(empty($weight_data['result']))
+        continue;
     }
     $weight_data['name'] = $row['name'];
     array_push($res,$weight_data);
