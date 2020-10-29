@@ -1,5 +1,12 @@
 <template>
   <v-container>
+    <v-card dark class="text-center mb-3 pa-3">
+			<v-icon style="font-size:100px;">mdi-information</v-icon>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h2 font-weight-bold" style="">공지사항</span>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h6 font-weight-medium mb-3">병사들에게 전파할 사항을 작성하고 관리해보세요</span>
+		</v-card>
     <v-container v-if="isLoading" class="text-center">
       <v-progress-circular
         indeterminate

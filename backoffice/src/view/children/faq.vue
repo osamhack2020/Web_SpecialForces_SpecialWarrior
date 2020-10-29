@@ -1,5 +1,12 @@
 <template>
   <v-container>
+    <v-card dark class="text-center mb-3 pa-3">
+			<v-icon style="font-size:100px;">mdi-frequently-asked-questions</v-icon>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h2 font-weight-bold" style="">FAQ</span>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h6 font-weight-medium mb-3">자주 묻는 사항들을 확인해보세요</span>
+		</v-card>
     <v-container v-if="isLoading" class="text-center">
       <v-progress-circular
         indeterminate
@@ -10,10 +17,6 @@
       FAQ가 없습니다
     </v-container>
     <v-expansion-panels focusable popout>
-      <v-card-title>
-        <v-icon left>mdi-frequently-asked-questions</v-icon>
-        FAQ
-      </v-card-title>
       <v-expansion-panel
         v-for="(item,i) in faq"
         :key="i"

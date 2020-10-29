@@ -1,7 +1,13 @@
 <template>
-	<div>
+	<v-container>
+		<v-card dark class="text-center mb-3 pa-3">
+			<v-icon style="font-size:100px;">mdi-view-dashboard</v-icon>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h2 font-weight-bold" style="">모아보기</span>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h6 font-weight-medium mb-3">병사들의 건강상태를 한눈에 확인해보세요</span>
+		</v-card>
 		<v-tabs
-			class="rounded"
 			grow
 			v-model="selectedTab"
 			@change="$router.push(selectedTab?'/collection/day':'/collection/month')"
@@ -51,7 +57,7 @@
 				<router-view name="day" :selectedDate="selectedDate"></router-view>
 			</v-tab-item>
 		</v-tabs-items>
-	</div>
+	</v-container>
 </template>
 
 <script>
