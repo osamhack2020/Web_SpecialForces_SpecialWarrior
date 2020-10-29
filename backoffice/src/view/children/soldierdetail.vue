@@ -27,6 +27,8 @@
           <weightprofile class="mt-3" v-if="isLoadedWeight" :weightArray="weightArray" ></weightprofile>
 
           <heartrateprofile class="mt-3" v-if="isLoadedHeartrate" :heartrateArray="heartrateArray"></heartrateprofile>
+
+          <calorieprofile class="mt-3" v-if="isLoadedCalorie" :calorieArray="calorieArray"></calorieprofile>
         </v-container>
 
         <v-sheet
@@ -51,25 +53,29 @@ import latestexamine from './soldierdetail/latestexamine.vue';
 import sleeptime from './soldierdetail/sleeptime.vue';
 import weightprofile from './soldierdetail/weightprofile.vue';
 import heartrateprofile from './soldierdetail/heartrateprofile.vue';
+import calorieprofile from './soldierdetail/calorieprofile.vue';
 
 export default {
     name:'soldierdetail',
     props:['from'],
-    components:{userinfo,sleeptime,dailyprofile,latestexamine,weightprofile,heartrateprofile},
+    components:{userinfo,sleeptime,dailyprofile,latestexamine,weightprofile,heartrateprofile,calorieprofile},
     data:()=>({
       isLoadedUserInfo:false,
       isLoadedSleeptime:false,
       isLoadedHeartrate:false,
       isLoadedWeight:false,
+      isLoadedCalorie:false,
       dialog:true,
       userInfo:[],
       userSleeptimeData:[],
       userHeartrateData:[],
       userWeightData:[],
+      userCalorieData:[],
 
       sleeptimeArray:[],
       heartrateArray:[],
       weightArray:[],
+      calorieArray:[],
 
       stringEmpty:"미입력",
       stringEmptyExercise:"미측정",
@@ -111,6 +117,7 @@ export default {
             this.getSleeptimeData();
             this.getHeartrateData();
             this.getWeightData();
+            this.getCalorieData();
             //Load Finished
             this.isLoadedUserInfo = true;
           }
@@ -170,6 +177,24 @@ export default {
           }
         });
       },
+      getCalorieData(){
+        return axios(
+          {
+            method: 'post',
+            url: `${resourceHost}/cadre/get_calorie_data`,
+            data:{
+              user_id:this.user_id,
+            }
+        })
+        .then((response)=>{
+          if(response.status==200){
+            this.userCalorieData = response.data;
+            this.setCalorieArray();
+            //Load Finished
+            this.isLoadedCalorie = true;
+          }
+        });
+      },
       setSleeptimeArray(){
         this.userSleeptimeData.result.forEach((item)=>{
           if(!item.sleep_time) 
@@ -192,6 +217,14 @@ export default {
             this.heartrateArray.push(0);
           else
             this.heartrateArray.push(parseInt(item.min_max_avg.average));
+        });
+      },
+      setCalorieArray(){
+        this.userCalorieData.result.forEach((item)=>{
+          if(!item.calorie) 
+            this.calorieArray.push(0);
+          else
+            this.calorieArray.push(parseInt(item.calorie));
         });
       },
       getMilClass(classnum){

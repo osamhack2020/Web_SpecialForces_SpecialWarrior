@@ -8,7 +8,12 @@
         elevation="10"
       >
         <v-card-title>
-          Login
+        <v-btn dark block class="mb-4" @click="$router.push('/')">
+          <v-icon>
+            mdi-arm-flex
+          </v-icon>
+          SpecialForces
+        </v-btn>
         </v-card-title>
         <v-card-text>
           <v-text-field
