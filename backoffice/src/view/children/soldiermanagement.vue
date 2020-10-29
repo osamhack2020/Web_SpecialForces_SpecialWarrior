@@ -1,6 +1,13 @@
 <template>
     <v-container>
-        <v-card class="pa-3">
+        <v-card dark class="text-center mb-3 pa-3">
+          <v-icon style="font-size:100px;">mdi-clipboard-account</v-icon>
+          <v-divider class="ma-4"></v-divider>
+          <span class="text-h2 font-weight-bold" style="">병사관리</span>
+          <v-divider class="ma-4"></v-divider>
+          <span class="text-h6 font-weight-medium mb-3">내 병사들의 건강상태를 확인하고 조언해보세요</span>
+        </v-card>
+        <v-card class="mt-3 px-3 pt-3">
             <v-chip-group
               mandatory
               active-class="primary--text"
@@ -14,6 +21,7 @@
                 <v-chip>王</v-chip>
             </v-chip-group>
             <v-text-field
+              dense
               outlined
               clearable
               single-line

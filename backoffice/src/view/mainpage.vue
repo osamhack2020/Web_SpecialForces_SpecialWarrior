@@ -1,41 +1,39 @@
 <template>
-  <v-app id="inspire">
-    <v-app-bar
+  <v-app>
+    <v-navigation-drawer
       app
-      color="white"
-      flat
+      dark
     >
-      <v-container class="py-0 fill-height">
-        <v-avatar
-          class="mr-10"
-          color="grey darken-1"
-          size="32"
-        ></v-avatar>
-
-        <v-btn
-          v-for="link in links"
-          :key="link.name"
-          text
-          :to="link.to"
-        >
-          {{ link.name }}
+      <v-sheet
+        class="pa-4 text-center"
+      >
+        <v-btn color="white" block class="mb-4" style="color:black" @click="$router.push('/')">
+          <v-icon>
+            mdi-arm-flex
+          </v-icon>
+          SpecialForces
         </v-btn>
-
-        <v-spacer></v-spacer>
-              
-        <v-responsive align="right">
-          <v-menu offset-y>
+        
+        <div>
+          <v-menu offset-y dark>
             <template v-slot:activator="{ on, attrs }">
-              <v-chip 
-                small
-                class="mr-1"
+              <v-card color="secondary">
+                
+                <span class="text-subtitle-2">{{ $store.getters.getSelectedUnit.unit_full_name }}</span>
+      
+                <v-btn
+                block
+                color="primary"
                 @click="setMatched();getAccessibleUnit();"
                 v-bind="attrs"
                 v-on="on"
               >
-                {{ $store.getters.getSelectedUnit.unit_full_name }}
-                <v-icon>mdi-chevron-down</v-icon>
-              </v-chip>
+              <v-icon left>mdi-account-group</v-icon>
+                변경
+                <v-icon right>mdi-chevron-down</v-icon>
+              </v-btn>
+              </v-card>
+              
             </template>
             
             <v-list dense rounded>
@@ -45,88 +43,62 @@
                   :key="item.unit_id"
                   @click="$store.commit('SetSelectedUnit',item);"
                 >
-                  <v-list-item-title>{{item.unit_full_name}}</v-list-item-title>
+                  <v-list-item-title color="white">{{item.unit_full_name}}</v-list-item-title>
                 </v-list-item>
               </v-list-item-group>
             </v-list>
           </v-menu>
-          <br>
-          <v-chip small class="mr-1">{{ this.$store.getters.getUserData.name }}</v-chip>
-          <v-chip small class="mr-1" @click="logout()"><v-icon>mdi-power</v-icon>로그아웃</v-chip>
-        </v-responsive>
-      </v-container>
-    </v-app-bar>
+          <div class="mt-4">
+          <v-chip class="mr-1"><v-icon>mdi-account</v-icon>{{ this.$store.getters.getUserData.name }}</v-chip>
+          <v-chip class="mr-1" @click="logout()"><v-icon>mdi-power</v-icon>로그아웃</v-chip>
+          </div>
+        </div>
+      </v-sheet>
 
-    <v-main class="grey lighten-3">
+      <v-divider></v-divider>
+
+      <v-list rounded>
+        <v-list-item
+          v-for="item in links"
+          :key="item.name"
+          link
+          :to="item.to"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.name }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-main class="grey lighten-2">
       <v-container>
-        <v-row>
-          <v-col cols="2">
-            <v-sheet rounded="lg">
-              <v-list color="transparent">
-                <v-list-item>
-                <v-list-item-title>
-                  <v-icon>mdi-bell</v-icon>
-                  알림 로그
-                </v-list-item-title>
-                </v-list-item>
-
-                <v-divider class="my-2"></v-divider>
-
-                <v-list-item
-                  v-for="(item,index) in this.$store.state.alerts"
-                  :key="index"
-                  link
-                  @click="$store.commit('closeAlert',index)"
-                >
-                <v-list-item-title>
-                  <v-icon>mdi-exclamation-thick</v-icon>
-                  {{ item.message }}
-                </v-list-item-title>
-                </v-list-item>
-
-                <v-divider class="my-2"></v-divider>
-
-                <v-list-item
-                  link
-                  color="grey lighten-4"
-                  @click="$store.commit('clearAlert');"
-                >
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      <v-icon>mdi-delete-forever</v-icon>
-                      모두 삭제
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-sheet>
-          </v-col>
-
-          <v-col>
-            <v-sheet
-              min-height="70vh"
-              rounded="lg"
-            >
-              <router-view></router-view>
-            </v-sheet>
-          </v-col>
-        </v-row>
+        <v-sheet
+          min-height="70vh"
+          rounded
+        >
+          <router-view></router-view>
+        </v-sheet>
       </v-container>
     </v-main>
-
-    <v-snackbar v-model="$store.getters.getSnackbar.show">
-      {{ $store.getters.getSnackbar.message }}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="pink"
-          text
-          v-bind="attrs"
-          @click="$store.commit('closeSnackbar');"
-        >
-          닫기
-        </v-btn>
-      </template>
-    </v-snackbar>
+    
+    <v-footer
+      app
+      dark
+      padless
+      class="font-weight-medium"
+    >
+      <v-col
+        class="text-center"
+        cols="12"
+      >
+        {{ new Date().getFullYear() }} — <strong>SpecialWarrior</strong> — <router-link to="/opensource">오픈소스 라이센스</router-link>
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 
@@ -135,11 +107,11 @@
     name:'mainpage',
     data: () => ({
       links: [
-        {name:'병사관리',to:'/management'},
-        {name:'모아보기',to:'/collection'},
-        {name:'전사현황',to:'/warriorstatus'},
-        {name:'FAQ',to:'/faq'},
-        {name:'공지사항',to:'/notice'},
+        {icon:'mdi-clipboard-account',name:'병사관리',to:'/management'},
+        {icon:'mdi-view-dashboard',name:'모아보기',to:'/collection'},
+        {icon:'mdi-clipboard-list',name:'전사현황',to:'/warriorstatus'},
+        {icon:'mdi-frequently-asked-questions',name:'FAQ',to:'/faq'},
+        {icon:'mdi-information',name:'공지사항',to:'/notice'},
       ],
       test: 0,
     }),

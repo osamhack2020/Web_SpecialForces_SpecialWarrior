@@ -1,5 +1,12 @@
 <template>
   <v-container>
+    <v-card dark class="text-center mb-3 pa-3">
+			<v-icon style="font-size:100px;">mdi-frequently-asked-questions</v-icon>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h2 font-weight-bold" style="">FAQ</span>
+			<v-divider class="ma-4"></v-divider>
+			<span class="text-h6 font-weight-medium mb-3">자주 묻는 사항들을 확인해보세요</span>
+		</v-card>
     <v-container v-if="isLoading" class="text-center">
       <v-progress-circular
         indeterminate
@@ -16,6 +23,11 @@
       >
         <v-expansion-panel-header>
           {{item.question}}
+          <template v-slot:actions>
+            <v-icon color="primary">
+              $expand
+            </v-icon>
+          </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <span class="text-body-1">{{item.answer}}</span>
@@ -33,6 +45,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <v-btn
+      class="mb-13"
       elevation="2"
       fab
       dark

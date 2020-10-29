@@ -35,7 +35,6 @@ const axiosInterceptor = axios.interceptors.response.use(
         //status != 200
         
         if(error.response.data.error){ //FROM AUTH Process
-            //alert(error.response.data.error_description);
             if( error.response.data.error_description.indexOf("expired") != -1 ){
                 //Needs Refresh
                 return store.dispatch('refreshToken')
@@ -44,11 +43,16 @@ const axiosInterceptor = axios.interceptors.response.use(
                     return axios.request(error.config);
                 });
             }
+            else if(error.response.data.error_description.indexOf("invalid") != -1){
+                //Refresh Token expired, too
+                store.dispatch('logout');
+                return;
+            }
             else
-            store.commit('pushAlert',{idx:store.state.alerts.length,type:'error',message:error.response.data.error_description});
+            store.commit('showSnackbar',{message:error.response.data.error_description});
         }
         else{ //FROM API
-            store.commit('pushAlert',{idx:store.state.alerts.length,type:'error',message:error.response.data.message});
+            store.commit('showSnackbar',{message:error.response.data.message});
         }
 
         return Promise.reject(error);
@@ -110,7 +114,6 @@ export const store = new Vuex.Store({
             this.dispatch("getAccessibleUnit");
             this.commit("SetSelectedUnit",{unit_full_name:state.userData.unit_full_name, unit_id:state.userData.unit_id});
             this.commit("clearAlert");
-            router.push('/');
         },
         OnLogout(){
             this.commit("clearAlert");
@@ -172,7 +175,7 @@ export const store = new Vuex.Store({
         //FAQ
         SetFaqRefresh(state,payload){
             state.isFaqNeedRefresh = payload;
-        }
+        },
     },
     actions:{
         fetchUser({commit}){
@@ -185,6 +188,7 @@ export const store = new Vuex.Store({
                   if(response.status==200){
                     commit("SetUserData",response.data.result[0]);
                     commit("AfterLoginSuccess");
+                    router.push('/');
                   }
               });
         },

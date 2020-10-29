@@ -1,14 +1,16 @@
 <template>
-  <v-card>
+  <v-card class="mt-3 text-black">
     <v-card-subtitle>
-      최근 30일간 수면시간(분)
+      <v-icon color="purple lighten-1">mdi-power-sleep</v-icon>
+      최근 30일간 수면시간
     </v-card-subtitle>
     <v-card-text>
       <v-sparkline
         fill
-        smooth="10"
+        smooth="15"
         :value="sleeptimeArray"
         auto-draw
+        color="purple lighten-1"
         label-size="3"
       >
         <template v-slot:label="item" class="text-caption">
@@ -46,10 +48,7 @@
 <script>
 export default {
   name:'sleeptime',
-  props:{
-    sleeptimeArray:Object,
-    userSleeptimeData:Object,
-  },
+  props:['sleeptimeArray','userSleeptimeData'],
   data:()=>({
   }),
   methods:{
