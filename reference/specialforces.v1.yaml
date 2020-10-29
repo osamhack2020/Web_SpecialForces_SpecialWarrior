@@ -23,6 +23,7 @@ info:
     2020-10-24 전우목록을 같은 소속에서만 받아오도록 변경, 전우 요청,거절 API 제거<br>
     2020-10-27 운동 프로필 가져오기 API exercise_id 별로 받아올수 있도록 수정<br>
     2020-10-27 유저정보 가져오기 API 최근 체력검정 결과 포함하도록 수정<br>
+    2020-10-29 칼로리 데이터 가져오기 API 추가<br>
 
     > 운동 종류<br>
     {<br>
@@ -1581,6 +1582,115 @@ paths:
                             average: '90'
       operationId: get-api-v1-heartrate-get_heartrate_profile_data
       description: 일별로 30일치 가져오기
+  /api/v1/profile/get_calorie_data:
+    get:
+      summary: 칼로리 데이터 가져오기 API
+      tags:
+        - 프로필
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        profile_id:
+                          type: string
+                        date:
+                          type: string
+                        calorie:
+                          type:
+                            - string
+                            - 'null'
+                  min_max_avg:
+                    type: object
+                    properties:
+                      min:
+                        type:
+                          - string
+                          - 'null'
+                      max:
+                        type:
+                          - string
+                          - 'null'
+                      average:
+                        type:
+                          - string
+                          - 'null'
+              examples:
+                예제 응답:
+                  value:
+                    success: true
+                    result:
+                      - profile_id: '102'
+                        date: '2020-10-17'
+                        calorie: '2345.6'
+                      - profile_id: '103'
+                        date: '2020-10-16'
+                        calorie: '2424.2'
+                      - profile_id: '104'
+                        date: '2020-10-15'
+                        calorie: '2580.2'
+                      - profile_id: '105'
+                        date: '2020-10-13'
+                        calorie: '2020.1'
+                      - profile_id: '106'
+                        date: '2020-10-14'
+                        calorie: '2000.1'
+                      - profile_id: '107'
+                        date: '2020-10-12'
+                        calorie: '2222.2'
+                      - profile_id: '112'
+                        date: '2020-10-18'
+                        calorie: null
+                      - profile_id: '119'
+                        date: '2020-10-19'
+                        calorie: null
+                      - profile_id: '128'
+                        date: '2020-10-20'
+                        calorie: null
+                      - profile_id: '135'
+                        date: '2020-10-21'
+                        calorie: null
+                      - profile_id: '142'
+                        date: '2020-10-22'
+                        calorie: null
+                      - profile_id: '149'
+                        date: '2020-10-23'
+                        calorie: null
+                      - profile_id: '156'
+                        date: '2020-10-24'
+                        calorie: null
+                      - profile_id: '163'
+                        date: '2020-10-25'
+                        calorie: null
+                      - profile_id: '170'
+                        date: '2020-10-26'
+                        calorie: null
+                      - profile_id: '177'
+                        date: '2020-10-27'
+                        calorie: null
+                      - profile_id: '184'
+                        date: '2020-10-28'
+                        calorie: null
+                      - profile_id: '190'
+                        date: '2020-10-29'
+                        calorie: null
+                    min_max_avg:
+                      min: '2000'
+                      max: '2580'
+                      average: '2265'
+      operationId: get-api-v1-profile-get_calorie_data
+      description: 일일 프로필에 기록된 30일치 칼로리 데이터를 가져옵니다. 없을 시에는 null로 제공됩니다.(예제참고)
 components:
   schemas: {}
   securitySchemes:
