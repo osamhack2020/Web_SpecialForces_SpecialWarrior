@@ -24,6 +24,7 @@ info:
     2020-10-27 운동 프로필 가져오기 API exercise_id 별로 받아올수 있도록 수정<br>
     2020-10-27 유저정보 가져오기 API 최근 체력검정 결과 포함하도록 수정<br>
     2020-10-29 칼로리 데이터 가져오기 API 추가<br>
+    2020-10-29 전우목록 가져오기 API 이름, 계급 포함하도록 수정<br>
 
     > 운동 종류<br>
     {<br>
@@ -529,15 +530,29 @@ paths:
                       properties:
                         user_id:
                           type: string
+                        name:
+                          type: string
+                          description: 성명
+                        class:
+                          type: integer
+                          description: 계급
               examples:
-                example-1:
+                예제:
                   value:
                     success: true
                     result:
                       - user_id: skyinpus
+                        name: 박성수
+                        class: '0'
                       - user_id: somefriend
+                        name: 박철수
+                        class: '3'
                       - user_id: someone
-                      - user_id: testaccount
+                        name: 배철수
+                        class: '2'
+                      - user_id: string
+                        name: 안철수
+                        class: '0'
       operationId: get-api-friend-list
       description: 자신의 전우 목록을 리스팅합니다
     parameters: []
