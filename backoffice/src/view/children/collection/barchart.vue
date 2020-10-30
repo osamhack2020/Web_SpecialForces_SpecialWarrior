@@ -19,6 +19,8 @@ export default {
                     return data['datasets'][tooltipItem['datasetIndex']]['label'] + ": " + data['datasets'][tooltipItem['datasetIndex']]['data'][tooltipItem['index']]+"kg";  
                   else if(data['type']==2)
                     return data['datasets'][tooltipItem['datasetIndex']]['label'] + ": " + data['datasets'][tooltipItem['datasetIndex']]['data'][tooltipItem['index']]+"bpm";  
+                  else if(data['type']==3)
+                    return data['datasets'][tooltipItem['datasetIndex']]['label'] + ": " + data['datasets'][tooltipItem['datasetIndex']]['data'][tooltipItem['index']]+"kcal";  
                 },
             }
         },

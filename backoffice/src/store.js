@@ -52,6 +52,10 @@ const axiosInterceptor = axios.interceptors.response.use(
             store.commit('showSnackbar',{message:error.response.data.error_description});
         }
         else{ //FROM API
+            if(error.response.data.message.indexOf("간부만 접근할 수 있습니다") != -1){
+                //Refresh Token expired, too
+                store.dispatch('logout');
+            }
             store.commit('showSnackbar',{message:error.response.data.message});
         }
 
@@ -253,7 +257,8 @@ export const store = new Vuex.Store({
               })
               .then((response)=>{
                   if(response.status==200){
-                    commit("pushAlert",{message:response.message,type:"info"});
+                    commit("showSnackbar",{message:response.data.message});
+                    alert(JSON.stringify(response));
                   }
               });
         },

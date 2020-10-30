@@ -3,6 +3,11 @@
 SpecialForces is a healthcare solution for Ministry of National Defense Soldiers.</br>
 스페셜포스는 대한민국 국방부 국군 장병들을 위한 헬스케어 솔루션입니다.
 
+[![GitHub forks](https://img.shields.io/github/forks/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/network)
+[![GitHub stars](https://img.shields.io/github/stars/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/stargazers)
+[![GitHub license](https://img.shields.io/github/license/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/API%20DOCUMENT-LINK-green?style=for-the-badge)](https://spefo.stoplight.io/docs/web-specialforces-specialwarrior/reference/specialforces.v1.yaml)
+
 ## 1. Intro (팀소개 및 프로잭트 설명 동영상)
 [![Watch the video](https://img.youtube.com/vi/LjX3eVQdIyk/0.jpg)](https://www.youtube.com/watch?time_continue=117&v=LjX3eVQdIyk)</br>
 >The project SpecialForces was done by team SpecialWarriors. The team consist of IoT developer(Project Manager), App developer and Web developer. Web developer also developed the server.
