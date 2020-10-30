@@ -66,7 +66,7 @@ SpecialForces is a healthcare solution for Ministry of National Defense Soldiers
 
 
 ## 4. Technique Used (기술스택)
-### (1)Back Office
+### (1)Frontend
 <table>
     <tbody>
         <tr>
@@ -112,10 +112,26 @@ Vue Libraries
 
 ### (2)Application
 
-### (3)Server
-    PHP 7.2
-    MariaDB 10.1
-    Apache 2.4
+### (3)Backend
+<table>
+    <tbody>
+        <tr>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/AWS_Simple_Icons_Compute_Amazon_EC2_Instances.svg/1200px-AWS_Simple_Icons_Compute_Amazon_EC2_Instances.svg.png" width="50" height="50"></td>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/PHP-logo.svg/1200px-PHP-logo.svg.png" width="70" height="50"></td>
+            <td align="center"><img src="https://t1.daumcdn.net/cfile/tistory/2110AB4D581033FD0D" width="60" height="50"></td>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Apache_HTTP_server_logo_%282016%29.svg/1280px-Apache_HTTP_server_logo_%282016%29.svg.png" width="110" height="50"></td>
+            <td align="center"><img src="https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/000/036/thumb/jwt.png" width="50" height="50"></td>
+        </tr>
+        <tr>
+            <td align="center">AWS EC2</td>
+            <td align="center">PHP7.2</td>
+            <td align="center">Mariadb10.1</td>
+            <td align="center">Apache2.4</td>
+            <td align="center">JWT</td>
+        </tr>
+    </tbody>
+</table>
+
 ### (4)IoT Device(클릭시 해당 기기 문서로 이동)
 - <a href = "https://github.com/SpecailForces/SpecialForces-IoT/tree/master/devices/push_up#specialforces-push-up-auto-measuring-device">팔굽혀펴기 체력 측정장치</a>
 - <a href = "https://github.com/SpecailForces/SpecialForces-IoT/tree/master/devices/sit_up#specialforces-sit-up-auto-measuring-device">윗몸일으키기 체력 측정장치</a>
