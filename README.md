@@ -7,7 +7,8 @@ SpecialForces is a healthcare solution for Ministry of National Defense Soldiers
 [![GitHub stars](https://img.shields.io/github/stars/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/stargazers)
 [![GitHub license](https://img.shields.io/github/license/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/blob/main/LICENSE)
 
-[![API DOCUMENT](https://img.shields.io/badge/API%20DOCUMENT-LINK-green?style=for-the-badge)](https://spefo.stoplight.io/docs/web-specialforces-specialwarrior/reference/specialforces.v1.yaml)
+[![API DOCUMENT](https://img.shields.io/badge/API%20DOCUMENTATION-LINK-green?style=for-the-badge)](https://spefo.stoplight.io/docs/web-specialforces-specialwarrior/reference/specialforces.v1.yaml)
+[![DOCUMENT](https://img.shields.io/badge/Gitbook-LINK-blue?style=for-the-badge)](https://specialwarrior-specialforces.gitbook.io/specialforces/)
 
 [![DEMO](https://img.shields.io/badge/Live%20Demo-LINK-green?style=for-the-badge)](https://page.spefor.ml)<br>
 - Test account for Demo<br>
@@ -66,12 +67,49 @@ SpecialForces is a healthcare solution for Ministry of National Defense Soldiers
 
 ## 4. Technique Used (기술스택)
 ### (1)Back Office
-    vuejs
-    vue-cli
-    vuetifyjs
-    vue-router
-    vuex
-    axios
+<table>
+    <tbody>
+        <tr>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/220px-Vue.js_Logo_2.svg.png" width="50" height="50"></td>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/1024px-Unofficial_JavaScript_logo_2.svg.png" width="50" height="50"></td>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" width="50" height="50"></td>
+            <td align="center"><img src="https://www.w3.org/html/logo/downloads/HTML5_Logo_512.png" width="50" height="50"></td>
+            <td align="center"><img src="https://webpack.js.org/85ba630cf0c5f29ae3e3.svg" width="50" height="50"></td>
+            <td align="center"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRfu1mi6LAfuv1HSVFYUtOVgBsIB5f96Ui_Xw&usqp=CAU" width="50" height="50"></td>
+        </tr>
+        <tr>
+            <td align="center">Vue.js</td>
+            <td align="center">Javascript</td>
+            <td align="center">CSS</td>
+            <td align="center">HTML5</td>
+            <td align="center">Webpack</td>
+            <td align="center">Github Pages</td>
+        </tr>
+    </tbody>
+</table>
+
+Vue Libraries
+<table>
+    <tbody>
+        <tr>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/220px-Vue.js_Logo_2.svg.png" width="50" height="50"></td>
+            <td align="center"><img src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-dark.svg" width="50" height="50"></td>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/220px-Vue.js_Logo_2.svg.png" width="50" height="50"></td>
+            <td align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/220px-Vue.js_Logo_2.svg.png" width="50" height="50"></td>
+            <td align="center"><img src="https://ukruralskills.co.uk/assets/providers_logos/no-logo.png" width="50" height="50"></td>
+            <td align="center"><img src="https://www.chartjs.org/img/chartjs-logo.svg" width="50" height="50"></td>
+        </tr>
+        <tr>
+            <td align="center">vue-cli</td>
+            <td align="center">vuetifyjs</td>
+            <td align="center">vue-router</td>
+            <td align="center">vuex</td>
+            <td align="center">axios</td>
+            <td align="center">chartjs</td>
+        </tr>
+    </tbody>
+</table>
+
 ### (2)Application
 
 ### (3)Server
