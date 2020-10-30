@@ -6,7 +6,25 @@ SpecialForces is a healthcare solution for Ministry of National Defense Soldiers
 [![GitHub forks](https://img.shields.io/github/forks/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/network)
 [![GitHub stars](https://img.shields.io/github/stars/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/stargazers)
 [![GitHub license](https://img.shields.io/github/license/osamhack2020/Web_SpecialForces_SpecialWarrior?style=for-the-badge)](https://github.com/osamhack2020/Web_SpecialForces_SpecialWarrior/blob/main/LICENSE)
-[![GitHub license](https://img.shields.io/badge/API%20DOCUMENT-LINK-green?style=for-the-badge)](https://spefo.stoplight.io/docs/web-specialforces-specialwarrior/reference/specialforces.v1.yaml)
+
+[![API DOCUMENT](https://img.shields.io/badge/API%20DOCUMENT-LINK-green?style=for-the-badge)](https://spefo.stoplight.io/docs/web-specialforces-specialwarrior/reference/specialforces.v1.yaml)
+
+[![DEMO](https://img.shields.io/badge/Live%20Demo-LINK-green?style=for-the-badge)](https://page.spefor.ml)<br>
+- Test account for Demo<br>
+    <table>
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>PW</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>test</td>
+            <td>test</td>
+        </tr>
+    </tbody>
+    </table>
 
 ## 1. Intro (팀소개 및 프로잭트 설명 동영상)
 [![Watch the video](https://img.youtube.com/vi/LjX3eVQdIyk/0.jpg)](https://www.youtube.com/watch?time_continue=117&v=LjX3eVQdIyk)</br>
