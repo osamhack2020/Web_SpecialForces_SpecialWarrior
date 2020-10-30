@@ -8,7 +8,7 @@
         elevation="10"
       >
         <v-card-title>
-        <v-btn dark block class="mb-4" @click="$router.push('/')">
+        <v-btn dark block large class="mb-4" @click="$router.push('/')">
           <v-icon>
             mdi-arm-flex
           </v-icon>
