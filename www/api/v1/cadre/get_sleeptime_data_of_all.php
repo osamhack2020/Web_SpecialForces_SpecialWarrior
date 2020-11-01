@@ -27,6 +27,8 @@ try{
       $sleeptime_data=get_sleeptime_data($dbconn,$row['user_id']);
     }else{
       $sleeptime_data=get_sleeptime_data_of_date($dbconn,$row['user_id'],$input['date']);
+      if(empty($sleeptime_data['result']))
+        continue;
     }
     $sleeptime_data['name']=$row['name'];
     array_push($res,$sleeptime_data);

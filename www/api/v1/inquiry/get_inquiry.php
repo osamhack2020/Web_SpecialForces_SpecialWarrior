@@ -2,24 +2,24 @@
 require_once __DIR__.'/../auth/settings.php';
 require_once('../dbsettings.php');
 require_once('../token_validator.php');
+require_once('../cadre/cadre_validator.php');
 
 /*
-  Get Friend List API
-  2020-10-xx goraegori
+  Get Faq API
+  2020-10-17 goraegori
   Input : 
-  Output : success, result
+  Output : success,result(faq_id,question,answer)
 */
-
-
-$input = json_decode(file_get_contents('php://input'),true);
 $res=array("success"=>false,"result"=>array());
 
-try{ 
-  $sql = "SELECT user_id,name,class FROM warrior WHERE user_id != '$userInfo[user_id]' AND unit_id = $userInfo[unit_id] AND cadre_flag=0;";
+try{
+  if($admin_flag)
+    $sql = "SELECT * FROM inquiry";
+  else
+    $sql = "SELECT * FROM inquiry WHERE user_id = '$userInfo[user_id]'";
   $result = mysqli_query($dbconn,$sql);
-  for($i=0;$i<$result->num_rows;$i++){
-    $row = mysqli_fetch_assoc($result);
-    array_push($res['result'], $row);
+  while($row = mysqli_fetch_assoc($result)){
+     array_push($res['result'], $row); 
   }
   $res['success']=true;
 }

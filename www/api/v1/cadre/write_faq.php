@@ -16,6 +16,7 @@ $datetime = date("Y-m-d H:i:s");
 
 try{
   if(!$cadre_flag) throw new Exception("간부만 접근할 수 있습니다");
+  if(!$admin_flag) throw new Exception("관리자만 접근할 수 있습니다");
   if(empty($input['question']) || empty($input['answer'])) throw new Exception("질문이나 응답이 입력되지 않았습니다");
   
   $sql = "INSERT INTO faq(question,answer) VALUES('$input[question]','$input[answer]')"; 

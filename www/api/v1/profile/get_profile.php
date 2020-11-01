@@ -12,7 +12,7 @@ require_once('./get_profile_function.php');
 */
 $input = json_decode(file_get_contents('php://input'),true);
 
-$input['date']= $input['date']?$input['date']:null;
+if(empty($input['date'])) $input['date'] = null;
 $res = get_profile($dbconn,$userInfo['user_id'],$input['date']);
 echo json_encode($res,JSON_UNESCAPED_UNICODE);
 ?>
